@@ -1,10 +1,394 @@
+import { useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import AppHeader from '../components/AppHeader';
+import QuantityStepper from '../components/QuantityStepper';
+import EmptyState from '../components/EmptyState';
+import { useCart } from '../context/CartContext';
+import { resolveFulfillment, suggestConsolidation } from '../utils/fulfillment';
+import { daysBetween, computeItemTotal, formatPrice } from '../utils/pricing';
+import { getDisplayData } from '../utils/displayData';
+import placeholderImg from '/placeholder-gear.svg';
+
 export default function Cart() {
+  const navigate = useNavigate();
+  const { items, dateRange, updateQty, removeItem, setDateRange } = useCart();
+
+  const fulfillment = useMemo(() => resolveFulfillment(items), [items]);
+  const consolidation = useMemo(
+    () => suggestConsolidation(items, fulfillment),
+    [items, fulfillment]
+  );
+
+  const totals = useMemo(() => {
+    let total = 0;
+    let hasTbd = false;
+    for (const ci of items) {
+      if (!ci.rentalDay) { hasTbd = true; continue; }
+      const d = daysBetween(ci.dateRange?.start, ci.dateRange?.end);
+      const it = computeItemTotal(ci, d);
+      if (it !== null) total += it * ci.qty;
+      else hasTbd = true;
+    }
+    return { total, hasTbd };
+  }, [items]);
+
+  const days = daysBetween(dateRange?.start, dateRange?.end);
+
+  if (items.length === 0) {
+    return (
+      <div className="page-enter">
+        <AppHeader title="Cart" />
+        <div style={styles.body}>
+          <EmptyState
+            title="Your cart is empty"
+            message="Browse gear or use the Kit Builder to get started."
+          >
+            <div style={styles.emptyLinks}>
+              <Link to="/browse" className="btn-outline-accent" style={styles.emptyBtn}>Browse Gear</Link>
+              <Link to="/kit-builder" className="btn-outline-accent" style={styles.emptyBtn}>Kit Builder</Link>
+            </div>
+          </EmptyState>
+        </div>
+      </div>
+    );
+  }
+
+  const locationGroups = useMemo(() => {
+    if (fulfillment.type === 'empty') return [];
+    const groups = {};
+    for (const p of fulfillment.plan) {
+      const key = p.location ? p.location.id : 'unavailable';
+      if (!groups[key]) groups[key] = { location: p.location, items: [] };
+      const ci = items.find((i) => i.product === p.product);
+      if (ci) groups[key].items.push(ci);
+    }
+    return Object.values(groups);
+  }, [fulfillment, items]);
+
+  function formatDateShort(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
+  }
+
+  const dateLabel = dateRange?.start && dateRange?.end
+    ? `${formatDateShort(dateRange.start)} – ${formatDateShort(dateRange.end)}`
+    : '';
+
   return (
-    <div className="page-enter container" style={{ padding: 'var(--space-lg) var(--space-md)' }}>
-      <h1 style={{ fontSize: 'var(--text-2xl)', fontWeight: 700 }}>Cart</h1>
-      <p style={{ color: 'var(--color-text-secondary)', marginTop: 'var(--space-sm)' }}>
-        Coming soon — multi-item cart with cross-location fulfillment.
-      </p>
+    <div className="page-enter">
+      <AppHeader title="Cart" subtitle={`${items.length} item${items.length !== 1 ? 's' : ''}${dateLabel ? ' · ' + dateLabel : ''}`} />
+
+      <div style={styles.body}>
+        {/* Fulfillment notice */}
+        {fulfillment.type === 'split' && (
+          <div style={styles.splitNotice}>
+            <div style={styles.splitRow}>
+              <span style={styles.splitIcon}>!</span>
+              <div>
+                <strong style={styles.splitTitle}>
+                  Kit split across {fulfillment.locations.length} locations
+                </strong>
+                <p style={styles.splitText}>
+                  {fulfillment.locations.map((l) => l.name).join(' and ')} — {fulfillment.locations.length} pickups required.
+                </p>
+              </div>
+            </div>
+            {consolidation && (
+              <button style={styles.consolidateBtn}>
+                Consolidate to {consolidation.majorityLocation.name}
+              </button>
+            )}
+          </div>
+        )}
+
+        {fulfillment.type === 'single' && fulfillment.locations[0] && (
+          <div style={styles.singleNotice}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            <span style={styles.singleText}>
+              All items available at <strong>{fulfillment.locations[0].name}</strong>
+            </span>
+          </div>
+        )}
+
+        {/* Items grouped by location */}
+        {locationGroups.map((group) => (
+          <div key={group.location?.id || 'unavailable'} style={styles.locationGroup}>
+            {fulfillment.type === 'split' && (
+              <div style={styles.locationLabel}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                {group.location ? group.location.name : 'Unavailable'}
+              </div>
+            )}
+            {group.items.map((ci) => {
+              const d = getDisplayData(ci.product);
+              const itemDays = daysBetween(ci.dateRange?.start, ci.dateRange?.end);
+              const lineTotal = ci.rentalDay ? computeItemTotal(ci, itemDays) : null;
+
+              return (
+                <div key={ci.product} style={styles.cartItem}>
+                  <div style={styles.itemThumb}>
+                    <img
+                      src={ci.imageSource || placeholderImg}
+                      alt={d.shortName}
+                      style={styles.itemImg}
+                      onError={(e) => { e.target.src = placeholderImg; }}
+                    />
+                  </div>
+                  <div style={styles.itemInfo}>
+                    <span style={styles.itemName}>{d.shortName}</span>
+                    <span style={styles.itemDates}>
+                      {ci.dateRange?.start && ci.dateRange?.end
+                        ? `${formatDateShort(ci.dateRange.start)} – ${formatDateShort(ci.dateRange.end)}`
+                        : 'No dates set'}
+                    </span>
+                    <span style={styles.itemPrice}>
+                      {lineTotal !== null
+                        ? formatPrice(lineTotal * ci.qty)
+                        : 'Price TBD'}
+                    </span>
+                  </div>
+                  <div style={styles.itemActions}>
+                    <QuantityStepper
+                      value={ci.qty}
+                      onChange={(q) => updateQty(ci.product, q)}
+                    />
+                    <button
+                      style={styles.removeBtn}
+                      onClick={() => removeItem(ci.product)}
+                      aria-label={`Remove ${d.shortName}`}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ))}
+
+        {/* Summary */}
+        <div style={styles.summary}>
+          <div style={styles.summaryRow}>
+            <span style={styles.summaryLabel}>Subtotal</span>
+            <span style={styles.summaryValue}>{formatPrice(totals.total)}</span>
+          </div>
+          {totals.hasTbd && (
+            <p style={styles.tbdNote}>Some items have unconfirmed pricing</p>
+          )}
+          <div style={styles.summaryDivider} />
+          <div style={styles.summaryRow}>
+            <span style={styles.summaryTotalLabel}>Estimated total</span>
+            <span style={styles.summaryTotalValue}>{formatPrice(totals.total)}</span>
+          </div>
+        </div>
+
+        <button
+          className="btn-primary"
+          style={styles.checkoutBtn}
+          onClick={() => navigate('/checkout')}
+        >
+          Proceed to Checkout
+        </button>
+      </div>
     </div>
   );
 }
+
+const styles = {
+  body: {
+    padding: 'var(--space-md)',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 'var(--space-md)',
+  },
+  emptyLinks: {
+    display: 'flex',
+    gap: 'var(--space-sm)',
+    marginTop: 'var(--space-md)',
+  },
+  emptyBtn: {
+    padding: '8px 20px',
+    fontSize: 'var(--text-sm)',
+    textDecoration: 'none',
+  },
+  splitNotice: {
+    background: 'rgba(246,139,30,0.08)',
+    border: '1px solid rgba(246,139,30,0.2)',
+    borderRadius: 'var(--radius-lg)',
+    padding: 'var(--space-md)',
+  },
+  splitRow: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: 'var(--space-sm)',
+  },
+  splitIcon: {
+    width: 24,
+    height: 24,
+    borderRadius: 'var(--radius-full)',
+    background: 'var(--color-accent)',
+    color: '#fff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '14px',
+    fontWeight: 700,
+    flexShrink: 0,
+  },
+  splitTitle: {
+    fontSize: 'var(--text-sm)',
+    display: 'block',
+  },
+  splitText: {
+    fontSize: 'var(--text-xs)',
+    color: 'var(--color-text-secondary)',
+    marginTop: 2,
+  },
+  consolidateBtn: {
+    marginTop: 'var(--space-sm)',
+    padding: '6px 14px',
+    fontSize: 'var(--text-xs)',
+    fontWeight: 600,
+    color: 'var(--color-accent)',
+    background: 'transparent',
+    border: '1.5px solid var(--color-accent)',
+    borderRadius: 'var(--radius-full)',
+    cursor: 'pointer',
+  },
+  singleNotice: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'var(--space-sm)',
+    padding: 'var(--space-sm) var(--space-md)',
+    background: 'var(--color-success-light)',
+    borderRadius: 'var(--radius-lg)',
+  },
+  singleText: {
+    fontSize: 'var(--text-sm)',
+    color: 'var(--color-text)',
+  },
+  locationGroup: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 'var(--space-sm)',
+  },
+  locationLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 6,
+    fontSize: 'var(--text-sm)',
+    color: 'var(--color-text-secondary)',
+    paddingLeft: 2,
+  },
+  cartItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'var(--space-md)',
+    padding: 'var(--space-md)',
+    background: 'var(--color-surface)',
+    borderRadius: 'var(--radius-md)',
+    border: '1px solid var(--color-border)',
+  },
+  itemThumb: {
+    width: 48,
+    height: 48,
+    borderRadius: 'var(--radius-sm)',
+    background: '#f0f0ea',
+    overflow: 'hidden',
+    flexShrink: 0,
+  },
+  itemImg: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+  },
+  itemInfo: {
+    flex: 1,
+    minWidth: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 2,
+  },
+  itemName: {
+    fontSize: 'var(--text-sm)',
+    fontWeight: 600,
+  },
+  itemDates: {
+    fontSize: 'var(--text-xs)',
+    color: 'var(--color-text-secondary)',
+  },
+  itemPrice: {
+    fontSize: 'var(--text-sm)',
+    fontWeight: 700,
+    color: 'var(--color-accent)',
+  },
+  itemActions: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    gap: 'var(--space-xs)',
+    flexShrink: 0,
+  },
+  removeBtn: {
+    color: 'var(--color-text-tertiary)',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    padding: 2,
+  },
+  summary: {
+    background: 'var(--color-surface-raised)',
+    border: '1px solid var(--color-border)',
+    borderRadius: 'var(--radius-lg)',
+    boxShadow: 'var(--glass-shadow)',
+    padding: 'var(--space-md)',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 'var(--space-sm)',
+  },
+  summaryRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  summaryLabel: {
+    fontSize: 'var(--text-sm)',
+    color: 'var(--color-text-secondary)',
+  },
+  summaryValue: {
+    fontSize: 'var(--text-sm)',
+    fontWeight: 600,
+  },
+  summaryDivider: {
+    height: 1,
+    background: 'var(--color-border)',
+  },
+  summaryTotalLabel: {
+    fontSize: 'var(--text-base)',
+    fontWeight: 700,
+  },
+  summaryTotalValue: {
+    fontSize: 'var(--text-lg)',
+    fontWeight: 700,
+  },
+  tbdNote: {
+    fontSize: 'var(--text-xs)',
+    color: 'var(--color-warning)',
+    margin: 0,
+  },
+  checkoutBtn: {
+    width: '100%',
+    borderRadius: 'var(--radius-lg)',
+    fontSize: 'var(--text-base)',
+    fontWeight: 700,
+  },
+};
