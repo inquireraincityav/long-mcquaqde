@@ -1,0 +1,62 @@
+[
+  {
+    "eventType": "Wedding ceremony",
+    "guestCount": "< 100",
+    "venue": "Outdoor",
+    "wattsPerGuest": "10-14",
+    "speakerCount": 2,
+    "subCount": "0-1",
+    "wirelessMics": 2,
+    "wiredMics": 0,
+    "mixerChannelsMin": 4,
+    "source": "Outdoor multiplier roughly doubles indoor watts/guest (no room reinforcement, inverse-square loss)."
+  },
+  {
+    "eventType": "Wedding reception",
+    "guestCount": "100-200",
+    "venue": "Indoor",
+    "wattsPerGuest": "7-8",
+    "speakerCount": 2,
+    "subCount": 1,
+    "wirelessMics": 2,
+    "wiredMics": 3,
+    "mixerChannelsMin": 8,
+    "source": "Wired count assumes live tabla/keyboard/singer setup, matching SJAI Studio's own gig rig."
+  },
+  {
+    "eventType": "Wedding reception",
+    "guestCount": "300-400",
+    "venue": "Indoor",
+    "wattsPerGuest": "6-8",
+    "speakerCount": 2,
+    "subCount": 2,
+    "wirelessMics": 2,
+    "wiredMics": 3,
+    "mixerChannelsMin": 8,
+    "source": "Cross-checked against SJAI Studio quote Q-2026-19 (2x PS15 tops + 2x 15in subs, 300-400 guests, Aria Banquet Hall)."
+  },
+  {
+    "eventType": "Corporate speech / panel",
+    "guestCount": "Any",
+    "venue": "Indoor",
+    "wattsPerGuest": "3-5",
+    "speakerCount": 2,
+    "subCount": 0,
+    "wirelessMics": "3-4",
+    "wiredMics": 0,
+    "mixerChannelsMin": 6,
+    "source": "Speech-only content needs far less power per guest than music -- clarity over output."
+  },
+  {
+    "eventType": "DJ set / club night",
+    "guestCount": "100-300",
+    "venue": "Indoor",
+    "wattsPerGuest": "8-12",
+    "speakerCount": "2-4",
+    "subCount": 2,
+    "wirelessMics": 1,
+    "wiredMics": 0,
+    "mixerChannelsMin": 4,
+    "source": "Higher watts/guest for dance-floor content; add speakers past ~5,000 sq ft or delay stacks beyond 80-100ft throw."
+  }
+]

@@ -1,0 +1,59 @@
+[
+  {
+    "name": "Standard PA Package",
+    "description": "A classic 2-speaker PA for small bands, DJs, ceremonies or larger presentations. Good for small halls, community centres, gyms, etc.",
+    "items": [
+      { "product": "Yorkville Sound YXL12P 12 Inch 1000 Watt Powered Loudspeaker", "qty": 2 },
+      { "product": "Yorkville 14-Channel Compact Desk Mixer", "qty": 1 },
+      { "product": "Shure SM58 Unidirectional/Cardioid Dynamic Microphone", "qty": 2 },
+      { "product": "Yorkville Sound Tripod Boom Stand - Black", "qty": 2 }
+    ],
+    "asQuotedDay": 73,
+    "asQuotedMonth": 285
+  },
+  {
+    "name": "Panel/Conference Package",
+    "description": "Designed for panel discussions, town halls, board meetings and community forums where multiple people need mics — handhelds, table mics, podium, wireless lav.",
+    "items": [
+      { "product": "Yorkville Sound YXL12P 12 Inch 1000 Watt Powered Loudspeaker", "qty": 2 },
+      { "product": "Yorkville 14-Channel Compact Desk Mixer", "qty": 1 },
+      { "product": "Shure SM58 Unidirectional/Cardioid Dynamic Microphone", "qty": 3 },
+      { "product": "Podium mic (model TBD)", "qty": 1 },
+      { "product": "Sennheiser EW 112-P G4-A Portable Lavalier Set", "qty": 1 },
+      { "product": "Yorkville Sound Tripod Boom Stand - Black", "qty": 3 }
+    ],
+    "asQuotedDay": 105,
+    "asQuotedMonth": 405,
+    "note": "Computed total will undercount until Podium mic has a real rate."
+  },
+  {
+    "name": "Recording/Hybrid Meeting Package",
+    "description": "For events that need to be recorded or streamed (Zoom/Teams/YouTube) as well as heard clearly in the room. Good for panels, lectures and town halls.",
+    "items": [
+      { "product": "Yorkville Sound YXL12P 12 Inch 1000 Watt Powered Loudspeaker", "qty": 2 },
+      { "product": "Yorkville 14-Channel Compact Desk Mixer", "qty": 1 },
+      { "product": "Shure SM58 Unidirectional/Cardioid Dynamic Microphone", "qty": 1 },
+      { "product": "Podium mic (model TBD)", "qty": 1 },
+      { "product": "Sennheiser EW 112-P G4-A Portable Lavalier Set", "qty": 1 },
+      { "product": "Yorkville Sound Tripod Boom Stand - Black", "qty": 1 },
+      { "product": "Zoom Q8N Handheld 4K video and audio Recorder", "qty": 1 }
+    ],
+    "asQuotedDay": 0,
+    "asQuotedMonth": 0,
+    "note": "Original sheet left this at $0.00 (unfinished). Zoom Q8N added to gear list since the description names it."
+  },
+  {
+    "name": "Presentation + Projector Package",
+    "description": "Slides + sound. Ideal for keynotes, lectures, film nights or corporate presentations where you need both a big image and clear speech.",
+    "items": [
+      { "product": "Epson PowerLite 2140W WXGA 3LCD Projector", "qty": 1 },
+      { "product": "Grandview Cyber X-Press Series Pull-Up Projector Screen - 92\"", "qty": 1 },
+      { "product": "Yorkville SoundEXM Mobile Tower Battery Powered PA System", "qty": 1 },
+      { "product": "Shure SM58 Unidirectional/Cardioid Dynamic Microphone", "qty": 1 },
+      { "product": "Yorkville Sound Tripod Boom Stand - Black", "qty": 1 }
+    ],
+    "asQuotedDay": 115,
+    "asQuotedMonth": 455,
+    "note": "Matches original total exactly."
+  }
+]
