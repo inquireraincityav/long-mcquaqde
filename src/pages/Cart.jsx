@@ -302,7 +302,7 @@ const styles = {
     width: 48,
     height: 48,
     borderRadius: 'var(--radius-sm)',
-    background: '#f0f0ea',
+    background: '#1a1520',
     overflow: 'hidden',
     flexShrink: 0,
   },

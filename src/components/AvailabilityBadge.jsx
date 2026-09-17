@@ -32,24 +32,24 @@ export default function AvailabilityBadge({ product, hasDateRange = false, overl
 const styles = {
   badge: {
     display: 'inline-block',
-    fontSize: '11px',
-    fontWeight: 600,
-    padding: '3px 10px',
-    borderRadius: 'var(--radius-full)',
+    fontSize: '10.5px',
+    fontWeight: 700,
+    padding: '2px 8px',
+    borderRadius: '7px',
     whiteSpace: 'nowrap',
   },
   overlay: {
     position: 'absolute',
-    top: 10,
-    left: 10,
+    top: 8,
+    left: 8,
   },
   available: {
-    background: 'rgba(22, 163, 74, 0.15)',
-    color: '#16a34a',
+    background: 'rgba(46, 125, 50, 0.10)',
+    color: '#1a5c1e',
   },
   partial: {
-    background: 'rgba(217, 119, 6, 0.15)',
-    color: '#b45309',
+    background: 'rgba(234, 179, 8, 0.13)',
+    color: '#7a4d00',
   },
   unavailable: {
     background: 'rgba(220, 38, 38, 0.12)',

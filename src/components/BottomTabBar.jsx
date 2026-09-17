@@ -6,7 +6,7 @@ const tabs = [
     to: '/browse',
     label: 'Browse',
     icon: (active) => (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? 'var(--color-accent)' : 'var(--color-text-tertiary)'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? 'var(--color-accent)' : '#aaa'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="11" cy="11" r="8" />
         <line x1="21" y1="21" x2="16.65" y2="16.65" />
       </svg>
@@ -16,7 +16,7 @@ const tabs = [
     to: '/kit-builder',
     label: 'Kit Builder',
     icon: (active) => (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? 'var(--color-accent)' : 'var(--color-text-tertiary)'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? 'var(--color-accent)' : '#aaa'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <polygon points="12 2 2 7 12 12 22 7 12 2" />
         <polyline points="2 17 12 22 22 17" />
         <polyline points="2 12 12 17 22 12" />
@@ -27,7 +27,7 @@ const tabs = [
     to: '/cart',
     label: 'Cart',
     icon: (active) => (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? 'var(--color-accent)' : 'var(--color-text-tertiary)'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? 'var(--color-accent)' : '#aaa'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
         <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
         <line x1="12" y1="22.08" x2="12" y2="12" />
@@ -39,7 +39,7 @@ const tabs = [
     to: '/orders',
     label: 'Orders',
     icon: (active) => (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? 'var(--color-accent)' : 'var(--color-text-tertiary)'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? 'var(--color-accent)' : '#aaa'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
         <polyline points="14 2 14 8 20 8" />
         <line x1="16" y1="13" x2="8" y2="13" />
@@ -67,14 +67,14 @@ export default function BottomTabBar() {
       {tabs.map((tab) => {
         const active = isTabActive(tab.to);
         return (
-          <Link key={tab.to} to={tab.to} style={{ ...styles.tab, color: active ? 'var(--color-accent)' : 'var(--color-text-tertiary)' }}>
+          <Link key={tab.to} to={tab.to} style={{ ...styles.tab, color: active ? 'var(--color-accent)' : '#aaa' }}>
             <div style={styles.iconWrap}>
               {tab.icon(active)}
               {tab.hasBadge && itemCount > 0 && (
                 <span style={styles.badge}>{itemCount}</span>
               )}
             </div>
-            <span style={{ ...styles.label, fontWeight: active ? 600 : 400 }}>{tab.label}</span>
+            <span style={{ ...styles.label, fontWeight: active ? 700 : 400 }}>{tab.label}</span>
           </Link>
         );
       })}
@@ -89,10 +89,11 @@ const styles = {
     left: 0,
     right: 0,
     height: 'var(--bottom-nav-height)',
-    background: 'rgba(255, 255, 255, 0.92)',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-    borderTop: '1px solid var(--color-border)',
+    background: 'var(--glass-bg)',
+    backdropFilter: 'var(--glass-blur)',
+    WebkitBackdropFilter: 'var(--glass-blur)',
+    borderTop: '1px solid var(--color-border-glass)',
+    boxShadow: '0 -1px 0 rgba(0,0,0,0.05), var(--glass-highlight)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-around',
@@ -104,9 +105,9 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: 2,
+    gap: 3,
     textDecoration: 'none',
-    padding: '8px 12px',
+    padding: '4px 16px',
     minWidth: 64,
   },
   iconWrap: {
@@ -114,8 +115,8 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 28,
-    height: 28,
+    width: 24,
+    height: 24,
   },
   badge: {
     position: 'absolute',
@@ -134,7 +135,8 @@ const styles = {
     padding: '0 4px',
   },
   label: {
-    fontSize: '11px',
+    fontSize: '10px',
     lineHeight: 1,
+    letterSpacing: '0.1px',
   },
 };

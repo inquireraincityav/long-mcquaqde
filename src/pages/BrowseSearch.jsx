@@ -91,16 +91,17 @@ const styles = {
     marginBottom: 'var(--space-md)',
   },
   sectionTitle: {
-    fontSize: 'var(--text-xl)',
-    fontWeight: 700,
+    fontSize: '19px',
+    fontWeight: 800,
+    letterSpacing: '-0.5px',
   },
   count: {
-    fontSize: 'var(--text-sm)',
+    fontSize: '12.5px',
     color: 'var(--color-text-secondary)',
   },
   grid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
-    gap: 'var(--space-md)',
+    gap: '12px',
   },
 };

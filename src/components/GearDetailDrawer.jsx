@@ -38,6 +38,9 @@ export default function GearDetailDrawer({ item, dateRange: initialDateRange, on
   return (
     <div style={styles.overlay} onClick={onClose}>
       <div style={styles.drawer} onClick={(e) => e.stopPropagation()}>
+        <div style={styles.dragHandleWrap}>
+          <div style={styles.dragHandle} />
+        </div>
         <div style={styles.imageSection}>
           <AvailabilityBadge product={item.product} hasDateRange={validDates} overlay />
           <button style={styles.closeBtn} onClick={onClose} aria-label="Close">
@@ -188,6 +191,22 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
   },
+  dragHandleWrap: {
+    display: 'flex',
+    justifyContent: 'center',
+    padding: '10px 0 6px',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 2,
+  },
+  dragHandle: {
+    width: 36,
+    height: 4,
+    borderRadius: 2,
+    background: 'rgba(0, 0, 0, 0.2)',
+  },
   closeBtn: {
     position: 'absolute',
     top: 'var(--space-md)',
@@ -201,12 +220,12 @@ const styles = {
     background: 'rgba(255,255,255,0.85)',
     border: '1px solid var(--color-border)',
     cursor: 'pointer',
-    zIndex: 1,
+    zIndex: 3,
     color: 'var(--color-text-secondary)',
   },
   imageSection: {
     position: 'relative',
-    background: '#f0f0ea',
+    background: '#1a1520',
     aspectRatio: '16/10',
     display: 'flex',
     alignItems: 'center',
@@ -218,6 +237,7 @@ const styles = {
     width: '100%',
     height: '100%',
     objectFit: 'cover',
+    opacity: 0.88,
   },
   content: {
     padding: 'var(--space-lg) var(--space-md)',

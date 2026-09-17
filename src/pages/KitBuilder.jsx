@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppHeader from '../components/AppHeader';
 import QuantityStepper from '../components/QuantityStepper';
+import BottomSheet from '../components/BottomSheet';
 import { useCart } from '../context/CartContext';
 import { buildKit } from '../utils/kitMatcher';
 import { daysBetween, computeItemTotal, formatPrice, } from '../utils/pricing';
@@ -9,11 +10,12 @@ import { getDisplayData, getWeeklyRate } from '../utils/displayData';
 import placeholderImg from '/placeholder-gear.svg';
 
 const EVENT_TYPES = [
-  { value: '', label: 'Select event type...' },
   { value: 'corporate_panel', label: 'Corporate Conference' },
+  { value: 'dj_set', label: 'DJ / Dance Party' },
   { value: 'wedding_ceremony', label: 'Wedding Ceremony' },
-  { value: 'wedding_reception', label: 'Wedding Reception' },
-  { value: 'dj_set', label: 'DJ Set / Club Night' },
+  { value: 'product_launch', label: 'Product Launch' },
+  { value: 'town_hall', label: 'Town Hall Meeting' },
+  { value: 'live_concert', label: 'Live Concert' },
   { value: 'custom', label: 'Custom' },
 ];
 
@@ -27,6 +29,7 @@ export default function KitBuilder() {
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
   const [result, setResult] = useState(null);
   const [whyOpen, setWhyOpen] = useState(false);
+  const [eventSheetOpen, setEventSheetOpen] = useState(false);
 
   const canGenerate = eventType && guestCount > 0 && dateRange.start && dateRange.end;
   const days = daysBetween(dateRange.start, dateRange.end);
@@ -97,15 +100,17 @@ export default function KitBuilder() {
           <div style={styles.formRow}>
             <div style={styles.fieldWide}>
               <label style={styles.label}>Event Type</label>
-              <select
-                value={eventType}
-                onChange={(e) => setEventType(e.target.value)}
-                style={styles.select}
+              <button
+                style={styles.sheetTrigger}
+                onClick={() => setEventSheetOpen(true)}
               >
-                {EVENT_TYPES.map((et) => (
-                  <option key={et.value} value={et.value}>{et.label}</option>
-                ))}
-              </select>
+                <span style={{ color: eventType ? 'var(--color-text)' : 'var(--color-text-tertiary)' }}>
+                  {eventType ? EVENT_TYPES.find((e) => e.value === eventType)?.label : 'Select event type…'}
+                </span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.5 }}>
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
             </div>
             <div style={styles.fieldNarrow}>
               <label style={styles.label}>Guests</label>
@@ -353,6 +358,15 @@ export default function KitBuilder() {
           </div>
         )}
       </div>
+
+      <BottomSheet
+        open={eventSheetOpen}
+        onClose={() => setEventSheetOpen(false)}
+        title="Event Type"
+        options={EVENT_TYPES}
+        value={eventType}
+        onChange={setEventType}
+      />
     </div>
   );
 }
@@ -398,7 +412,7 @@ const styles = {
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
   },
-  select: {
+  sheetTrigger: {
     width: '100%',
     padding: '10px 12px',
     border: '1px solid var(--color-border-strong)',
@@ -406,8 +420,12 @@ const styles = {
     fontSize: 'var(--text-sm)',
     background: 'var(--color-surface-solid)',
     color: 'var(--color-text)',
-    outline: 'none',
     cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 'var(--space-sm)',
+    textAlign: 'left',
   },
   guestStepper: {
     display: 'flex',
@@ -551,7 +569,7 @@ const styles = {
     height: 90,
     borderRadius: 'var(--radius-md)',
     overflow: 'hidden',
-    background: '#f0f0ea',
+    background: '#1a1520',
     flexShrink: 0,
   },
   thumbImg: {

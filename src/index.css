@@ -1,5 +1,5 @@
 :root {
-  --color-bg: #fdf6ef;
+  --color-bg: #faf7f3;
   --color-surface: rgba(255, 255, 255, 0.72);
   --color-surface-solid: #ffffff;
   --color-surface-hover: rgba(255, 255, 255, 0.88);
@@ -7,24 +7,27 @@
   --color-surface-warm: rgba(246, 139, 30, 0.04);
   --color-border: rgba(0, 0, 0, 0.08);
   --color-border-strong: rgba(0, 0, 0, 0.14);
-  --color-text: #1a1a2e;
-  --color-text-secondary: #5a5a72;
-  --color-text-tertiary: #8a8a9a;
+  --color-border-glass: rgba(255, 255, 255, 0.28);
+  --color-text: #444444;
+  --color-text-secondary: #888888;
+  --color-text-tertiary: #aaaaaa;
   --color-accent: #F68B1E;
   --color-accent-hover: #e07a10;
   --color-accent-light: rgba(246, 139, 30, 0.10);
   --color-accent-lighter: rgba(246, 139, 30, 0.04);
   --color-danger: #dc2626;
   --color-danger-light: rgba(220, 38, 38, 0.08);
-  --color-warning: #d97706;
-  --color-warning-light: rgba(217, 119, 6, 0.08);
-  --color-success: #16a34a;
-  --color-success-light: rgba(22, 163, 74, 0.08);
+  --color-warning: #7a4d00;
+  --color-warning-light: rgba(234, 179, 8, 0.13);
+  --color-success: #1a5c1e;
+  --color-success-light: rgba(46, 125, 50, 0.10);
 
-  --glass-blur: blur(20px);
-  --glass-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.04);
-  --glass-shadow-lg: 0 4px 24px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
-  --glass-shadow-xl: 0 8px 40px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  --glass-blur: blur(14px);
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 2px 14px rgba(0, 0, 0, 0.07);
+  --glass-shadow-lg: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --glass-shadow-xl: 0 8px 40px rgba(0, 0, 0, 0.12);
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.42);
 
   --space-xs: 4px;
   --space-sm: 8px;
@@ -36,16 +39,16 @@
 
   --radius-sm: 8px;
   --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
+  --radius-lg: 18px;
+  --radius-xl: 22px;
   --radius-full: 9999px;
 
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
+  --text-xs: 0.6875rem;
+  --text-sm: 0.8125rem;
   --text-base: 1rem;
   --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
+  --text-xl: 1.1875rem;
   --text-2xl: 1.5rem;
   --text-3xl: 1.875rem;
   --text-4xl: 2.25rem;
@@ -117,21 +120,21 @@ a:hover {
 }
 
 .glass-panel {
-  background: var(--color-surface);
+  background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-glass);
   border-radius: var(--radius-lg);
-  box-shadow: var(--glass-shadow);
+  box-shadow: var(--glass-shadow), var(--glass-highlight);
 }
 
 .glass-panel-raised {
   background: var(--color-surface-raised);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-glass);
   border-radius: var(--radius-lg);
-  box-shadow: var(--glass-shadow-lg);
+  box-shadow: var(--glass-shadow-lg), var(--glass-highlight);
 }
 
 .btn-primary {
@@ -229,4 +232,9 @@ a:hover {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }
