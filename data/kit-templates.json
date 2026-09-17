@@ -13,34 +13,32 @@
   },
   {
     "name": "Panel/Conference Package",
-    "description": "Designed for panel discussions, town halls, board meetings and community forums where multiple people need mics — handhelds, table mics, podium, wireless lav.",
+    "description": "Designed for panel discussions, town halls, board meetings and community forums where multiple people need mics — handhelds, table mics, and wireless lav.",
     "items": [
       { "product": "Yorkville Sound YXL12P 12 Inch 1000 Watt Powered Loudspeaker", "qty": 2 },
       { "product": "Yorkville 14-Channel Compact Desk Mixer", "qty": 1 },
       { "product": "Shure SM58 Unidirectional/Cardioid Dynamic Microphone", "qty": 3 },
-      { "product": "Podium mic (model TBD)", "qty": 1 },
+      { "product": "Apex Compact Boundary Microphone", "qty": 2 },
       { "product": "Sennheiser EW 112-P G4-A Portable Lavalier Set", "qty": 1 },
       { "product": "Yorkville Sound Tripod Boom Stand - Black", "qty": 3 }
     ],
-    "asQuotedDay": 105,
-    "asQuotedMonth": 405,
-    "note": "Computed total will undercount until Podium mic has a real rate."
+    "asQuotedDay": 101,
+    "asQuotedMonth": 397
   },
   {
     "name": "Recording/Hybrid Meeting Package",
     "description": "For events that need to be recorded or streamed (Zoom/Teams/YouTube) as well as heard clearly in the room. Good for panels, lectures and town halls.",
     "items": [
       { "product": "Yorkville Sound YXL12P 12 Inch 1000 Watt Powered Loudspeaker", "qty": 2 },
-      { "product": "Yorkville 14-Channel Compact Desk Mixer", "qty": 1 },
-      { "product": "Shure SM58 Unidirectional/Cardioid Dynamic Microphone", "qty": 1 },
-      { "product": "Podium mic (model TBD)", "qty": 1 },
+      { "product": "Mackie ProFX16v3 16-Channel Professional Effects Mixer", "qty": 1 },
+      { "product": "Shure SM58 Unidirectional/Cardioid Dynamic Microphone", "qty": 2 },
       { "product": "Sennheiser EW 112-P G4-A Portable Lavalier Set", "qty": 1 },
-      { "product": "Yorkville Sound Tripod Boom Stand - Black", "qty": 1 },
-      { "product": "Zoom Q8N Handheld 4K video and audio Recorder", "qty": 1 }
+      { "product": "Zoom Q8N Handheld 4K Video and Audio Recorder", "qty": 1 },
+      { "product": "Focusrite Scarlett 2i2 3rd Gen USB Audio Interface", "qty": 1 },
+      { "product": "Yorkville Sound Tripod Boom Stand - Black", "qty": 2 }
     ],
-    "asQuotedDay": 0,
-    "asQuotedMonth": 0,
-    "note": "Original sheet left this at $0.00 (unfinished). Zoom Q8N added to gear list since the description names it."
+    "asQuotedDay": 103,
+    "asQuotedMonth": 396
   },
   {
     "name": "Presentation + Projector Package",
@@ -53,7 +51,90 @@
       { "product": "Yorkville Sound Tripod Boom Stand - Black", "qty": 1 }
     ],
     "asQuotedDay": 115,
-    "asQuotedMonth": 455,
-    "note": "Matches original total exactly."
+    "asQuotedMonth": 455
+  },
+  {
+    "name": "DJ / Dance Party Package",
+    "description": "Full DJ setup with controller, speakers, subwoofer, and lighting. Perfect for house parties, school dances, wedding receptions, and club nights.",
+    "items": [
+      { "product": "Pioneer DDJ-FLX6 4-Channel DJ Controller", "qty": 1 },
+      { "product": "QSC K12.2 12 Inch 2000W Powered Loudspeaker", "qty": 2 },
+      { "product": "JBL PRX418S 18 Inch Passive Subwoofer", "qty": 1 },
+      { "product": "Chauvet DJ GigBAR Move 5-in-1 Lighting System", "qty": 1 },
+      { "product": "Chauvet DJ Hurricane Haze 2D Water-Based Hazer", "qty": 1 }
+    ],
+    "asQuotedDay": 119,
+    "asQuotedMonth": 476
+  },
+  {
+    "name": "Live Band Package",
+    "description": "Full backline and PA for a live band — drums, keys, guitar amp, bass rig, PA speakers, and mixer. Add mics as needed.",
+    "items": [
+      { "product": "QSC K12.2 12 Inch 2000W Powered Loudspeaker", "qty": 2 },
+      { "product": "QSC KS118 18 Inch 3600W Powered Subwoofer", "qty": 1 },
+      { "product": "Yamaha MG20XU 20-Channel Mixer with Effects and USB", "qty": 1 },
+      { "product": "Fender '65 Twin Reverb Reissue Guitar Amplifier", "qty": 1 },
+      { "product": "Ampeg SVT-CL Classic 300W All-Tube Bass Head", "qty": 1 },
+      { "product": "Ampeg SVT-810E 8x10 Bass Cabinet", "qty": 1 },
+      { "product": "DW Collector's Series 5-Piece Drum Kit", "qty": 1 },
+      { "product": "Shure SM58 Unidirectional/Cardioid Dynamic Microphone", "qty": 3 },
+      { "product": "Shure SM57 Instrument Microphone", "qty": 4 },
+      { "product": "Yorkville Sound Tripod Boom Stand - Black", "qty": 6 }
+    ],
+    "asQuotedDay": 282,
+    "asQuotedMonth": 1126
+  },
+  {
+    "name": "Stage Lighting Package",
+    "description": "Complete lighting rig for events, performances, and galas. Includes wash lights, moving heads, hazer, DMX controller, and stands.",
+    "items": [
+      { "product": "Chauvet DJ SlimPAR Pro H USB RGBAW+UV LED Wash Light", "qty": 4 },
+      { "product": "Chauvet Intimidator Spot 360 LED Moving Head", "qty": 2 },
+      { "product": "ADJ Ultra Bar 12H RGBAW+UV LED Linear Fixture", "qty": 2 },
+      { "product": "Chauvet DJ Hurricane Haze 2D Water-Based Hazer", "qty": 1 },
+      { "product": "Chauvet DJ Obey 70 DMX Controller", "qty": 1 },
+      { "product": "ADJ Lighting Stand Package with T-Bar", "qty": 2 }
+    ],
+    "asQuotedDay": 113,
+    "asQuotedMonth": 452
+  },
+  {
+    "name": "Wedding Reception Package",
+    "description": "Everything for a wedding reception — speeches, dinner music, DJ, dancing. Includes wireless mics for toasts, PA for music, and ambient lighting.",
+    "items": [
+      { "product": "Bose L1 Pro32 Portable Line Array System", "qty": 1 },
+      { "product": "Shure BLX288/PG58 Dual Channel Handheld Wireless System", "qty": 1 },
+      { "product": "Sennheiser EW 112-P G4-A Portable Lavalier Set", "qty": 1 },
+      { "product": "Chauvet DJ SlimPAR Pro H USB RGBAW+UV LED Wash Light", "qty": 6 },
+      { "product": "ADJ Lighting Stand Package with T-Bar", "qty": 2 },
+      { "product": "Yorkville Sound Tripod Boom Stand - Black", "qty": 1 }
+    ],
+    "asQuotedDay": 143,
+    "asQuotedMonth": 570
+  },
+  {
+    "name": "Pro DJ Club Setup",
+    "description": "Industry-standard club DJ setup with CDJs, mixer, and turntables. The same gear you'd find in a professional club booth.",
+    "items": [
+      { "product": "Pioneer CDJ-2000NXS2 Professional Multi Player", "qty": 2 },
+      { "product": "Pioneer DJM-900NXS2 4-Channel Professional DJ Mixer", "qty": 1 },
+      { "product": "QSC K12.2 12 Inch 2000W Powered Loudspeaker", "qty": 2 },
+      { "product": "QSC KS118 18 Inch 3600W Powered Subwoofer", "qty": 2 }
+    ],
+    "asQuotedDay": 234,
+    "asQuotedMonth": 936
+  },
+  {
+    "name": "Keyboard/Piano Stage Setup",
+    "description": "Stage keyboard setup with premium instrument, stand, monitors and DI. Perfect for solo performers, session musicians, and worship teams.",
+    "items": [
+      { "product": "Nord Stage 3 88 Weighted Key Stage Keyboard", "qty": 1 },
+      { "product": "Keyboard X-Stand Double Braced", "qty": 1 },
+      { "product": "Radial ProDI Passive Direct Box", "qty": 1 },
+      { "product": "KRK ROKIT 5 G4 5-Inch Powered Studio Monitor (Pair)", "qty": 1 },
+      { "product": "Furman M-8x2 Merit Series 8 Outlet Power Conditioner", "qty": 1 }
+    ],
+    "asQuotedDay": 68,
+    "asQuotedMonth": 272
   }
 ]

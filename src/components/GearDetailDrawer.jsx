@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import QuantityStepper from './QuantityStepper';
-import AvailabilityBadge from './AvailabilityBadge';
 import { useCart } from '../context/CartContext';
 import { daysBetween, computeItemTotal, formatPrice } from '../utils/pricing';
 import { getDisplayData, getWeeklyRate } from '../utils/displayData';
+import { getItemAvailability, LOCATIONS } from '../utils/availability';
 import placeholderImg from '/placeholder-gear.svg';
 
 export default function GearDetailDrawer({ item, dateRange: initialDateRange, onClose }) {
@@ -11,6 +11,7 @@ export default function GearDetailDrawer({ item, dateRange: initialDateRange, on
   const [dateRange, setDateRange] = useState(initialDateRange || { start: '', end: '' });
   const [qty, setQty] = useState(1);
   const [activeTab, setActiveTab] = useState('specs');
+  const [selectedLocation, setSelectedLocation] = useState(null);
 
   if (!item) return null;
 
@@ -18,9 +19,12 @@ export default function GearDetailDrawer({ item, dateRange: initialDateRange, on
   const days = daysBetween(dateRange.start, dateRange.end);
   const validDates = dateRange.start && dateRange.end && days > 0;
   const totalAmount = validDates ? computeItemTotal(item, days) : null;
-  const canAdd = validDates && item.rentalDay;
+  const canAdd = validDates && item.rentalDay && selectedLocation;
+
+  const availability = getItemAvailability(item.product);
 
   function handleAdd() {
+    const loc = LOCATIONS.find((l) => l.id === selectedLocation);
     addItem({
       product: item.product,
       category: item.category,
@@ -29,6 +33,7 @@ export default function GearDetailDrawer({ item, dateRange: initialDateRange, on
       imageSource: item.imageSource,
       qty,
       dateRange,
+      pickupLocation: loc,
     });
     onClose();
   }
@@ -42,7 +47,6 @@ export default function GearDetailDrawer({ item, dateRange: initialDateRange, on
           <div style={styles.dragHandle} />
         </div>
         <div style={styles.imageSection}>
-          <AvailabilityBadge product={item.product} hasDateRange={validDates} overlay />
           <button style={styles.closeBtn} onClick={onClose} aria-label="Close">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18" />
@@ -87,6 +91,55 @@ export default function GearDetailDrawer({ item, dateRange: initialDateRange, on
             <div style={{ ...styles.tierBox, ...(validDates && days >= 30 ? styles.tierActive : {}) }}>
               <span style={styles.tierLabel}>Monthly</span>
               <span style={styles.tierPrice}>{item.rentalMonth ? formatPrice(item.rentalMonth) : '—'}</span>
+            </div>
+          </div>
+
+          {/* Location availability */}
+          <div style={styles.locationSection}>
+            <h3 style={styles.locationTitle}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              Pickup Location
+            </h3>
+            <div style={styles.locationList}>
+              {availability.map((loc) => (
+                <button
+                  key={loc.id}
+                  style={{
+                    ...styles.locationRow,
+                    ...(selectedLocation === loc.id ? styles.locationRowSelected : {}),
+                    ...(!loc.available ? styles.locationRowUnavailable : {}),
+                  }}
+                  onClick={() => loc.available && setSelectedLocation(loc.id)}
+                  disabled={!loc.available}
+                >
+                  <div style={styles.locationInfo}>
+                    <span style={{
+                      ...styles.locationName,
+                      ...(!loc.available ? { color: 'var(--color-text-tertiary)' } : {}),
+                    }}>
+                      {loc.name}
+                    </span>
+                    <span style={styles.locationCondition}>
+                      {loc.available ? loc.condition : 'Unavailable'}
+                    </span>
+                  </div>
+                  <div style={styles.locationRight}>
+                    {loc.available ? (
+                      <span style={styles.availableBadge}>In Stock</span>
+                    ) : (
+                      <span style={styles.unavailableBadge}>Out</span>
+                    )}
+                    {selectedLocation === loc.id && (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    )}
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
 
@@ -157,9 +210,13 @@ export default function GearDetailDrawer({ item, dateRange: initialDateRange, on
             disabled={!canAdd}
             onClick={handleAdd}
           >
-            {!canAdd
-              ? item.rentalDay ? 'Select dates to add' : 'Contact store for rate'
-              : `Add to Cart - ${formatPrice((totalAmount || 0) * qty)} total`}
+            {!item.rentalDay
+              ? 'Contact store for rate'
+              : !validDates
+                ? 'Select dates to add'
+                : !selectedLocation
+                  ? 'Select a pickup location'
+                  : `Add to Cart – ${formatPrice((totalAmount || 0) * qty)} total`}
           </button>
         </div>
       </div>
@@ -315,6 +372,78 @@ const styles = {
     fontSize: 'var(--text-lg)',
     fontWeight: 700,
     color: 'var(--color-text)',
+  },
+  locationSection: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 'var(--space-sm)',
+  },
+  locationTitle: {
+    fontSize: 'var(--text-sm)',
+    fontWeight: 700,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 6,
+    color: 'var(--color-text)',
+  },
+  locationList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 6,
+  },
+  locationRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '10px 12px',
+    borderRadius: 'var(--radius-md)',
+    border: '1px solid var(--color-border)',
+    background: 'var(--color-surface-solid)',
+    cursor: 'pointer',
+    transition: 'border-color 0.15s, background 0.15s',
+  },
+  locationRowSelected: {
+    borderColor: 'var(--color-accent)',
+    background: 'var(--color-accent-lighter)',
+  },
+  locationRowUnavailable: {
+    opacity: 0.5,
+    cursor: 'not-allowed',
+  },
+  locationInfo: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 1,
+  },
+  locationName: {
+    fontSize: 'var(--text-sm)',
+    fontWeight: 600,
+    color: 'var(--color-text)',
+  },
+  locationCondition: {
+    fontSize: 'var(--text-xs)',
+    color: 'var(--color-text-tertiary)',
+  },
+  locationRight: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'var(--space-sm)',
+  },
+  availableBadge: {
+    fontSize: '10.5px',
+    fontWeight: 700,
+    padding: '2px 8px',
+    borderRadius: '7px',
+    background: 'rgba(46,125,50,0.10)',
+    color: '#1a5c1e',
+  },
+  unavailableBadge: {
+    fontSize: '10.5px',
+    fontWeight: 700,
+    padding: '2px 8px',
+    borderRadius: '7px',
+    background: 'rgba(220,38,38,0.08)',
+    color: 'var(--color-danger)',
   },
   tabs: {
     display: 'flex',

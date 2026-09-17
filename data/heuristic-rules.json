@@ -9,6 +9,7 @@
     "wirelessMics": 2,
     "wiredMics": 0,
     "mixerChannelsMin": 4,
+    "lighting": false,
     "source": "Outdoor multiplier roughly doubles indoor watts/guest (no room reinforcement, inverse-square loss)."
   },
   {
@@ -21,6 +22,8 @@
     "wirelessMics": 2,
     "wiredMics": 3,
     "mixerChannelsMin": 8,
+    "lighting": true,
+    "lightingFixtures": 6,
     "source": "Wired count assumes live tabla/keyboard/singer setup, matching SJAI Studio's own gig rig."
   },
   {
@@ -33,6 +36,8 @@
     "wirelessMics": 2,
     "wiredMics": 3,
     "mixerChannelsMin": 8,
+    "lighting": true,
+    "lightingFixtures": 8,
     "source": "Cross-checked against SJAI Studio quote Q-2026-19 (2x PS15 tops + 2x 15in subs, 300-400 guests, Aria Banquet Hall)."
   },
   {
@@ -45,10 +50,11 @@
     "wirelessMics": "3-4",
     "wiredMics": 0,
     "mixerChannelsMin": 6,
+    "lighting": false,
     "source": "Speech-only content needs far less power per guest than music -- clarity over output."
   },
   {
-    "eventType": "DJ set / club night",
+    "eventType": "DJ / dance party",
     "guestCount": "100-300",
     "venue": "Indoor",
     "wattsPerGuest": "8-12",
@@ -57,6 +63,52 @@
     "wirelessMics": 1,
     "wiredMics": 0,
     "mixerChannelsMin": 4,
+    "lighting": true,
+    "lightingFixtures": 4,
+    "hazer": true,
     "source": "Higher watts/guest for dance-floor content; add speakers past ~5,000 sq ft or delay stacks beyond 80-100ft throw."
+  },
+  {
+    "eventType": "Live concert",
+    "guestCount": "100-500",
+    "venue": "Indoor",
+    "wattsPerGuest": "10-15",
+    "speakerCount": "2-4",
+    "subCount": "2-4",
+    "wirelessMics": 2,
+    "wiredMics": "6-12",
+    "mixerChannelsMin": 16,
+    "lighting": true,
+    "lightingFixtures": 8,
+    "hazer": true,
+    "source": "Full band setup requires significant channel count and power headroom."
+  },
+  {
+    "eventType": "Product launch",
+    "guestCount": "50-200",
+    "venue": "Indoor",
+    "wattsPerGuest": "5-7",
+    "speakerCount": 2,
+    "subCount": 0,
+    "wirelessMics": 2,
+    "wiredMics": 1,
+    "mixerChannelsMin": 8,
+    "projector": true,
+    "lighting": true,
+    "lightingFixtures": 4,
+    "source": "Needs AV presentation capability plus clean speech reinforcement."
+  },
+  {
+    "eventType": "Town hall meeting",
+    "guestCount": "50-300",
+    "venue": "Indoor",
+    "wattsPerGuest": "3-5",
+    "speakerCount": 2,
+    "subCount": 0,
+    "wirelessMics": "2-4",
+    "wiredMics": "2-4",
+    "mixerChannelsMin": 8,
+    "lighting": false,
+    "source": "Multiple mic positions for panelists plus audience Q&A."
   }
 ]

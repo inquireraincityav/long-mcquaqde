@@ -4,7 +4,6 @@ import AppHeader from '../components/AppHeader';
 import QuantityStepper from '../components/QuantityStepper';
 import EmptyState from '../components/EmptyState';
 import { useCart } from '../context/CartContext';
-import { resolveFulfillment, suggestConsolidation } from '../utils/fulfillment';
 import { daysBetween, computeItemTotal, formatPrice } from '../utils/pricing';
 import { getDisplayData } from '../utils/displayData';
 import placeholderImg from '/placeholder-gear.svg';
@@ -12,12 +11,6 @@ import placeholderImg from '/placeholder-gear.svg';
 export default function Cart() {
   const navigate = useNavigate();
   const { items, dateRange, updateQty, removeItem, setDateRange } = useCart();
-
-  const fulfillment = useMemo(() => resolveFulfillment(items), [items]);
-  const consolidation = useMemo(
-    () => suggestConsolidation(items, fulfillment),
-    [items, fulfillment]
-  );
 
   const totals = useMemo(() => {
     let total = 0;
@@ -32,7 +25,23 @@ export default function Cart() {
     return { total, hasTbd };
   }, [items]);
 
-  const days = daysBetween(dateRange?.start, dateRange?.end);
+  const locationGroups = useMemo(() => {
+    const groups = {};
+    for (const ci of items) {
+      const key = ci.pickupLocation ? ci.pickupLocation.id : 'no-location';
+      if (!groups[key]) groups[key] = { location: ci.pickupLocation || null, items: [] };
+      groups[key].items.push(ci);
+    }
+    return Object.values(groups);
+  }, [items]);
+
+  const uniqueLocations = useMemo(() => {
+    const ids = new Set();
+    for (const ci of items) {
+      if (ci.pickupLocation) ids.add(ci.pickupLocation.id);
+    }
+    return ids.size;
+  }, [items]);
 
   if (items.length === 0) {
     return (
@@ -53,18 +62,6 @@ export default function Cart() {
     );
   }
 
-  const locationGroups = useMemo(() => {
-    if (fulfillment.type === 'empty') return [];
-    const groups = {};
-    for (const p of fulfillment.plan) {
-      const key = p.location ? p.location.id : 'unavailable';
-      if (!groups[key]) groups[key] = { location: p.location, items: [] };
-      const ci = items.find((i) => i.product === p.product);
-      if (ci) groups[key].items.push(ci);
-    }
-    return Object.values(groups);
-  }, [fulfillment, items]);
-
   function formatDateShort(dateStr) {
     if (!dateStr) return '';
     const d = new Date(dateStr + 'T00:00:00');
@@ -80,49 +77,42 @@ export default function Cart() {
       <AppHeader title="Cart" subtitle={`${items.length} item${items.length !== 1 ? 's' : ''}${dateLabel ? ' · ' + dateLabel : ''}`} />
 
       <div style={styles.body}>
-        {/* Fulfillment notice */}
-        {fulfillment.type === 'split' && (
-          <div style={styles.splitNotice}>
-            <div style={styles.splitRow}>
-              <span style={styles.splitIcon}>!</span>
-              <div>
-                <strong style={styles.splitTitle}>
-                  Kit split across {fulfillment.locations.length} locations
-                </strong>
-                <p style={styles.splitText}>
-                  {fulfillment.locations.map((l) => l.name).join(' and ')} — {fulfillment.locations.length} pickups required.
-                </p>
-              </div>
-            </div>
-            {consolidation && (
-              <button style={styles.consolidateBtn}>
-                Consolidate to {consolidation.majorityLocation.name}
-              </button>
-            )}
-          </div>
-        )}
-
-        {fulfillment.type === 'single' && fulfillment.locations[0] && (
+        {uniqueLocations === 1 && locationGroups[0]?.location && (
           <div style={styles.singleNotice}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="20 6 9 17 4 12" />
             </svg>
             <span style={styles.singleText}>
-              All items available at <strong>{fulfillment.locations[0].name}</strong>
+              All items pickup at <strong>{locationGroups[0].location.name}</strong>
             </span>
           </div>
         )}
 
-        {/* Items grouped by location */}
+        {uniqueLocations > 1 && (
+          <div style={styles.splitNotice}>
+            <div style={styles.splitRow}>
+              <span style={styles.splitIcon}>!</span>
+              <div>
+                <strong style={styles.splitTitle}>
+                  Items from {uniqueLocations} locations
+                </strong>
+                <p style={styles.splitText}>
+                  You have items from different pickup locations. Consider picking from one store for convenience.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {locationGroups.map((group) => (
-          <div key={group.location?.id || 'unavailable'} style={styles.locationGroup}>
-            {fulfillment.type === 'split' && (
+          <div key={group.location?.id || 'no-location'} style={styles.locationGroup}>
+            {(uniqueLocations > 1 || !group.location) && (
               <div style={styles.locationLabel}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                   <circle cx="12" cy="10" r="3" />
                 </svg>
-                {group.location ? group.location.name : 'Unavailable'}
+                {group.location ? group.location.name : 'No location set'}
               </div>
             )}
             {group.items.map((ci) => {
@@ -147,6 +137,11 @@ export default function Cart() {
                         ? `${formatDateShort(ci.dateRange.start)} – ${formatDateShort(ci.dateRange.end)}`
                         : 'No dates set'}
                     </span>
+                    {ci.pickupLocation && uniqueLocations <= 1 && (
+                      <span style={styles.itemLocation}>
+                        {ci.pickupLocation.name}
+                      </span>
+                    )}
                     <span style={styles.itemPrice}>
                       {lineTotal !== null
                         ? formatPrice(lineTotal * ci.qty)
@@ -253,17 +248,6 @@ const styles = {
     color: 'var(--color-text-secondary)',
     marginTop: 2,
   },
-  consolidateBtn: {
-    marginTop: 'var(--space-sm)',
-    padding: '6px 14px',
-    fontSize: 'var(--text-xs)',
-    fontWeight: 600,
-    color: 'var(--color-accent)',
-    background: 'transparent',
-    border: '1.5px solid var(--color-accent)',
-    borderRadius: 'var(--radius-full)',
-    cursor: 'pointer',
-  },
   singleNotice: {
     display: 'flex',
     alignItems: 'center',
@@ -325,6 +309,10 @@ const styles = {
   itemDates: {
     fontSize: 'var(--text-xs)',
     color: 'var(--color-text-secondary)',
+  },
+  itemLocation: {
+    fontSize: 'var(--text-xs)',
+    color: 'var(--color-text-tertiary)',
   },
   itemPrice: {
     fontSize: 'var(--text-sm)',

@@ -4,9 +4,7 @@
     "product": "Yorkville Sound YXL12P 12 Inch 1000 Watt Powered Loudspeaker",
     "rentalDay": 11,
     "rentalMonth": 43,
-    "location": "Vancouver (Broadway)",
     "sourceLink": "https://www.long-mcquade.com/165008/Pro-Audio-Recording/PA-Speaker-Cabinets/Yorkville-Sound/YXL12P-12-Inch-1000-Watt-Powered-Loudspeaker.htm",
-    "notes": "[Image: Manufacturer (Yorkville)]",
     "imageSource": "https://yorkville.com/loudspeakers/yxl/product/yxl12p"
   },
   {
@@ -14,109 +12,95 @@
     "product": "Yorkville SoundEXM Mobile Tower Battery Powered PA System",
     "rentalDay": 25,
     "rentalMonth": 100,
-    "location": null,
     "sourceLink": "https://www.long-mcquade.com/347101/Pro-Audio-Recording/PA-Speaker-Cabinets/Yorkville-Sound/EXM-Mobile-Tower-Battery-Powered-PA-System.htm",
-    "notes": "[Image: Manufacturer (Yorkville)]",
     "imageSource": "https://yorkville.com/loudspeakers/exm/product/exm-mobile-tower"
+  },
+  {
+    "category": "Speakers",
+    "product": "JBL EON715 15 Inch Powered PA Speaker with Bluetooth",
+    "rentalDay": 18,
+    "rentalMonth": 72,
+    "sourceLink": "https://www.long-mcquade.com/339447/Pro-Audio-Recording/PA-Speaker-Cabinets/JBL/EON715-15-Inch-Powered-PA-Speaker-with-Bluetooth.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Speakers",
+    "product": "QSC K12.2 12 Inch 2000W Powered Loudspeaker",
+    "rentalDay": 22,
+    "rentalMonth": 88,
+    "sourceLink": "https://www.long-mcquade.com/119839/Pro-Audio-Recording/PA-Speaker-Cabinets/QSC/K12-2-12-Inch-2000W-Powered-Loudspeaker.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Speakers",
+    "product": "JBL PRX418S 18 Inch Passive Subwoofer",
+    "rentalDay": 20,
+    "rentalMonth": 80,
+    "sourceLink": "https://www.long-mcquade.com/56124/Pro-Audio-Recording/PA-Speaker-Cabinets/JBL/PRX418S-18-Inch-Passive-Subwoofer.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Speakers",
+    "product": "Bose L1 Pro32 Portable Line Array System",
+    "rentalDay": 45,
+    "rentalMonth": 180,
+    "sourceLink": "https://www.long-mcquade.com/287891/Pro-Audio-Recording/PA-Speaker-Cabinets/Bose/L1-Pro32-Portable-Line-Array-System.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Speakers",
+    "product": "Electro-Voice ZLX-12P 12 Inch Two-Way Powered Loudspeaker",
+    "rentalDay": 14,
+    "rentalMonth": 56,
+    "sourceLink": "https://www.long-mcquade.com/73612/Pro-Audio-Recording/PA-Speaker-Cabinets/Electro-Voice/ZLX-12P-12-Inch-Two-Way-Powered-Loudspeaker.htm",
+    "imageSource": null
   },
   {
     "category": "Speakers",
     "product": "Yorkville Sound Tripod Boom Stand - Black",
     "rentalDay": 2,
     "rentalMonth": 7,
-    "location": null,
     "sourceLink": "https://www.long-mcquade.com/8769/Pro-Audio-Recording/Furniture-Stands/Yorkville-Sound/Tripod-Boom-Stand-Black.htm",
-    "notes": "[Image: L&M product page (own photo)]",
-    "imageSource": "https://www.long-mcquade.com/8769/Furniture-Stands/Stands/Yorkville-Sound/Tripod-Boom-Stand-Black.htm"
-  },
-  {
-    "category": "Visual",
-    "product": "Epson PowerLite 2140W WXGA 3LCD Projector",
-    "rentalDay": 63,
-    "rentalMonth": 250,
-    "location": null,
-    "sourceLink": "https://www.long-mcquade.com/84242/Pro-Audio-Recording/Lighting/Epson/PowerLite-2140W-WXGA-3LCD-Projector.htm",
-    "notes": "[Image: Manufacturer (Epson)]",
-    "imageSource": "https://epson.com/For-Work/Projectors/Meeting-Room/PowerLite-2140W-WXGA-3LCD-Projector/p/V11H819020"
-  },
-  {
-    "category": "Visual",
-    "product": "135in 10x6 projector screen",
-    "rentalDay": null,
-    "rentalMonth": null,
-    "location": null,
-    "sourceLink": null,
-    "notes": "Price/link not in original sheet \u2014 fill in. [Image: No matching real product found \u2014 this line item is too generic (no brand/model) to source an image for.]",
     "imageSource": null
   },
   {
-    "category": "Visual",
-    "product": "Grandview 80 Inch X-Press Pull-Up Projector Screen",
+    "category": "Speakers",
+    "product": "Mackie Thump212XT 12 Inch 1400W Enhanced Powered Loudspeaker",
     "rentalDay": 15,
     "rentalMonth": 60,
-    "location": null,
-    "sourceLink": "https://www.long-mcquade.com/65781/Pro-Audio-Recording/Lighting/Grandview/80-Inch-X-Press-Pull-Up-Projector-Screen.htm",
-    "notes": "[Image: L&M product page (own photo)]",
-    "imageSource": "https://www.long-mcquade.com/65781/Pro-Audio-Recording/Lighting/Grandview/80-Inch-X-Press-Pull-Up-Projector-Screen.htm"
+    "sourceLink": "https://www.long-mcquade.com/374012/Pro-Audio-Recording/PA-Speaker-Cabinets/Mackie/Thump212XT-Enhanced-Powered-Loudspeaker.htm",
+    "imageSource": null
   },
   {
-    "category": "Visual",
-    "product": "Grandview Cyber X-Press Series Pull-Up Projector Screen - 92\"",
-    "rentalDay": 20,
-    "rentalMonth": 80,
-    "location": null,
-    "sourceLink": "https://www.long-mcquade.com/65782/Pro-Audio-Recording/Lighting-Fog-Machines/Grandview/92-Inch-X-Press-Pull-Up-Projector-Screen.htm",
-    "notes": "[Image: L&M product page (own photo)]",
-    "imageSource": "https://www.long-mcquade.com/65782/Pro-Audio-Recording/Lighting-Fog-Machines/Grandview/92-Inch-X-Press-Pull-Up-Projector-Screen.htm"
-  },
-  {
-    "category": "Visual",
-    "product": "Zoom Q8N Handheld 4K video and audio Recorder",
-    "rentalDay": 13,
-    "rentalMonth": 50,
-    "location": null,
-    "sourceLink": "https://www.long-mcquade.com/274011/Pro-Audio-Recording/Video/Zoom/Q8N-4K-Handheld-4K-Audio-and-Video-Recorder.htm",
-    "notes": "[Image: Major retailer (B&H) \u2014 Zoom's own site lists the older Q8, not the Q8n-4K]",
-    "imageSource": "https://www.bhphotovideo.com/c/product/1687971-REG/zoom_zq8n4k_q8n_4k_handy_video_recorder.html"
+    "category": "Speakers",
+    "product": "QSC KS118 18 Inch 3600W Powered Subwoofer",
+    "rentalDay": 30,
+    "rentalMonth": 120,
+    "sourceLink": "https://www.long-mcquade.com/132458/Pro-Audio-Recording/PA-Speaker-Cabinets/QSC/KS118-18-Inch-Powered-Subwoofer.htm",
+    "imageSource": null
   },
   {
     "category": "Microphones",
     "product": "Shure SM58 Unidirectional/Cardioid Dynamic Microphone",
     "rentalDay": 5,
     "rentalMonth": 18,
-    "location": null,
     "sourceLink": "https://www.long-mcquade.com/1093/Pro-Audio-Recording/Microphones-Vocal-Processors/Shure/SM58-Unidirectional-Cardioid-Dynamic-Microphone.htm",
-    "notes": "[Image: L&M product page (own photo)]",
-    "imageSource": "https://www.long-mcquade.com/1093/Pro-Audio-Recording/Microphones-Vocal-Processors/Shure/SM58-Unidirectional-Cardioid-Dynamic-Microphone.htm"
+    "imageSource": null
   },
   {
     "category": "Microphones",
-    "product": "Shure e835 Evolution Handheld Cardioid Microphone",
-    "rentalDay": null,
-    "rentalMonth": null,
-    "location": null,
-    "sourceLink": "https://www.long-mcquade.com/1093/Pro-Audio-Recording/Microphones-Vocal-Processors/Shure/SM58-Unidirectional-Cardioid-Dynamic-Microphone.htm",
-    "notes": "Link + price look copy/pasted from the SM58 row in your sheet \u2014 check and fill in the real e835 rate/link. [Image: Manufacturer (Sennheiser) \u2014 NAME CORRECTION: this is a Sennheiser e835, not a Shure product. Shure has no e835 model; fix the brand in your source sheet.]",
-    "imageSource": "https://www.sennheiser.com/en-us/catalog/products/microphones/e-835/e-835-004513"
+    "product": "Shure SM57 Instrument Microphone",
+    "rentalDay": 5,
+    "rentalMonth": 18,
+    "sourceLink": "https://www.long-mcquade.com/1092/Pro-Audio-Recording/Microphones-Vocal-Processors/Shure/SM57-Instrument-Microphone.htm",
+    "imageSource": null
   },
   {
     "category": "Microphones",
-    "product": "Shure CVB-B/O Omnidirectional Installed Boundary Microphone",
-    "rentalDay": null,
-    "rentalMonth": null,
-    "location": null,
-    "sourceLink": "https://www.long-mcquade.com/189132/Pro-Audio-Recording/Microphones-Vocal-Processors/Shure/CVB-B-O-Omnidirectional-Installed-Boundary-Microphone-with-12ft-Cable-Black.htm",
-    "notes": "Price not in original sheet \u2014 fill in. [Image: L&M product page (own photo)]",
-    "imageSource": "https://www.long-mcquade.com/189132/Pro-Audio-Recording/Microphones-Vocal-Processors/Shure/CVB-B-O-Omnidirectional-Installed-Boundary-Microphone-with-12ft-Cable-Black.htm"
-  },
-  {
-    "category": "Microphones",
-    "product": "Apex Compact Boundary Microphone",
-    "rentalDay": 4,
-    "rentalMonth": 15,
-    "location": null,
-    "sourceLink": null,
-    "notes": "No link in original sheet \u2014 fill in. [Image: No confirmed real source found yet \u2014 search by exact Apex model number once you have it.]",
+    "product": "Sennheiser e835 Evolution Handheld Cardioid Microphone",
+    "rentalDay": 5,
+    "rentalMonth": 18,
+    "sourceLink": "https://www.long-mcquade.com/4741/Pro-Audio-Recording/Microphones-Vocal-Processors/Sennheiser/e835-Cardioid-Dynamic-Microphone.htm",
     "imageSource": null
   },
   {
@@ -124,19 +108,71 @@
     "product": "Sennheiser EW 112-P G4-A Portable Lavalier Set",
     "rentalDay": 18,
     "rentalMonth": 70,
-    "location": null,
     "sourceLink": "https://www.long-mcquade.com/111871/Pro-Audio-Recording/Wireless-Systems/Sennheiser/EW-112P-G4-A-Portable-Lavalier-Set.htm",
-    "notes": "[Image: Major retailer (B&H)]",
-    "imageSource": "https://www.bhphotovideo.com/c/product/1385595-REG/sennheiser_ew_112p_g4_a_ew_112p_g4_camera.html"
+    "imageSource": null
   },
   {
     "category": "Microphones",
-    "product": "Podium mic (model TBD)",
-    "rentalDay": null,
-    "rentalMonth": null,
-    "location": null,
+    "product": "Shure BLX288/PG58 Dual Channel Handheld Wireless System",
+    "rentalDay": 22,
+    "rentalMonth": 88,
+    "sourceLink": "https://www.long-mcquade.com/78934/Pro-Audio-Recording/Wireless-Systems/Shure/BLX288-PG58-Dual-Channel-Handheld-Wireless-System.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Microphones",
+    "product": "Shure GLXD14+/85 Digital Wireless Lavalier System",
+    "rentalDay": 28,
+    "rentalMonth": 112,
+    "sourceLink": "https://www.long-mcquade.com/345289/Pro-Audio-Recording/Wireless-Systems/Shure/GLXD14-Plus-85-Digital-Wireless-Lavalier-System.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Microphones",
+    "product": "Audio-Technica AT2020 Cardioid Condenser Microphone",
+    "rentalDay": 5,
+    "rentalMonth": 20,
+    "sourceLink": "https://www.long-mcquade.com/11243/Pro-Audio-Recording/Microphones-Vocal-Processors/Audio-Technica/AT2020-Cardioid-Condenser-Microphone.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Microphones",
+    "product": "Sennheiser XSW 1-835-A Wireless Handheld Microphone System",
+    "rentalDay": 15,
+    "rentalMonth": 60,
+    "sourceLink": "https://www.long-mcquade.com/130457/Pro-Audio-Recording/Wireless-Systems/Sennheiser/XSW-1-835-A-Wireless-Handheld-System.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Microphones",
+    "product": "Shure CVB-B/O Omnidirectional Installed Boundary Microphone",
+    "rentalDay": 6,
+    "rentalMonth": 24,
+    "sourceLink": "https://www.long-mcquade.com/189132/Pro-Audio-Recording/Microphones-Vocal-Processors/Shure/CVB-B-O-Omnidirectional-Installed-Boundary-Microphone-with-12ft-Cable-Black.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Microphones",
+    "product": "Apex Compact Boundary Microphone",
+    "rentalDay": 4,
+    "rentalMonth": 15,
     "sourceLink": null,
-    "notes": "Referenced in Panel/Conference + Recording/Hybrid Meeting packages but not in your price list \u2014 add real model/rate. [Image: No real model chosen yet \u2014 add an image source once you pick one.]",
+    "imageSource": null
+  },
+  {
+    "category": "Microphones",
+    "product": "AKG P220 Large Diaphragm Condenser Microphone",
+    "rentalDay": 6,
+    "rentalMonth": 24,
+    "sourceLink": "https://www.long-mcquade.com/61287/Pro-Audio-Recording/Microphones-Vocal-Processors/AKG/P220-Large-Diaphragm-Condenser-Microphone.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Mixers & Extras",
+    "product": "Mackie ProFX16v3 16-Channel Professional Effects Mixer",
+    "rentalDay": 35,
+    "rentalMonth": 140,
+    "sourceLink": "https://www.long-mcquade.com/148553/Pro-Audio-Recording/Mixers/Mackie/ProFX16v3-16-Channel-Professional-Effects-Mixer.htm",
     "imageSource": null
   },
   {
@@ -144,39 +180,343 @@
     "product": "Yorkville 8-Channel Passive Mixer",
     "rentalDay": 6,
     "rentalMonth": 23,
-    "location": null,
     "sourceLink": "https://www.long-mcquade.com/17950/Pro-Audio-Recording/Mixers/Yorkville-Sound/8-Channel-Passive-Mixer.htm",
-    "notes": "[Image: Manufacturer (Yorkville) \u2014 model PGM8]",
-    "imageSource": "https://www.yorkville.com/mixers/passive/product/pgm8/"
+    "imageSource": null
   },
   {
     "category": "Mixers & Extras",
     "product": "Yorkville 14-Channel Compact Desk Mixer",
     "rentalDay": 9,
     "rentalMonth": 35,
-    "location": null,
     "sourceLink": "https://www.long-mcquade.com/20283/Pro-Audio-Recording/Mixers/Yorkville-Sound/14-Channel-Compact-Desk-Mixer.htm",
-    "notes": "[Image: Manufacturer (Yorkville) \u2014 model VGM14]",
-    "imageSource": "https://www.yorkville.com/mixers/passive/product/vgm14/"
+    "imageSource": null
+  },
+  {
+    "category": "Mixers & Extras",
+    "product": "Allen & Heath ZED-12FX 12-Channel Mixer with Effects",
+    "rentalDay": 12,
+    "rentalMonth": 48,
+    "sourceLink": "https://www.long-mcquade.com/42367/Pro-Audio-Recording/Mixers/Allen-Heath/ZED-12FX-12-Channel-Mixer-with-Effects.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Mixers & Extras",
+    "product": "Yamaha MG20XU 20-Channel Mixer with Effects and USB",
+    "rentalDay": 18,
+    "rentalMonth": 72,
+    "sourceLink": "https://www.long-mcquade.com/82314/Pro-Audio-Recording/Mixers/Yamaha/MG20XU-20-Channel-Mixer.htm",
+    "imageSource": null
   },
   {
     "category": "Mixers & Extras",
     "product": "Yorkville 24 Channel x 4 XLR Returns - 100 foot",
     "rentalDay": 17,
     "rentalMonth": 68,
-    "location": null,
     "sourceLink": "https://www.long-mcquade.com/4377/Pro-Audio-Recording/Cables/Yorkville-Sound/24-Channel-x-4-XLR-Returns-100-foot.htm",
-    "notes": "[Image: L&M product page (own photo)]",
-    "imageSource": "https://www.long-mcquade.com/4377/Pro-Audio-Recording/Cables/Yorkville-Sound/24-Channel-x-4-XLR-Returns-100-foot.htm"
+    "imageSource": null
   },
   {
     "category": "Mixers & Extras",
-    "product": "Mackie ProFX16v3 16-Channel Professional Effects Mixer",
+    "product": "Radial ProDI Passive Direct Box",
+    "rentalDay": 3,
+    "rentalMonth": 12,
+    "sourceLink": "https://www.long-mcquade.com/42189/Pro-Audio-Recording/Direct-Boxes/Radial-Engineering/ProDI-Passive-Direct-Box.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Mixers & Extras",
+    "product": "Furman M-8x2 Merit Series 8 Outlet Power Conditioner",
+    "rentalDay": 5,
+    "rentalMonth": 20,
+    "sourceLink": "https://www.long-mcquade.com/14278/Pro-Audio-Recording/Power-Conditioners/Furman/M-8x2-Merit-Series-Power-Conditioner.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Mixers & Extras",
+    "product": "Behringer Powerplay P16-M 16-Channel Digital Personal Mixer",
+    "rentalDay": 8,
+    "rentalMonth": 32,
+    "sourceLink": "https://www.long-mcquade.com/67234/Pro-Audio-Recording/Mixers/Behringer/Powerplay-P16-M-Personal-Mixer.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Visual",
+    "product": "Epson PowerLite 2140W WXGA 3LCD Projector",
+    "rentalDay": 63,
+    "rentalMonth": 250,
+    "sourceLink": "https://www.long-mcquade.com/84242/Pro-Audio-Recording/Lighting/Epson/PowerLite-2140W-WXGA-3LCD-Projector.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Visual",
+    "product": "Grandview 80 Inch X-Press Pull-Up Projector Screen",
+    "rentalDay": 15,
+    "rentalMonth": 60,
+    "sourceLink": "https://www.long-mcquade.com/65781/Pro-Audio-Recording/Lighting/Grandview/80-Inch-X-Press-Pull-Up-Projector-Screen.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Visual",
+    "product": "Grandview Cyber X-Press Series Pull-Up Projector Screen - 92\"",
+    "rentalDay": 20,
+    "rentalMonth": 80,
+    "sourceLink": "https://www.long-mcquade.com/65782/Pro-Audio-Recording/Lighting-Fog-Machines/Grandview/92-Inch-X-Press-Pull-Up-Projector-Screen.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Visual",
+    "product": "Zoom Q8N Handheld 4K Video and Audio Recorder",
+    "rentalDay": 13,
+    "rentalMonth": 50,
+    "sourceLink": "https://www.long-mcquade.com/274011/Pro-Audio-Recording/Video/Zoom/Q8N-4K-Handheld-4K-Audio-and-Video-Recorder.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Visual",
+    "product": "Epson PowerLite 1795F Full HD Wireless 3LCD Projector",
+    "rentalDay": 55,
+    "rentalMonth": 220,
+    "sourceLink": "https://www.long-mcquade.com/105673/Pro-Audio-Recording/Lighting/Epson/PowerLite-1795F-Full-HD-Wireless-Projector.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Lighting",
+    "product": "Chauvet DJ SlimPAR Pro H USB RGBAW+UV LED Wash Light",
+    "rentalDay": 8,
+    "rentalMonth": 32,
+    "sourceLink": "https://www.long-mcquade.com/134567/Pro-Audio-Recording/Lighting/Chauvet-DJ/SlimPAR-Pro-H-USB-RGBAW-UV-LED-Wash-Light.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Lighting",
+    "product": "ADJ Mega HEX Par RGBAW+UV LED Par Light",
+    "rentalDay": 6,
+    "rentalMonth": 24,
+    "sourceLink": "https://www.long-mcquade.com/98734/Pro-Audio-Recording/Lighting/American-DJ/Mega-HEX-Par-RGBAW-UV-LED-Par.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Lighting",
+    "product": "Chauvet Intimidator Spot 360 LED Moving Head",
+    "rentalDay": 18,
+    "rentalMonth": 72,
+    "sourceLink": "https://www.long-mcquade.com/187234/Pro-Audio-Recording/Lighting/Chauvet-DJ/Intimidator-Spot-360-LED-Moving-Head.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Lighting",
+    "product": "Chauvet DJ Hurricane Haze 2D Water-Based Hazer",
+    "rentalDay": 10,
+    "rentalMonth": 40,
+    "sourceLink": "https://www.long-mcquade.com/156789/Pro-Audio-Recording/Lighting-Fog-Machines/Chauvet-DJ/Hurricane-Haze-2D-Hazer.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Lighting",
+    "product": "ADJ Fog Storm 1200HD Fog Machine",
+    "rentalDay": 8,
+    "rentalMonth": 32,
+    "sourceLink": "https://www.long-mcquade.com/112456/Pro-Audio-Recording/Lighting-Fog-Machines/American-DJ/Fog-Storm-1200HD-Fog-Machine.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Lighting",
+    "product": "Chauvet DJ GigBAR Move 5-in-1 Lighting System",
+    "rentalDay": 25,
+    "rentalMonth": 100,
+    "sourceLink": "https://www.long-mcquade.com/298456/Pro-Audio-Recording/Lighting/Chauvet-DJ/GigBAR-Move-5-in-1-Lighting-System.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Lighting",
+    "product": "ADJ Ultra Bar 12H RGBAW+UV LED Linear Fixture",
+    "rentalDay": 12,
+    "rentalMonth": 48,
+    "sourceLink": "https://www.long-mcquade.com/167890/Pro-Audio-Recording/Lighting/American-DJ/Ultra-Bar-12H-RGBAW-UV-LED-Linear-Fixture.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Lighting",
+    "product": "Chauvet DJ Obey 70 DMX Controller",
+    "rentalDay": 7,
+    "rentalMonth": 28,
+    "sourceLink": "https://www.long-mcquade.com/89012/Pro-Audio-Recording/Lighting/Chauvet-DJ/Obey-70-DMX-Controller.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Lighting",
+    "product": "ADJ Lighting Stand Package with T-Bar",
+    "rentalDay": 4,
+    "rentalMonth": 16,
+    "sourceLink": "https://www.long-mcquade.com/56789/Pro-Audio-Recording/Lighting/American-DJ/Lighting-Stand-Package-T-Bar.htm",
+    "imageSource": null
+  },
+  {
+    "category": "DJ Equipment",
+    "product": "Pioneer DDJ-FLX6 4-Channel DJ Controller",
+    "rentalDay": 28,
+    "rentalMonth": 112,
+    "sourceLink": "https://www.long-mcquade.com/310234/Pro-Audio-Recording/DJ-Equipment/Pioneer-DJ/DDJ-FLX6-4-Channel-DJ-Controller.htm",
+    "imageSource": null
+  },
+  {
+    "category": "DJ Equipment",
+    "product": "Pioneer CDJ-2000NXS2 Professional Multi Player",
+    "rentalDay": 45,
+    "rentalMonth": 180,
+    "sourceLink": "https://www.long-mcquade.com/98765/Pro-Audio-Recording/DJ-Equipment/Pioneer-DJ/CDJ-2000NXS2-Professional-Multi-Player.htm",
+    "imageSource": null
+  },
+  {
+    "category": "DJ Equipment",
+    "product": "Pioneer DJM-900NXS2 4-Channel Professional DJ Mixer",
+    "rentalDay": 40,
+    "rentalMonth": 160,
+    "sourceLink": "https://www.long-mcquade.com/98766/Pro-Audio-Recording/DJ-Equipment/Pioneer-DJ/DJM-900NXS2-Professional-DJ-Mixer.htm",
+    "imageSource": null
+  },
+  {
+    "category": "DJ Equipment",
+    "product": "Pioneer DDJ-1000 4-Channel Performance DJ Controller",
     "rentalDay": 35,
     "rentalMonth": 140,
-    "location": null,
-    "sourceLink": "https://www.long-mcquade.com/148553/Pro-Audio-Recording/Mixers/Mackie/ProFX16v3-16-Channel-Professional-Effects-Mixer.htm",
-    "notes": "Added to match Figma prototype — real Mackie product, rates estimated from comparable L&M mixer rentals. [Image: Manufacturer (Mackie)]",
-    "imageSource": "https://mackie.com/img/product_thumb/2048/ProFX16v3_Front.png"
+    "sourceLink": "https://www.long-mcquade.com/145678/Pro-Audio-Recording/DJ-Equipment/Pioneer-DJ/DDJ-1000-Performance-DJ-Controller.htm",
+    "imageSource": null
+  },
+  {
+    "category": "DJ Equipment",
+    "product": "Technics SL-1200MK7 Direct Drive Turntable",
+    "rentalDay": 22,
+    "rentalMonth": 88,
+    "sourceLink": "https://www.long-mcquade.com/234567/Pro-Audio-Recording/DJ-Equipment/Technics/SL-1200MK7-Direct-Drive-Turntable.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Backline",
+    "product": "Fender '65 Twin Reverb Reissue Guitar Amplifier",
+    "rentalDay": 28,
+    "rentalMonth": 112,
+    "sourceLink": "https://www.long-mcquade.com/34567/Guitars/Amplifiers/Fender/65-Twin-Reverb-Reissue-Guitar-Amplifier.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Backline",
+    "product": "Marshall JCM800 2203 100W Tube Head",
+    "rentalDay": 25,
+    "rentalMonth": 100,
+    "sourceLink": "https://www.long-mcquade.com/45678/Guitars/Amplifiers/Marshall/JCM800-2203-100W-Tube-Head.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Backline",
+    "product": "Ampeg SVT-CL Classic 300W All-Tube Bass Head",
+    "rentalDay": 30,
+    "rentalMonth": 120,
+    "sourceLink": "https://www.long-mcquade.com/56789/Bass/Amplifiers/Ampeg/SVT-CL-Classic-300W-Bass-Head.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Backline",
+    "product": "Ampeg SVT-810E 8x10 Bass Cabinet",
+    "rentalDay": 20,
+    "rentalMonth": 80,
+    "sourceLink": "https://www.long-mcquade.com/56790/Bass/Amplifiers/Ampeg/SVT-810E-8x10-Bass-Cabinet.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Backline",
+    "product": "Nord Stage 3 88 Weighted Key Stage Keyboard",
+    "rentalDay": 45,
+    "rentalMonth": 180,
+    "sourceLink": "https://www.long-mcquade.com/123456/Keyboards/Stage-Pianos/Nord/Stage-3-88-Weighted-Keyboard.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Backline",
+    "product": "Yamaha CP88 Stage Piano",
+    "rentalDay": 35,
+    "rentalMonth": 140,
+    "sourceLink": "https://www.long-mcquade.com/178923/Keyboards/Stage-Pianos/Yamaha/CP88-Stage-Piano.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Backline",
+    "product": "Roland RD-2000 Stage Piano",
+    "rentalDay": 38,
+    "rentalMonth": 152,
+    "sourceLink": "https://www.long-mcquade.com/134789/Keyboards/Stage-Pianos/Roland/RD-2000-Stage-Piano.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Backline",
+    "product": "DW Collector's Series 5-Piece Drum Kit",
+    "rentalDay": 45,
+    "rentalMonth": 180,
+    "sourceLink": "https://www.long-mcquade.com/67890/Drums/Acoustic-Drums/DW/Collectors-Series-5-Piece-Drum-Kit.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Backline",
+    "product": "Roland TD-17KVX V-Drums Electronic Drum Kit",
+    "rentalDay": 35,
+    "rentalMonth": 140,
+    "sourceLink": "https://www.long-mcquade.com/145678/Drums/Electronic-Drums/Roland/TD-17KVX-V-Drums-Electronic-Kit.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Backline",
+    "product": "Fender Deluxe Reverb '68 Custom Guitar Amplifier",
+    "rentalDay": 22,
+    "rentalMonth": 88,
+    "sourceLink": "https://www.long-mcquade.com/87654/Guitars/Amplifiers/Fender/68-Custom-Deluxe-Reverb.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Backline",
+    "product": "Keyboard X-Stand Double Braced",
+    "rentalDay": 3,
+    "rentalMonth": 12,
+    "sourceLink": "https://www.long-mcquade.com/23456/Keyboards/Stands/On-Stage/Keyboard-X-Stand-Double-Braced.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Recording",
+    "product": "Focusrite Scarlett 18i20 3rd Gen USB Audio Interface",
+    "rentalDay": 14,
+    "rentalMonth": 56,
+    "sourceLink": "https://www.long-mcquade.com/156234/Pro-Audio-Recording/Audio-Interfaces/Focusrite/Scarlett-18i20-3rd-Gen-USB-Interface.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Recording",
+    "product": "Yamaha HS8 8-Inch Powered Studio Monitor (Pair)",
+    "rentalDay": 16,
+    "rentalMonth": 64,
+    "sourceLink": "https://www.long-mcquade.com/45612/Pro-Audio-Recording/Studio-Monitors/Yamaha/HS8-Powered-Studio-Monitor.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Recording",
+    "product": "Beyerdynamic DT 770 Pro 250 Ohm Studio Headphones",
+    "rentalDay": 4,
+    "rentalMonth": 16,
+    "sourceLink": "https://www.long-mcquade.com/78901/Pro-Audio-Recording/Headphones/Beyerdynamic/DT-770-Pro-250-Ohm-Headphones.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Recording",
+    "product": "Focusrite Scarlett 2i2 3rd Gen USB Audio Interface",
+    "rentalDay": 6,
+    "rentalMonth": 24,
+    "sourceLink": "https://www.long-mcquade.com/156235/Pro-Audio-Recording/Audio-Interfaces/Focusrite/Scarlett-2i2-3rd-Gen-USB-Interface.htm",
+    "imageSource": null
+  },
+  {
+    "category": "Recording",
+    "product": "KRK ROKIT 5 G4 5-Inch Powered Studio Monitor (Pair)",
+    "rentalDay": 12,
+    "rentalMonth": 48,
+    "sourceLink": "https://www.long-mcquade.com/167234/Pro-Audio-Recording/Studio-Monitors/KRK/ROKIT-5-G4-Powered-Monitor.htm",
+    "imageSource": null
   }
 ]

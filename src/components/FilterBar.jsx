@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { LOCATIONS } from '../utils/availability';
 import BottomSheet from './BottomSheet';
 
 const ChevronDown = () => (
@@ -14,26 +13,17 @@ export default function FilterBar({
   categories,
   dateRange,
   onDateRangeChange,
-  location,
-  onLocationChange,
   search,
   onSearchChange,
 }) {
   const [catOpen, setCatOpen] = useState(false);
-  const [locOpen, setLocOpen] = useState(false);
 
   const catOptions = [
     { value: 'all', label: 'All Categories' },
     ...categories.map((c) => ({ value: c, label: c })),
   ];
 
-  const locOptions = [
-    { value: '', label: 'Any nearby' },
-    ...LOCATIONS.map((l) => ({ value: l.id, label: l.name })),
-  ];
-
   const catLabel = category === 'all' ? 'All Categories' : category;
-  const locLabel = location ? LOCATIONS.find((l) => l.id === location)?.name || 'Any nearby' : 'Any nearby';
 
   return (
     <div style={styles.bar}>
@@ -81,15 +71,6 @@ export default function FilterBar({
             aria-label="End date"
           />
         </div>
-
-        <button style={styles.pill} onClick={() => setLocOpen(true)}>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-            <circle cx="12" cy="10" r="3" />
-          </svg>
-          {locLabel}
-          <ChevronDown />
-        </button>
       </div>
 
       <BottomSheet
@@ -99,15 +80,6 @@ export default function FilterBar({
         options={catOptions}
         value={category}
         onChange={onCategoryChange}
-      />
-
-      <BottomSheet
-        open={locOpen}
-        onClose={() => setLocOpen(false)}
-        title="Location"
-        options={locOptions}
-        value={location || ''}
-        onChange={(v) => onLocationChange(v || null)}
       />
     </div>
   );

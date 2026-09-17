@@ -10,10 +10,9 @@ export default function BrowseSearch() {
   const [category, setCategory] = useState('all');
   const [search, setSearch] = useState('');
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
-  const [location, setLocation] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
 
-  const { items, categories } = useInventory({ category, search, location });
+  const { items, categories } = useInventory({ category, search });
 
   const sorted = [...items].sort((a, b) => (a.rentalDay || 999) - (b.rentalDay || 999));
 
@@ -30,8 +29,6 @@ export default function BrowseSearch() {
           categories={categories}
           dateRange={dateRange}
           onDateRangeChange={setDateRange}
-          location={location}
-          onLocationChange={setLocation}
           search={search}
           onSearchChange={setSearch}
         />

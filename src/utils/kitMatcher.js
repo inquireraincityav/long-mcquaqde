@@ -20,16 +20,14 @@ function parseRange(str) {
   return [0, Infinity];
 }
 
-function guestCountInRange(count, rangeStr) {
-  const [min, max] = parseRange(rangeStr);
-  return count >= min && count <= max;
-}
-
 const templateEventMap = {
-  'wedding_ceremony': ['Standard PA Package'],
-  'wedding_reception': ['Standard PA Package'],
-  'corporate_panel': ['Panel/Conference Package'],
-  'dj_set': ['Standard PA Package'],
+  'wedding_ceremony': ['Standard PA Package', 'Wedding Reception Package'],
+  'wedding_reception': ['Wedding Reception Package', 'Standard PA Package'],
+  'corporate_panel': ['Panel/Conference Package', 'Presentation + Projector Package'],
+  'dj_set': ['DJ / Dance Party Package'],
+  'product_launch': ['Presentation + Projector Package'],
+  'town_hall': ['Panel/Conference Package', 'Recording/Hybrid Meeting Package'],
+  'live_concert': ['Live Band Package'],
   'custom': [],
 };
 
@@ -54,15 +52,18 @@ export function matchTemplate(eventType, guestCount, venue) {
   return null;
 }
 
-export function matchHeuristic(eventType, guestCount, venue) {
-  const eventTypeMap = {
-    'wedding_ceremony': 'Wedding ceremony',
-    'wedding_reception': 'Wedding reception',
-    'corporate_panel': 'Corporate speech / panel',
-    'dj_set': 'DJ set / club night',
-    'custom': null,
-  };
+const eventTypeMap = {
+  'wedding_ceremony': 'Wedding ceremony',
+  'wedding_reception': 'Wedding reception',
+  'corporate_panel': 'Corporate speech / panel',
+  'dj_set': 'DJ / dance party',
+  'product_launch': 'Product launch',
+  'town_hall': 'Town hall meeting',
+  'live_concert': 'Live concert',
+  'custom': null,
+};
 
+export function matchHeuristic(eventType, guestCount, venue) {
   const mappedType = eventTypeMap[eventType];
   let candidates = heuristicRules;
 
@@ -102,7 +103,6 @@ export function matchHeuristic(eventType, guestCount, venue) {
 
   const items = buildItemsFromRule(bestRule);
 
-  const [rMin, rMax] = parseRange(bestRule.guestCount);
   const tierLabel =
     bestRule.guestCount === 'Any'
       ? 'any size'
@@ -136,7 +136,7 @@ function buildItemsFromRule(rule) {
       : rule.subCount;
   if (subCount > 0) {
     const subs = inventory.filter(
-      (i) => i.category === 'Speakers' && i.product.includes('Powered')
+      (i) => i.category === 'Speakers' && (i.product.includes('Subwoofer') || i.product.includes('Sub'))
     );
     if (subs.length > 0) {
       items.push({ ...subs[0], qty: subCount });
@@ -168,11 +168,36 @@ function buildItemsFromRule(rule) {
       ? parseInt(rule.mixerChannelsMin)
       : rule.mixerChannelsMin;
   if (mixerMin > 0) {
-    const mixer =
-      mixerMin > 8
-        ? inventory.find((i) => i.product.includes('14-Channel'))
-        : inventory.find((i) => i.product.includes('8-Channel'));
+    let mixer;
+    if (mixerMin >= 16) {
+      mixer = inventory.find((i) => i.product.includes('MG20XU') || i.product.includes('ProFX16'));
+    } else if (mixerMin > 8) {
+      mixer = inventory.find((i) => i.product.includes('14-Channel') || i.product.includes('ZED-12'));
+    } else {
+      mixer = inventory.find((i) => i.product.includes('8-Channel'));
+    }
     if (mixer) items.push({ ...mixer, qty: 1 });
+  }
+
+  if (rule.lighting) {
+    const fixCount = rule.lightingFixtures || 4;
+    const parLight = inventory.find((i) => i.product.includes('SlimPAR'));
+    if (parLight) items.push({ ...parLight, qty: fixCount });
+
+    const lightStand = inventory.find((i) => i.product.includes('Lighting Stand'));
+    if (lightStand) items.push({ ...lightStand, qty: Math.ceil(fixCount / 3) });
+  }
+
+  if (rule.hazer) {
+    const hazer = inventory.find((i) => i.product.includes('Hurricane Haze'));
+    if (hazer) items.push({ ...hazer, qty: 1 });
+  }
+
+  if (rule.projector) {
+    const projector = inventory.find((i) => i.product.includes('Projector') && i.category === 'Visual');
+    const screen = inventory.find((i) => i.product.includes('Projector Screen'));
+    if (projector) items.push({ ...projector, qty: 1 });
+    if (screen) items.push({ ...screen, qty: 1 });
   }
 
   const standCount = items.filter(
@@ -180,7 +205,7 @@ function buildItemsFromRule(rule) {
   ).length;
   const stand = inventory.find((i) => i.product.includes('Tripod Boom'));
   if (stand && standCount > 0) {
-    items.push({ ...stand, qty: Math.min(standCount, 4) });
+    items.push({ ...stand, qty: Math.min(standCount, 6) });
   }
 
   return items;

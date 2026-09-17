@@ -6,10 +6,14 @@ const CATEGORIES = [
   'Microphones',
   'Mixers & Extras',
   'Visual',
+  'Lighting',
+  'DJ Equipment',
+  'Backline',
+  'Recording',
 ];
 
 export default function useInventory(filters = {}) {
-  const { category, search, location } = filters;
+  const { category, search } = filters;
 
   const items = useMemo(() => {
     let result = [...inventory];
@@ -28,7 +32,7 @@ export default function useInventory(filters = {}) {
     }
 
     return result;
-  }, [category, search, location]);
+  }, [category, search]);
 
   const lookup = useMemo(
     () => Object.fromEntries(inventory.map((item) => [item.product, item])),
