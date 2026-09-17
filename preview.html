@@ -1,0 +1,798 @@
+<title>L&M Gear Rental</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+<style>
+:root {
+  --bg: #f4f7f9;
+  --surface: rgba(255,255,255,0.72);
+  --surface-solid: #ffffff;
+  --surface-hover: rgba(255,255,255,0.88);
+  --surface-raised: rgba(255,255,255,0.85);
+  --border: rgba(0,0,0,0.08);
+  --border-strong: rgba(0,0,0,0.14);
+  --text: #1a1a2e;
+  --text-2: #5a5a72;
+  --text-3: #8a8a9a;
+  --accent: #0d9488;
+  --accent-hover: #0f766e;
+  --accent-light: rgba(13,148,136,0.08);
+  --danger: #dc2626;
+  --danger-light: rgba(220,38,38,0.08);
+  --warning: #d97706;
+  --warning-light: rgba(217,119,6,0.08);
+  --success: #059669;
+  --success-light: rgba(5,150,105,0.08);
+  --glass-blur: blur(20px);
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+  --shadow-lg: 0 4px 24px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+  --shadow-xl: 0 8px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  --nav-h: 64px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1117;
+    --surface: rgba(30,32,42,0.82);
+    --surface-solid: #1a1c28;
+    --surface-hover: rgba(40,42,55,0.9);
+    --surface-raised: rgba(35,37,50,0.88);
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --text: #e8e8f0;
+    --text-2: #a0a0b4;
+    --text-3: #6a6a80;
+    --accent: #2dd4bf;
+    --accent-hover: #5eead4;
+    --accent-light: rgba(45,212,191,0.1);
+    --danger-light: rgba(220,38,38,0.15);
+    --warning-light: rgba(217,119,6,0.15);
+    --success-light: rgba(5,150,105,0.15);
+    --shadow: 0 1px 3px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.04);
+    --shadow-lg: 0 4px 24px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04);
+    --shadow-xl: 0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1117;
+  --surface: rgba(30,32,42,0.82);
+  --surface-solid: #1a1c28;
+  --surface-hover: rgba(40,42,55,0.9);
+  --surface-raised: rgba(35,37,50,0.88);
+  --border: rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.14);
+  --text: #e8e8f0;
+  --text-2: #a0a0b4;
+  --text-3: #6a6a80;
+  --accent: #2dd4bf;
+  --accent-hover: #5eead4;
+  --accent-light: rgba(45,212,191,0.1);
+  --danger-light: rgba(220,38,38,0.15);
+  --warning-light: rgba(217,119,6,0.15);
+  --success-light: rgba(5,150,105,0.15);
+  --shadow: 0 1px 3px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.04);
+  --shadow-lg: 0 4px 24px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04);
+  --shadow-xl: 0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  padding-inline: 16px;
+}
+#app { min-height: 100vh; display: flex; flex-direction: column; }
+img { max-width: 100%; display: block; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, select { font-family: inherit; font-size: inherit; color: var(--text); }
+a { color: var(--accent); text-decoration: none; }
+
+.container { max-width: 1200px; margin: 0 auto; width: 100%; }
+
+/* Nav */
+.nav { position: fixed; top: env(safe-area-inset-top, 0px); left: 0; right: 0; height: var(--nav-h); background: var(--surface); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-bottom: 1px solid var(--border); z-index: 100; display: flex; align-items: center; padding: 0 16px; }
+.nav-inner { max-width: 1200px; margin: 0 auto; width: 100%; display: flex; align-items: center; gap: 24px; }
+.logo { display: flex; align-items: center; gap: 8px; cursor: pointer; flex-shrink: 0; }
+.logo-mark { font-weight: 700; font-size: 1.125rem; color: var(--accent); }
+.logo-text { font-weight: 500; font-size: 0.875rem; color: var(--text-2); }
+.nav-links { display: flex; gap: 4px; flex: 1; }
+.nav-link { padding: 6px 14px; border-radius: var(--radius-full); font-size: 0.875rem; font-weight: 500; color: var(--text-2); cursor: pointer; transition: background 0.15s, color 0.15s; }
+.nav-link:hover { background: var(--accent-light); }
+.nav-link.active { background: var(--accent-light); color: var(--accent); }
+.cart-btn { position: relative; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: var(--radius-full); flex-shrink: 0; cursor: pointer; }
+.cart-btn:hover { background: var(--accent-light); }
+.cart-badge { position: absolute; top: 2px; right: 2px; min-width: 18px; height: 18px; border-radius: 9px; background: var(--accent); color: #fff; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+
+/* Page wrapper */
+.page { padding-top: calc(var(--nav-h) + 24px); padding-bottom: 64px; flex: 1; animation: fadeIn 0.2s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Landing */
+.hero { padding: 48px 0; text-align: center; max-width: 720px; margin: 0 auto; }
+.hero h1 { font-size: clamp(1.75rem, 5vw, 2.75rem); font-weight: 700; line-height: 1.15; margin-bottom: 16px; text-wrap: balance; }
+.hero h1 span { color: var(--accent); }
+.hero p { font-size: 1.125rem; color: var(--text-2); line-height: 1.6; margin-bottom: 48px; max-width: 540px; margin-left: auto; margin-right: auto; }
+.paths { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; text-align: left; }
+.path-card { padding: 24px; cursor: pointer; transition: box-shadow 0.2s, transform 0.15s; display: flex; flex-direction: column; gap: 8px; background: var(--surface-raised); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); }
+.path-card:hover { box-shadow: var(--shadow-xl); transform: translateY(-2px); }
+.path-icon { width: 56px; height: 56px; border-radius: var(--radius-md); background: var(--accent-light); display: flex; align-items: center; justify-content: center; margin-bottom: 4px; }
+.path-card h3 { font-size: 1.125rem; font-weight: 600; }
+.path-card p { font-size: 0.875rem; color: var(--text-2); line-height: 1.5; }
+.path-persona { font-size: 11px; font-weight: 500; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+
+/* Filter bar */
+.filter-bar { background: var(--surface); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.filter-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.search-wrap { position: relative; flex: 1 1 200px; min-width: 160px; }
+.search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+.search-wrap input { width: 100%; padding: 8px 12px 8px 34px; border: 1px solid var(--border-strong); border-radius: var(--radius-full); font-size: 0.875rem; background: var(--surface-solid); outline: none; }
+.search-wrap input:focus { border-color: var(--accent); }
+.filter-select { padding: 8px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius-full); font-size: 0.875rem; background: var(--surface-solid); outline: none; cursor: pointer; min-width: 120px; }
+.filter-select:focus { border-color: var(--accent); }
+.date-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.date-label { font-size: 0.875rem; font-weight: 500; color: var(--text-2); white-space: nowrap; }
+.date-input { padding: 6px 10px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); font-size: 0.875rem; background: var(--surface-solid); outline: none; min-width: 130px; }
+.date-input:focus { border-color: var(--accent); }
+.date-sep { color: var(--text-3); font-size: 0.875rem; }
+
+/* Card grid */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; margin-top: 24px; }
+.gear-card { display: flex; flex-direction: column; background: var(--surface); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); overflow: hidden; cursor: pointer; transition: box-shadow 0.2s, transform 0.15s; text-align: left; width: 100%; }
+.gear-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+.card-img { position: relative; aspect-ratio: 4/3; background: var(--surface-solid); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.card-img img { width: 100%; height: 100%; object-fit: contain; padding: 16px; }
+.card-spec { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); color: #fff; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: var(--radius-full); }
+.card-body { padding: 16px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.card-cat { font-size: 11px; font-weight: 500; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; }
+.card-name { font-size: 0.875rem; font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.card-footer { margin-top: auto; padding-top: 8px; display: flex; flex-direction: column; gap: 4px; }
+.price-compact { font-size: 0.875rem; font-weight: 600; }
+.price-tbd { font-size: 0.8125rem; font-weight: 500; color: var(--warning); background: var(--warning-light); padding: 2px 8px; border-radius: var(--radius-full); display: inline-block; }
+
+/* Badges */
+.badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: var(--radius-full); white-space: nowrap; }
+.badge-ok { background: var(--success-light); color: var(--success); }
+.badge-partial { background: var(--warning-light); color: var(--warning); }
+.badge-no { background: var(--danger-light); color: var(--danger); }
+
+/* Drawer overlay */
+.drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 200; display: flex; justify-content: flex-end; animation: fadeIn 0.15s ease-out; }
+.drawer { width: 100%; max-width: 480px; background: var(--surface-solid); height: 100%; overflow-y: auto; position: relative; box-shadow: var(--shadow-xl); }
+.drawer-close { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-full); background: var(--surface); border: 1px solid var(--border); cursor: pointer; z-index: 1; }
+.drawer-img { background: var(--surface-solid); aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; padding: 32px; }
+.drawer-img img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.drawer-content { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.drawer-cat { font-size: 11px; font-weight: 500; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; }
+.drawer-title { font-size: 1.25rem; font-weight: 700; line-height: 1.3; }
+.drawer-section { display: flex; flex-direction: column; gap: 8px; }
+.drawer-section h4 { font-size: 0.75rem; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; }
+.terms-list { list-style: none; display: flex; flex-direction: column; gap: 4px; font-size: 0.875rem; color: var(--text-2); }
+.terms-list li::before { content: "·"; margin-right: 8px; color: var(--text-3); }
+.divider { height: 1px; background: var(--border); margin: 4px 0; }
+.price-tiers { display: flex; gap: 16px; }
+.price-tier { display: flex; align-items: baseline; gap: 2px; }
+.price-amt { font-weight: 600; font-size: 1rem; }
+.price-per { font-size: 0.75rem; color: var(--text-3); }
+.price-total { font-weight: 600; font-size: 1.125rem; }
+.price-dur { font-size: 0.75rem; color: var(--text-3); margin-left: 4px; }
+
+/* Stepper */
+.stepper { display: inline-flex; align-items: center; border: 1px solid var(--border-strong); border-radius: var(--radius-full); overflow: hidden; height: 32px; }
+.stepper button { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 600; color: var(--text-2); }
+.stepper button:disabled { opacity: 0.3; cursor: not-allowed; }
+.stepper span { min-width: 28px; text-align: center; font-size: 0.875rem; font-weight: 600; }
+
+/* Buttons */
+.btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 8px 24px; background: var(--accent); color: #fff; font-weight: 600; font-size: 0.875rem; border-radius: var(--radius-full); transition: background 0.15s, transform 0.1s; height: 40px; cursor: pointer; border: none; }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-primary:active { transform: scale(0.98); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary.lg { height: 48px; font-size: 1rem; width: 100%; }
+.btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 8px 24px; background: var(--surface); color: var(--text); font-weight: 500; font-size: 0.875rem; border: 1px solid var(--border-strong); border-radius: var(--radius-full); transition: background 0.15s; height: 40px; cursor: pointer; }
+.btn-secondary:hover { background: var(--surface-hover); }
+
+/* Empty state */
+.empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 64px 16px; text-align: center; }
+.empty h3 { font-size: 1.125rem; font-weight: 600; margin: 16px 0 8px; }
+.empty p { font-size: 0.875rem; color: var(--text-2); max-width: 360px; margin-bottom: 24px; }
+.empty-links { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+
+/* Cart page */
+.cart-items { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; }
+.cart-item { display: flex; gap: 16px; padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); align-items: center; }
+.cart-item-img { width: 80px; height: 60px; border-radius: var(--radius-sm); background: var(--surface-solid); overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.cart-item-img img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+.cart-item-info { flex: 1; min-width: 0; }
+.cart-item-name { font-size: 0.875rem; font-weight: 600; margin-bottom: 2px; }
+.cart-item-meta { font-size: 0.8125rem; color: var(--text-2); }
+.cart-item-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.cart-item-price { font-weight: 600; font-size: 0.875rem; white-space: nowrap; }
+.remove-btn { color: var(--text-3); font-size: 0.8125rem; cursor: pointer; }
+.remove-btn:hover { color: var(--danger); }
+
+/* Fulfillment block */
+.fulfillment { padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); margin-top: 16px; }
+.fulfillment-title { font-size: 0.75rem; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.fulfillment-msg { font-size: 0.875rem; line-height: 1.5; }
+.fulfillment-icon { display: inline-flex; margin-right: 6px; vertical-align: middle; }
+
+/* Cart summary */
+.cart-summary { padding: 24px; background: var(--surface-raised); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); margin-top: 24px; display: flex; flex-direction: column; gap: 12px; }
+.summary-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; }
+.summary-row.total { font-size: 1.125rem; font-weight: 700; border-top: 1px solid var(--border); padding-top: 12px; }
+.summary-note { font-size: 0.8125rem; color: var(--warning); }
+
+/* Kit Builder */
+.kb-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 24px; }
+.kb-field { display: flex; flex-direction: column; gap: 6px; }
+.kb-field label { font-size: 0.75rem; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; }
+.kb-field select, .kb-field input { padding: 10px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius-md); font-size: 0.875rem; background: var(--surface-solid); outline: none; }
+.kb-field select:focus, .kb-field input:focus { border-color: var(--accent); }
+.kb-results { margin-top: 32px; }
+.kb-label { display: inline-block; font-size: 0.8125rem; font-weight: 500; color: var(--accent); background: var(--accent-light); padding: 4px 12px; border-radius: var(--radius-full); margin-bottom: 16px; }
+.kb-tier { font-size: 0.8125rem; color: var(--text-2); margin-bottom: 16px; }
+.kb-items { display: flex; flex-direction: column; gap: 12px; }
+.kb-item { display: flex; gap: 12px; padding: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); align-items: center; }
+.kb-item-img { width: 56px; height: 42px; border-radius: 6px; background: var(--surface-solid); overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.kb-item-img img { width: 100%; height: 100%; object-fit: contain; padding: 2px; }
+.kb-item-info { flex: 1; min-width: 0; }
+.kb-item-name { font-size: 0.8125rem; font-weight: 600; }
+.kb-item-price { font-size: 0.8125rem; color: var(--text-2); }
+.kb-item-qty { flex-shrink: 0; }
+.kb-total { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-top: 1px solid var(--border); margin-top: 16px; font-weight: 600; }
+.kb-why { margin-top: 16px; }
+.kb-why summary { font-size: 0.8125rem; font-weight: 500; color: var(--accent); cursor: pointer; padding: 8px 0; }
+.kb-why-content { font-size: 0.8125rem; color: var(--text-2); line-height: 1.6; padding: 8px 0; }
+.kb-nomatch { padding: 32px; text-align: center; }
+.kb-nomatch h3 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+.kb-nomatch p { font-size: 0.875rem; color: var(--text-2); max-width: 400px; margin: 0 auto; }
+
+/* Checkout */
+.checkout-grid { display: grid; grid-template-columns: 1fr 360px; gap: 24px; margin-top: 24px; }
+@media (max-width: 768px) { .checkout-grid { grid-template-columns: 1fr; } }
+.form-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.form-section h3 { font-size: 0.875rem; font-weight: 600; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+.form-field { display: flex; flex-direction: column; gap: 4px; }
+.form-field.full { grid-column: 1 / -1; }
+.form-field label { font-size: 0.75rem; font-weight: 500; color: var(--text-2); }
+.form-field input { padding: 10px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); font-size: 0.875rem; background: var(--surface-solid); outline: none; }
+.form-field input:focus { border-color: var(--accent); }
+.order-sidebar { display: flex; flex-direction: column; gap: 16px; }
+.deposit-note { font-size: 0.8125rem; color: var(--text-2); background: var(--accent-light); padding: 12px; border-radius: var(--radius-md); line-height: 1.5; }
+
+/* Confirmation */
+.confirm-page { text-align: center; max-width: 480px; margin: 0 auto; padding-top: 48px; }
+.confirm-icon { width: 64px; height: 64px; border-radius: 50%; background: var(--success-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
+.confirm-page h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
+.confirm-page .order-id { font-size: 1rem; color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; }
+.confirm-page p { color: var(--text-2); margin: 16px 0 32px; }
+
+/* Orders */
+.order-list { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; }
+.order-card { display: flex; gap: 16px; padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); align-items: flex-start; cursor: pointer; transition: box-shadow 0.15s; }
+.order-card:hover { box-shadow: var(--shadow-lg); }
+.order-status { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.order-card-info { flex: 1; }
+.order-card-id { font-weight: 600; font-size: 0.875rem; margin-bottom: 2px; font-variant-numeric: tabular-nums; }
+.order-card-dates { font-size: 0.8125rem; color: var(--text-2); }
+.order-card-items { font-size: 0.8125rem; color: var(--text-3); margin-top: 4px; }
+.order-card-total { font-weight: 600; font-size: 0.875rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Pickup/return */
+.pr-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); padding: 24px; margin-top: 24px; }
+.pr-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 16px; }
+.pr-item { display: flex; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.pr-item:last-child { border-bottom: none; }
+.pr-item-img { width: 48px; height: 36px; border-radius: 4px; background: var(--surface-solid); overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.pr-item-img img { width: 100%; height: 100%; object-fit: contain; }
+.pr-item-name { font-size: 0.8125rem; font-weight: 500; flex: 1; }
+.pr-check { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.pr-check input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); }
+.pr-check label { font-size: 0.8125rem; color: var(--text-2); }
+
+@media (max-width: 600px) {
+  .nav-links { display: none; }
+  .hero h1 { font-size: 1.75rem; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+  .cart-item { flex-wrap: wrap; }
+  .cart-item-actions { width: 100%; justify-content: space-between; }
+}
+</style>
+
+<div id="app"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+
+<script>
+const { createElement: h, useState, useCallback, useReducer, useContext, createContext, useMemo, useEffect, Fragment } = React;
+
+// ─── DATA ───
+const INVENTORY = [{"category":"Speakers","product":"Yorkville Sound YXL12P 12 Inch 1000 Watt Powered Loudspeaker","rentalDay":11,"rentalMonth":43,"location":"Vancouver (Broadway)","imageSource":null,"notes":""},{"category":"Speakers","product":"Yorkville SoundEXM Mobile Tower Battery Powered PA System","rentalDay":25,"rentalMonth":100,"location":null,"imageSource":null,"notes":""},{"category":"Speakers","product":"Yorkville Sound Tripod Boom Stand - Black","rentalDay":2,"rentalMonth":7,"location":null,"imageSource":null,"notes":""},{"category":"Visual","product":"Epson PowerLite 2140W WXGA 3LCD Projector","rentalDay":63,"rentalMonth":250,"location":null,"imageSource":null,"notes":""},{"category":"Visual","product":"135in 10x6 projector screen","rentalDay":null,"rentalMonth":null,"location":null,"imageSource":null,"notes":"Price/link not in original sheet"},{"category":"Visual","product":"Grandview 80 Inch X-Press Pull-Up Projector Screen","rentalDay":15,"rentalMonth":60,"location":null,"imageSource":null,"notes":""},{"category":"Visual","product":"Grandview Cyber X-Press Series Pull-Up Projector Screen - 92\"","rentalDay":20,"rentalMonth":80,"location":null,"imageSource":null,"notes":""},{"category":"Visual","product":"Zoom Q8N Handheld 4K video and audio Recorder","rentalDay":13,"rentalMonth":50,"location":null,"imageSource":null,"notes":""},{"category":"Microphones","product":"Shure SM58 Unidirectional/Cardioid Dynamic Microphone","rentalDay":5,"rentalMonth":18,"location":null,"imageSource":null,"notes":""},{"category":"Microphones","product":"Shure e835 Evolution Handheld Cardioid Microphone","rentalDay":null,"rentalMonth":null,"location":null,"imageSource":null,"notes":"NAME CORRECTION: this is a Sennheiser e835"},{"category":"Microphones","product":"Shure CVB-B/O Omnidirectional Installed Boundary Microphone","rentalDay":null,"rentalMonth":null,"location":null,"imageSource":null,"notes":"Price not in original sheet"},{"category":"Microphones","product":"Apex Compact Boundary Microphone","rentalDay":4,"rentalMonth":15,"location":null,"imageSource":null,"notes":""},{"category":"Microphones","product":"Sennheiser EW 112-P G4-A Portable Lavalier Set","rentalDay":18,"rentalMonth":70,"location":null,"imageSource":null,"notes":""},{"category":"Microphones","product":"Podium mic (model TBD)","rentalDay":null,"rentalMonth":null,"location":null,"imageSource":null,"notes":"No real model chosen yet"},{"category":"Mixers & Extras","product":"Yorkville 8-Channel Passive Mixer","rentalDay":6,"rentalMonth":23,"location":null,"imageSource":null,"notes":""},{"category":"Mixers & Extras","product":"Yorkville 14-Channel Compact Desk Mixer","rentalDay":9,"rentalMonth":35,"location":null,"imageSource":null,"notes":""},{"category":"Mixers & Extras","product":"Yorkville 24 Channel x 4 XLR Returns - 100 foot","rentalDay":17,"rentalMonth":68,"location":null,"imageSource":null,"notes":""}];
+
+const KIT_TEMPLATES = [{"name":"Standard PA Package","description":"A classic 2-speaker PA for small bands, DJs, ceremonies or larger presentations.","items":[{"product":"Yorkville Sound YXL12P 12 Inch 1000 Watt Powered Loudspeaker","qty":2},{"product":"Yorkville 14-Channel Compact Desk Mixer","qty":1},{"product":"Shure SM58 Unidirectional/Cardioid Dynamic Microphone","qty":2},{"product":"Yorkville Sound Tripod Boom Stand - Black","qty":2}],"asQuotedDay":73},{"name":"Panel/Conference Package","description":"Designed for panel discussions, town halls, board meetings.","items":[{"product":"Yorkville Sound YXL12P 12 Inch 1000 Watt Powered Loudspeaker","qty":2},{"product":"Yorkville 14-Channel Compact Desk Mixer","qty":1},{"product":"Shure SM58 Unidirectional/Cardioid Dynamic Microphone","qty":3},{"product":"Podium mic (model TBD)","qty":1},{"product":"Sennheiser EW 112-P G4-A Portable Lavalier Set","qty":1},{"product":"Yorkville Sound Tripod Boom Stand - Black","qty":3}],"asQuotedDay":105},{"name":"Recording/Hybrid Meeting Package","description":"For events that need to be recorded or streamed.","items":[{"product":"Yorkville Sound YXL12P 12 Inch 1000 Watt Powered Loudspeaker","qty":2},{"product":"Yorkville 14-Channel Compact Desk Mixer","qty":1},{"product":"Shure SM58 Unidirectional/Cardioid Dynamic Microphone","qty":1},{"product":"Podium mic (model TBD)","qty":1},{"product":"Sennheiser EW 112-P G4-A Portable Lavalier Set","qty":1},{"product":"Yorkville Sound Tripod Boom Stand - Black","qty":1},{"product":"Zoom Q8N Handheld 4K video and audio Recorder","qty":1}],"asQuotedDay":0},{"name":"Presentation + Projector Package","description":"Slides + sound. Ideal for keynotes, lectures, film nights.","items":[{"product":"Epson PowerLite 2140W WXGA 3LCD Projector","qty":1},{"product":"Grandview Cyber X-Press Series Pull-Up Projector Screen - 92\"","qty":1},{"product":"Yorkville SoundEXM Mobile Tower Battery Powered PA System","qty":1},{"product":"Shure SM58 Unidirectional/Cardioid Dynamic Microphone","qty":1},{"product":"Yorkville Sound Tripod Boom Stand - Black","qty":1}],"asQuotedDay":115}];
+
+const HEURISTIC_RULES = [{"eventType":"Wedding ceremony","guestCount":"< 100","venue":"Outdoor","wattsPerGuest":"10-14","speakerCount":2,"subCount":"0-1","wirelessMics":2,"wiredMics":0,"mixerChannelsMin":4},{"eventType":"Wedding reception","guestCount":"100-200","venue":"Indoor","wattsPerGuest":"7-8","speakerCount":2,"subCount":1,"wirelessMics":2,"wiredMics":3,"mixerChannelsMin":8},{"eventType":"Wedding reception","guestCount":"300-400","venue":"Indoor","wattsPerGuest":"6-8","speakerCount":2,"subCount":2,"wirelessMics":2,"wiredMics":3,"mixerChannelsMin":8},{"eventType":"Corporate speech / panel","guestCount":"Any","venue":"Indoor","wattsPerGuest":"3-5","speakerCount":2,"subCount":0,"wirelessMics":"3-4","wiredMics":0,"mixerChannelsMin":6},{"eventType":"DJ set / club night","guestCount":"100-300","venue":"Indoor","wattsPerGuest":"8-12","speakerCount":"2-4","subCount":2,"wirelessMics":1,"wiredMics":0,"mixerChannelsMin":4}];
+
+const CATEGORIES = ['Speakers','Microphones','Mixers & Extras','Visual'];
+const LOCATIONS = [{id:'van-broadway',name:'Vancouver (Broadway)'},{id:'van-main',name:'Vancouver (Main St)'},{id:'burnaby',name:'Burnaby'},{id:'surrey',name:'Surrey'},{id:'richmond',name:'Richmond'}];
+
+const invLookup = Object.fromEntries(INVENTORY.map(i=>[i.product,i]));
+
+// ─── UTILS ───
+function hashStr(s){let h=0;for(let i=0;i<s.length;i++){h=(h<<5)-h+s.charCodeAt(i);h|=0}return Math.abs(h)}
+function sRand(seed){let x=Math.sin(seed)*10000;return x-Math.floor(x)}
+function getAvail(product){const h=hashStr(product);return LOCATIONS.map((l,i)=>({...l,available:sRand(h+i)>0.25,condition:sRand(h+i+100)>0.5?'New':'Used'}))}
+function availCount(product){return getAvail(product).filter(l=>l.available).length}
+
+function daysBetween(s,e){if(!s||!e)return 0;return Math.max(Math.ceil((new Date(e)-new Date(s))/(864e5)),1)}
+function itemTotal(item,days){if(!item.rentalDay)return null;if(days<=0)return 0;const m=Math.floor(days/30),r=days%30;if(item.rentalMonth&&m>=1)return m*item.rentalMonth+r*item.rentalDay;return days*item.rentalDay}
+function fmtPrice(a){if(a==null)return'Price TBD';return'$'+a.toLocaleString('en-CA')}
+
+function specHighlight(item){const p=item.product;let m=p.match(/(\d+)\s*Watt/i);if(m)return m[1]+'W';m=p.match(/(\d+)-Channel/i);if(m)return m[1]+' Ch';m=p.match(/(\d+)\s*(?:Inch|")/i);if(m)return m[1]+'"';return null}
+
+// Placeholder SVG as data URI
+const PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='none'%3E%3Crect width='200' height='200' rx='12' fill='%23f0f4f8'/%3E%3Cpath d='M70 90 L100 70 L130 90 L130 130 L70 130Z' stroke='%2394a3b8' stroke-width='2' fill='none'/%3E%3Ccircle cx='100' cy='105' r='12' stroke='%2394a3b8' stroke-width='2' fill='none'/%3E%3Ctext x='100' y='165' text-anchor='middle' font-family='Inter,sans-serif' font-size='11' fill='%2394a3b8'%3ENo image%3C/text%3E%3C/svg%3E";
+
+function imgSrc(item){return item.imageSource||PLACEHOLDER}
+
+// ─── FULFILLMENT ───
+function resolveFulfillment(items) {
+  if(!items.length) return {type:'empty',locations:[],plan:[]};
+  const il = items.map(i=>({product:i.product,locs:new Set(getAvail(i.product).filter(l=>l.available).map(l=>l.id))}));
+  const single = LOCATIONS.find(loc=>il.every(i=>i.locs.has(loc.id)));
+  if(single) return {type:'single',locations:[single],plan:items.map(i=>({product:i.product,location:single}))};
+  const plan=[];
+  for(const i of il){
+    const arr=[...i.locs];
+    if(!arr.length){plan.push({product:i.product,location:null});continue}
+    let best=arr[0],bestC=0;
+    for(const id of arr){const c=il.filter(o=>o.locs.has(id)).length;if(c>bestC){bestC=c;best=id}}
+    plan.push({product:i.product,location:LOCATIONS.find(l=>l.id===best)});
+  }
+  const used=[...new Set(plan.filter(p=>p.location).map(p=>p.location.id))].map(id=>LOCATIONS.find(l=>l.id===id));
+  return {type:used.length>1?'split':'single',locations:used,plan};
+}
+
+// ─── KIT MATCHER ───
+function parseRange(s){if(!s)return[0,1e9];if(s==='Any')return[0,1e9];let m=s.match(/(\d+)\s*-\s*(\d+)/);if(m)return[+m[1],+m[2]];m=s.match(/<\s*(\d+)/);if(m)return[0,+m[1]];return[0,1e9]}
+
+const templateMap = {wedding_ceremony:['Standard PA Package'],wedding_reception:['Standard PA Package'],corporate_panel:['Panel/Conference Package'],dj_set:['Standard PA Package'],custom:[]};
+const eventTypeMap = {wedding_ceremony:'Wedding ceremony',wedding_reception:'Wedding reception',corporate_panel:'Corporate speech / panel',dj_set:'DJ set / club night',custom:null};
+
+function buildKit(eventType,guestCount,venue){
+  if(eventType!=='custom'){
+    const cands=templateMap[eventType]||[];
+    for(const n of cands){const t=KIT_TEMPLATES.find(x=>x.name===n);if(t)return{type:'template',template:t,label:'Matches our '+t.name,items:t.items.map(ti=>({...ti,...(invLookup[ti.product]||{})}))}}
+  }
+  // heuristic
+  const mapped=eventTypeMap[eventType];
+  let rules=HEURISTIC_RULES;
+  if(mapped){const f=rules.filter(r=>r.eventType===mapped);if(f.length)rules=f}
+  if(venue){const f=rules.filter(r=>r.venue.toLowerCase()===venue.toLowerCase());if(f.length)rules=f}
+  let best=null,bestD=1e9;
+  for(const r of rules){const[mn,mx]=parseRange(r.guestCount);if(r.guestCount==='Any'){if(!best)best=r;continue}const mid=(mn+mx)/2;const d=Math.abs(guestCount-mid);if(d<bestD){bestD=d;best=r}}
+  if(!best)return{type:'no_match',label:'No close match found',message:'Your event parameters are outside our standard sizing tiers. We recommend contacting a Long & McQuade location directly for a custom quote.',items:[]};
+  const items=[];
+  const sc=typeof best.speakerCount==='string'?parseInt(best.speakerCount):best.speakerCount;
+  const spk=INVENTORY.find(i=>i.category==='Speakers'&&i.product.includes('Loudspeaker'));
+  if(spk&&sc>0)items.push({...spk,qty:sc});
+  const subc=typeof best.subCount==='string'?parseInt(best.subCount):best.subCount;
+  if(subc>0){const s=INVENTORY.find(i=>i.category==='Speakers'&&i.product.includes('Mobile Tower'));if(s)items.push({...s,qty:subc})}
+  const wl=typeof best.wirelessMics==='string'?parseInt(best.wirelessMics):best.wirelessMics;
+  if(wl>0){const w=INVENTORY.find(i=>i.product.includes('Sennheiser EW 112'));if(w)items.push({...w,qty:wl})}
+  const wd=typeof best.wiredMics==='string'?parseInt(best.wiredMics):best.wiredMics;
+  if(wd>0){const w=INVENTORY.find(i=>i.product.includes('SM58'));if(w)items.push({...w,qty:wd})}
+  const mxMin=typeof best.mixerChannelsMin==='string'?parseInt(best.mixerChannelsMin):best.mixerChannelsMin;
+  if(mxMin>0){const mx=mxMin>8?INVENTORY.find(i=>i.product.includes('14-Channel')):INVENTORY.find(i=>i.product.includes('8-Channel'));if(mx)items.push({...mx,qty:1})}
+  const stCt=items.filter(i=>i.category==='Speakers'||i.category==='Microphones').length;
+  const st=INVENTORY.find(i=>i.product.includes('Tripod Boom'));
+  if(st&&stCt>0)items.push({...st,qty:Math.min(stCt,4)});
+  return{type:'heuristic',rule:best,label:'Suggested based on your event size',tierLabel:'Closest match: '+best.guestCount+' guest tier',items};
+}
+
+// ─── CART CONTEXT ───
+const CartCtx = createContext(null);
+const cartInit = {items:[],dateRange:{start:'',end:''},location:null};
+function cartReducer(state,action){
+  switch(action.type){
+    case'ADD_ITEM':{const ex=state.items.find(i=>i.product===action.p.product);if(ex)return{...state,items:state.items.map(i=>i.product===action.p.product?{...i,qty:i.qty+(action.p.qty||1)}:i)};return{...state,items:[...state.items,{...action.p,qty:action.p.qty||1,dateRange:action.p.dateRange||state.dateRange}]}}
+    case'ADD_KIT':{const merged=[...state.items];for(const ki of action.items){const idx=merged.findIndex(i=>i.product===ki.product);if(idx>=0)merged[idx]={...merged[idx],qty:merged[idx].qty+ki.qty};else merged.push({...ki,dateRange:action.dateRange||state.dateRange})}return{...state,items:merged,dateRange:action.dateRange||state.dateRange}}
+    case'REMOVE':return{...state,items:state.items.filter(i=>i.product!==action.product)};
+    case'SET_QTY':return{...state,items:state.items.map(i=>i.product===action.product?{...i,qty:Math.max(1,action.qty)}:i)};
+    case'SET_DATES':return{...state,dateRange:action.dr,items:state.items.map(i=>({...i,dateRange:action.dr}))};
+    case'CLEAR':return cartInit;
+    default:return state;
+  }
+}
+function CartProvider({children}){
+  const[state,dispatch]=useReducer(cartReducer,cartInit);
+  const count=state.items.reduce((s,i)=>s+i.qty,0);
+  const val=useMemo(()=>({...state,count,dispatch}),[state,count]);
+  return h(CartCtx.Provider,{value:val},children);
+}
+function useCart(){return useContext(CartCtx)}
+
+// ─── ORDERS ───
+function useOrders(){
+  const[orders,setOrders]=useState(()=>{try{return JSON.parse(localStorage.getItem('lm-orders')||'[]')}catch{return[]}});
+  const addOrder=useCallback(o=>{const n={id:'Q-'+new Date().getFullYear()+'-'+String(Date.now()).slice(-4),createdAt:new Date().toISOString(),status:'upcoming',...o};setOrders(p=>{const u=[n,...p];try{localStorage.setItem('lm-orders',JSON.stringify(u))}catch{};return u});return n},[]);
+  return{orders,addOrder};
+}
+
+// ─── SVG ICONS ───
+const SearchIcon = h('svg',{width:16,height:16,viewBox:'0 0 24 24',fill:'none',stroke:'var(--text-3)',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},h('circle',{cx:11,cy:11,r:8}),h('line',{x1:21,y1:21,x2:16.65,y2:16.65}));
+const CartIcon = h('svg',{width:20,height:20,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},h('circle',{cx:9,cy:21,r:1}),h('circle',{cx:20,cy:21,r:1}),h('path',{d:'M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6'}));
+const CloseIcon = h('svg',{width:20,height:20,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},h('line',{x1:18,y1:6,x2:6,y2:18}),h('line',{x1:6,y1:6,x2:18,y2:18}));
+const BrowseIcon = h('svg',{width:32,height:32,viewBox:'0 0 24 24',fill:'none',stroke:'var(--accent)',strokeWidth:1.5,strokeLinecap:'round',strokeLinejoin:'round'},h('circle',{cx:11,cy:11,r:8}),h('line',{x1:21,y1:21,x2:16.65,y2:16.65}));
+const KitIcon = h('svg',{width:32,height:32,viewBox:'0 0 24 24',fill:'none',stroke:'var(--accent)',strokeWidth:1.5,strokeLinecap:'round',strokeLinejoin:'round'},h('rect',{x:2,y:7,width:20,height:14,rx:2}),h('path',{d:'M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16'}));
+const CheckIcon = h('svg',{width:28,height:28,viewBox:'0 0 24 24',fill:'none',stroke:'var(--success)',strokeWidth:2.5,strokeLinecap:'round',strokeLinejoin:'round'},h('polyline',{points:'20 6 9 17 4 12'}));
+
+// ─── COMPONENTS ───
+function Stepper({value,onChange,min=1}){
+  return h('div',{className:'stepper'},
+    h('button',{onClick:()=>onChange(Math.max(min,value-1)),disabled:value<=min},'-'),
+    h('span',null,value),
+    h('button',{onClick:()=>onChange(value+1)},'+')
+  );
+}
+
+function AvailBadge({product,hasDates}){
+  if(!hasDates)return null;
+  const c=availCount(product),t=LOCATIONS.length;
+  if(c===0)return h('span',{className:'badge badge-no'},'Not available');
+  if(c===t)return h('span',{className:'badge badge-ok'},'In stock');
+  return h('span',{className:'badge badge-partial'},'Available at '+c+' of '+t+' locations');
+}
+
+function GearCard({item,hasDates,onClick}){
+  const spec=specHighlight(item);
+  return h('button',{className:'gear-card',onClick},
+    h('div',{className:'card-img'},
+      h('img',{src:imgSrc(item),alt:item.product,onError:e=>{e.target.src=PLACEHOLDER}}),
+      spec&&h('span',{className:'card-spec'},spec)
+    ),
+    h('div',{className:'card-body'},
+      h('span',{className:'card-cat'},item.category),
+      h('span',{className:'card-name'},item.product),
+      h('div',{className:'card-footer'},
+        item.rentalDay?h('span',{className:'price-compact'},'from '+fmtPrice(item.rentalDay)+'/day'):h('span',{className:'price-tbd'},'Contact store for rate'),
+        h(AvailBadge,{product:item.product,hasDates})
+      )
+    )
+  );
+}
+
+function GearDrawer({item,dateRange:initDR,onClose}){
+  const cart=useCart();
+  const[dr,setDR]=useState(initDR||{start:'',end:''});
+  const[qty,setQty]=useState(1);
+  const days=daysBetween(dr.start,dr.end);
+  const valid=dr.start&&dr.end&&days>0;
+  const tot=valid?itemTotal(item,days):null;
+  const canAdd=valid&&item.rentalDay;
+  const today=new Date().toISOString().split('T')[0];
+  function handleAdd(){cart.dispatch({type:'ADD_ITEM',p:{product:item.product,category:item.category,rentalDay:item.rentalDay,rentalMonth:item.rentalMonth,imageSource:item.imageSource,qty,dateRange:dr}});onClose()}
+  return h('div',{className:'drawer-overlay',onClick:onClose},
+    h('div',{className:'drawer',onClick:e=>e.stopPropagation()},
+      h('button',{className:'drawer-close',onClick:onClose},CloseIcon),
+      h('div',{className:'drawer-img'},h('img',{src:imgSrc(item),alt:item.product,onError:e=>{e.target.src=PLACEHOLDER}})),
+      h('div',{className:'drawer-content'},
+        h('span',{className:'drawer-cat'},item.category),
+        h('h2',{className:'drawer-title'},item.product),
+        h(AvailBadge,{product:item.product,hasDates:valid}),
+        h('div',{className:'drawer-section'},
+          h('h4',null,'Pricing'),
+          item.rentalDay?
+            valid?h('div',null,h('span',{className:'price-total'},fmtPrice(tot*qty)),h('span',{className:'price-dur'},' for '+days+' day'+(days!==1?'s':'')))
+            :h('div',{className:'price-tiers'},h('div',{className:'price-tier'},h('span',{className:'price-amt'},fmtPrice(item.rentalDay)),h('span',{className:'price-per'},'/day')),item.rentalMonth&&h('div',{className:'price-tier'},h('span',{className:'price-amt'},fmtPrice(item.rentalMonth)),h('span',{className:'price-per'},'/month')))
+          :h('span',{className:'price-tbd'},'Contact store for rate')
+        ),
+        h('div',{className:'drawer-section'},
+          h('h4',null,'Rental terms'),
+          h('ul',{className:'terms-list'},
+            h('li',null,'Valid government-issued ID required at pickup'),
+            h('li',null,'$20 deposit if no credit card on file'),
+            h('li',null,'Hold fee may apply for advance reservations')
+          )
+        ),
+        h('div',{className:'divider'}),
+        h('div',{className:'drawer-section'},
+          h('h4',null,'Rental dates'),
+          h('div',{style:{display:'flex',alignItems:'center',gap:8}},
+            h('input',{type:'date',className:'date-input',value:dr.start,min:today,onChange:e=>setDR({...dr,start:e.target.value})}),
+            h('span',{className:'date-sep'},'–'),
+            h('input',{type:'date',className:'date-input',value:dr.end,min:dr.start||today,onChange:e=>setDR({...dr,end:e.target.value})})
+          )
+        ),
+        h('div',{className:'drawer-section'},
+          h('h4',null,'Quantity'),
+          h(Stepper,{value:qty,onChange:setQty})
+        ),
+        h('button',{className:'btn-primary lg',disabled:!canAdd,onClick:handleAdd},
+          !canAdd?(item.rentalDay?'Select dates to add':'Contact store for rate'):('Add to cart — '+(tot!=null?fmtPrice(tot*qty):'Price TBD'))
+        )
+      )
+    )
+  );
+}
+
+// ─── PAGES ───
+
+function Landing({setPage}){
+  return h('div',{className:'page'},h('div',{className:'container'},
+    h('div',{className:'hero'},
+      h('h1',null,'Professional gear rental,',h('br'),h('span',null,'simplified.')),
+      h('p',null,'Browse Long & McQuade’s rental catalog with real-time availability, or let our kit builder assemble the right gear for your event.'),
+      h('div',{className:'paths'},
+        h('div',{className:'path-card',onClick:()=>setPage('browse')},
+          h('div',{className:'path-icon'},BrowseIcon),
+          h('h3',null,'Browse & Search'),
+          h('p',null,'Find specific gear by category, check availability for your dates, and add items one at a time.'),
+          h('span',{className:'path-persona'},'Great for first-time renters')
+        ),
+        h('div',{className:'path-card',onClick:()=>setPage('kit-builder')},
+          h('div',{className:'path-icon'},KitIcon),
+          h('h3',null,'Kit Builder'),
+          h('p',null,'Tell us your event type and guest count — we’ll suggest a complete gear kit based on real packages.'),
+          h('span',{className:'path-persona'},'Built for event professionals')
+        )
+      )
+    )
+  ));
+}
+
+function BrowsePage(){
+  const[cat,setCat]=useState('all');
+  const[search,setSearch]=useState('');
+  const[dr,setDR]=useState({start:'',end:''});
+  const[sortBy,setSort]=useState('relevance');
+  const[sel,setSel]=useState(null);
+  const today=new Date().toISOString().split('T')[0];
+  const hasDates=!!(dr.start&&dr.end);
+  let items=INVENTORY;
+  if(cat!=='all')items=items.filter(i=>i.category===cat);
+  if(search){const q=search.toLowerCase();items=items.filter(i=>i.product.toLowerCase().includes(q)||i.category.toLowerCase().includes(q))}
+  items=[...items].sort((a,b)=>{if(sortBy==='price-asc')return(a.rentalDay||999)-(b.rentalDay||999);if(sortBy==='price-desc')return(b.rentalDay||0)-(a.rentalDay||0);return 0});
+  return h('div',{className:'page'},h('div',{className:'container'},
+    h('h1',{style:{fontSize:'1.5rem',fontWeight:700}},'Browse Gear'),
+    h('p',{style:{fontSize:'0.875rem',color:'var(--text-2)',marginTop:4}},hasDates?'Showing availability for your selected dates':'Set dates to see real-time availability'),
+    h('div',{className:'filter-bar',style:{marginTop:16}},
+      h('div',{className:'filter-row'},
+        h('div',{className:'search-wrap'},SearchIcon,h('input',{type:'text',placeholder:'Search gear...',value:search,onChange:e=>setSearch(e.target.value)})),
+        h('select',{className:'filter-select',value:cat,onChange:e=>setCat(e.target.value)},h('option',{value:'all'},'All categories'),CATEGORIES.map(c=>h('option',{key:c,value:c},c))),
+        h('select',{className:'filter-select',value:sortBy,onChange:e=>setSort(e.target.value)},h('option',{value:'relevance'},'Sort: Relevance'),h('option',{value:'price-asc'},'Sort: Price (low)'),h('option',{value:'price-desc'},'Sort: Price (high)'))
+      ),
+      h('div',{className:'date-row'},
+        h('span',{className:'date-label'},'Rental dates'),
+        h('input',{type:'date',className:'date-input',value:dr.start,min:today,onChange:e=>setDR({...dr,start:e.target.value})}),
+        h('span',{className:'date-sep'},'–'),
+        h('input',{type:'date',className:'date-input',value:dr.end,min:dr.start||today,onChange:e=>setDR({...dr,end:e.target.value})})
+      )
+    ),
+    items.length===0?h('div',{className:'empty'},h('h3',null,'No items match'),h('p',null,'Try adjusting your filters or dates to see available gear.')):
+    h('div',{className:'grid'},items.map(item=>h(GearCard,{key:item.product,item,hasDates,onClick:()=>setSel(item)}))),
+    sel&&h(GearDrawer,{item:sel,dateRange:hasDates?dr:undefined,onClose:()=>setSel(null)})
+  ));
+}
+
+function KitBuilderPage({setPage}){
+  const cart=useCart();
+  const[eventType,setET]=useState('');
+  const[guests,setGuests]=useState('');
+  const[venue,setVenue]=useState('');
+  const[dr,setDR]=useState({start:'',end:''});
+  const[result,setResult]=useState(null);
+  const today=new Date().toISOString().split('T')[0];
+  const canGenerate=eventType&&guests&&venue&&dr.start&&dr.end;
+  function generate(){if(!canGenerate)return;setResult(buildKit(eventType,parseInt(guests),venue))}
+  function addToCart(){if(!result||!result.items.length)return;cart.dispatch({type:'ADD_KIT',items:result.items,dateRange:dr});setPage('cart')}
+  const days=daysBetween(dr.start,dr.end);
+  return h('div',{className:'page'},h('div',{className:'container',style:{maxWidth:800}},
+    h('h1',{style:{fontSize:'1.5rem',fontWeight:700}},'Kit Builder'),
+    h('p',{style:{fontSize:'0.875rem',color:'var(--text-2)',marginTop:4}},'Tell us about your event and we’ll suggest the right gear.'),
+    h('div',{className:'kb-form'},
+      h('div',{className:'kb-field'},h('label',null,'Event type'),h('select',{value:eventType,onChange:e=>setET(e.target.value)},h('option',{value:''},'Select...'),h('option',{value:'wedding_ceremony'},'Wedding ceremony'),h('option',{value:'wedding_reception'},'Wedding reception'),h('option',{value:'corporate_panel'},'Corporate speech/panel'),h('option',{value:'dj_set'},'DJ set / club night'),h('option',{value:'custom'},'Custom'))),
+      h('div',{className:'kb-field'},h('label',null,'Guest count'),h('input',{type:'number',placeholder:'e.g. 150',value:guests,onChange:e=>setGuests(e.target.value),min:1})),
+      h('div',{className:'kb-field'},h('label',null,'Venue'),h('select',{value:venue,onChange:e=>setVenue(e.target.value)},h('option',{value:''},'Select...'),h('option',{value:'Indoor'},'Indoor'),h('option',{value:'Outdoor'},'Outdoor'))),
+      h('div',{className:'kb-field'},h('label',null,'Dates'),h('div',{style:{display:'flex',gap:8,alignItems:'center'}},h('input',{type:'date',className:'date-input',value:dr.start,min:today,onChange:e=>setDR({...dr,start:e.target.value}),style:{flex:1}}),h('span',{className:'date-sep'},'–'),h('input',{type:'date',className:'date-input',value:dr.end,min:dr.start||today,onChange:e=>setDR({...dr,end:e.target.value}),style:{flex:1}})))
+    ),
+    h('div',{style:{marginTop:24}},h('button',{className:'btn-primary',disabled:!canGenerate,onClick:generate},'Build my kit')),
+    result&&h('div',{className:'kb-results'},
+      result.type==='no_match'?h('div',{className:'kb-nomatch'},h('h3',null,result.label),h('p',null,result.message)):h(Fragment,null,
+        h('span',{className:'kb-label'},result.label),
+        result.tierLabel&&h('div',{className:'kb-tier'},result.tierLabel),
+        h('div',{className:'kb-items'},result.items.map((item,i)=>{
+          const tot=days>0?itemTotal(item,days):null;
+          return h('div',{className:'kb-item',key:i},
+            h('div',{className:'kb-item-img'},h('img',{src:imgSrc(item),alt:item.product,onError:e=>{e.target.src=PLACEHOLDER}})),
+            h('div',{className:'kb-item-info'},h('div',{className:'kb-item-name'},item.product),h('div',{className:'kb-item-price'},item.rentalDay?(tot!=null?fmtPrice(tot*item.qty)+' ('+item.qty+'×'+fmtPrice(item.rentalDay)+'/day)'):fmtPrice(item.rentalDay)+'/day × '+item.qty):'Price to be confirmed')),
+            h('div',{className:'kb-item-qty'},'Qty: '+item.qty)
+          )})),
+        h('div',{className:'kb-total'},h('span',null,'Estimated total'),h('span',null,(()=>{let t=0,tbd=false;result.items.forEach(i=>{if(!i.rentalDay){tbd=true;return}const it=days>0?itemTotal(i,days):i.rentalDay;if(it!=null)t+=it*i.qty;else tbd=true});return fmtPrice(t)+(tbd?' + items TBD':'')})())),
+        result.rule&&h('details',{className:'kb-why'},h('summary',null,'Why this list?'),h('div',{className:'kb-why-content'},result.rule.wattsPerGuest+'W/guest, '+result.rule.venue.toLowerCase()+', '+result.rule.guestCount+' guests. '+result.rule.speakerCount+' speaker(s), '+result.rule.wirelessMics+' wireless + '+result.rule.wiredMics+' wired mic(s), '+result.rule.mixerChannelsMin+'+ mixer channels.')),
+        h('button',{className:'btn-primary lg',style:{marginTop:24},onClick:addToCart},'Add full kit to cart')
+      )
+    )
+  ));
+}
+
+function CartPage({setPage}){
+  const cart=useCart();
+  const{orders,addOrder}=useOrders();
+  const days=daysBetween(cart.dateRange.start,cart.dateRange.end);
+  const ff=resolveFulfillment(cart.items);
+  if(cart.items.length===0)return h('div',{className:'page'},h('div',{className:'container'},h('div',{className:'empty'},h('h3',null,'Your cart is empty'),h('p',null,'Browse gear or use the Kit Builder to get started.'),h('div',{className:'empty-links'},h('button',{className:'btn-secondary',onClick:()=>setPage('browse')},'Browse Gear'),h('button',{className:'btn-secondary',onClick:()=>setPage('kit-builder')},'Kit Builder')))));
+  let total=0,hasTbd=false;
+  cart.items.forEach(ci=>{const inv=invLookup[ci.product];if(!inv||!inv.rentalDay){hasTbd=true;return}const d=daysBetween(ci.dateRange?.start,ci.dateRange?.end);const it=itemTotal(inv,d);if(it!=null)total+=it*ci.qty;else hasTbd=true});
+  return h('div',{className:'page'},h('div',{className:'container',style:{maxWidth:800}},
+    h('h1',{style:{fontSize:'1.5rem',fontWeight:700}},'Cart'),
+    h('p',{style:{fontSize:'0.875rem',color:'var(--text-2)',marginTop:4}},cart.items.length+' item'+(cart.items.length!==1?'s':'')),
+    h('div',{className:'cart-items'},cart.items.map(ci=>{const inv=invLookup[ci.product];const d=daysBetween(ci.dateRange?.start,ci.dateRange?.end);const it=inv?itemTotal(inv,d):null;
+      return h('div',{className:'cart-item',key:ci.product},
+        h('div',{className:'cart-item-img'},h('img',{src:imgSrc(ci),alt:ci.product,onError:e=>{e.target.src=PLACEHOLDER}})),
+        h('div',{className:'cart-item-info'},h('div',{className:'cart-item-name'},ci.product),h('div',{className:'cart-item-meta'},d>0?d+' day'+(d!==1?'s':''):'No dates set')),
+        h('div',{className:'cart-item-actions'},h(Stepper,{value:ci.qty,onChange:q=>cart.dispatch({type:'SET_QTY',product:ci.product,qty:q})}),h('span',{className:'cart-item-price'},it!=null?fmtPrice(it*ci.qty):'TBD'),h('button',{className:'remove-btn',onClick:()=>cart.dispatch({type:'REMOVE',product:ci.product})},'Remove'))
+      )})),
+    h('div',{className:'fulfillment'},
+      h('div',{className:'fulfillment-title'},'Fulfillment'),
+      ff.type==='single'?h('div',{className:'fulfillment-msg'},h('span',{className:'fulfillment-icon',style:{color:'var(--success)'}},'✓'),' All items available at ',h('strong',null,ff.locations[0]?.name),'.'):
+      ff.type==='split'?h('div',{className:'fulfillment-msg'},h('span',{className:'fulfillment-icon',style:{color:'var(--warning)'}},'⚠'),' Your kit will be split across ',h('strong',null,ff.locations.length+' locations'),': ',ff.locations.map(l=>l.name).join(' and '),'. You’ll need '+ff.locations.length+' pickups.'):
+      h('div',{className:'fulfillment-msg'},'Add items to see fulfillment plan.')
+    ),
+    h('div',{className:'cart-summary'},
+      h('div',{className:'summary-row'},h('span',null,'Subtotal'),h('span',null,fmtPrice(total))),
+      hasTbd&&h('div',{className:'summary-note'},'Some items have unconfirmed pricing'),
+      h('div',{className:'summary-row'},h('span',null,'Deposit (est.)'),h('span',null,fmtPrice(Math.round(total*0.15)))),
+      h('div',{className:'summary-row total'},h('span',null,'Estimated total'),h('span',null,fmtPrice(total))),
+      h('button',{className:'btn-primary lg',onClick:()=>setPage('checkout')},'Proceed to checkout')
+    )
+  ));
+}
+
+function CheckoutPage({setPage}){
+  const cart=useCart();
+  const{addOrder}=useOrders();
+  const[confirmed,setConfirmed]=useState(false);
+  const[orderId,setOrderId]=useState('');
+  const days=daysBetween(cart.dateRange.start,cart.dateRange.end);
+  let total=0;cart.items.forEach(ci=>{const inv=invLookup[ci.product];if(!inv||!inv.rentalDay)return;const it=itemTotal(inv,days);if(it!=null)total+=it*ci.qty});
+  const deposit=Math.round(total*0.15);
+  function handlePlace(){
+    const order=addOrder({items:cart.items.map(i=>({product:i.product,qty:i.qty})),dateRange:cart.dateRange,total,deposit});
+    setOrderId(order.id);cart.dispatch({type:'CLEAR'});setConfirmed(true);
+  }
+  if(confirmed)return h('div',{className:'page'},h('div',{className:'container'},h('div',{className:'confirm-page'},
+    h('div',{className:'confirm-icon'},CheckIcon),
+    h('h2',null,'Reservation confirmed'),
+    h('div',{className:'order-id'},orderId),
+    h('p',null,'You’ll receive a confirmation email with pickup details and your itemized quote. Remember to bring valid ID.'),
+    h('div',{style:{display:'flex',gap:12,justifyContent:'center',flexWrap:'wrap'}},
+      h('button',{className:'btn-primary',onClick:()=>setPage('orders')},'View orders'),
+      h('button',{className:'btn-secondary',onClick:()=>setPage('landing')},'Back to home')
+    )
+  )));
+  return h('div',{className:'page'},h('div',{className:'container'},
+    h('h1',{style:{fontSize:'1.5rem',fontWeight:700}},'Checkout'),
+    h('div',{className:'checkout-grid'},
+      h('div',null,
+        h('div',{className:'form-section'},
+          h('h3',null,'Contact information'),
+          h('div',{className:'form-row'},
+            h('div',{className:'form-field'},h('label',null,'First name'),h('input',{type:'text',placeholder:'Jane'})),
+            h('div',{className:'form-field'},h('label',null,'Last name'),h('input',{type:'text',placeholder:'Doe'}))
+          ),
+          h('div',{className:'form-row'},
+            h('div',{className:'form-field full'},h('label',null,'Email'),h('input',{type:'email',placeholder:'jane@example.com'}))
+          ),
+          h('div',{className:'form-row'},
+            h('div',{className:'form-field full'},h('label',null,'Phone'),h('input',{type:'tel',placeholder:'(604) 555-0100'}))
+          )
+        ),
+        h('div',{className:'form-section',style:{marginTop:16}},
+          h('h3',null,'Payment (demo only)'),
+          h('div',{className:'form-row'},
+            h('div',{className:'form-field full'},h('label',null,'Card number'),h('input',{type:'text',placeholder:'4242 4242 4242 4242',maxLength:19}))
+          ),
+          h('div',{className:'form-row'},
+            h('div',{className:'form-field'},h('label',null,'Expiry'),h('input',{type:'text',placeholder:'MM/YY',maxLength:5})),
+            h('div',{className:'form-field'},h('label',null,'CVC'),h('input',{type:'text',placeholder:'123',maxLength:4}))
+          )
+        )
+      ),
+      h('div',{className:'order-sidebar'},
+        h('div',{className:'cart-summary'},
+          h('h3',{style:{fontSize:'0.875rem',fontWeight:600,marginBottom:8}},'Order summary'),
+          cart.items.map(ci=>h('div',{key:ci.product,className:'summary-row'},h('span',null,ci.product.split(' ').slice(0,3).join(' ')+' ×'+ci.qty),h('span',null,invLookup[ci.product]?.rentalDay?fmtPrice(itemTotal(invLookup[ci.product],days)*ci.qty):'TBD'))),
+          h('div',{className:'summary-row',style:{marginTop:8}},h('span',null,'Subtotal'),h('span',null,fmtPrice(total))),
+          h('div',{className:'summary-row'},h('span',null,'Refundable deposit'),h('span',null,fmtPrice(deposit))),
+          h('div',{className:'summary-row total'},h('span',null,'Total'),h('span',null,fmtPrice(total+deposit)))
+        ),
+        h('div',{className:'deposit-note'},'Valid government-issued ID required at pickup. $20 additional deposit if no credit card on file. Hold fee may apply for advance reservations.'),
+        h('button',{className:'btn-primary lg',onClick:handlePlace},'Place reservation')
+      )
+    )
+  ));
+}
+
+function OrdersPage({setPage}){
+  const{orders}=useOrders();
+  if(orders.length===0)return h('div',{className:'page'},h('div',{className:'container'},
+    h('h1',{style:{fontSize:'1.5rem',fontWeight:700}},'Order History'),
+    h('div',{className:'empty'},h('h3',null,'No orders yet'),h('p',null,'Your past and upcoming rentals will appear here.'),h('div',{className:'empty-links'},h('button',{className:'btn-secondary',onClick:()=>setPage('browse')},'Browse Gear')))
+  ));
+  return h('div',{className:'page'},h('div',{className:'container',style:{maxWidth:800}},
+    h('h1',{style:{fontSize:'1.5rem',fontWeight:700}},'Order History'),
+    h('div',{className:'order-list'},orders.map(o=>
+      h('div',{key:o.id,className:'order-card',onClick:()=>setPage('pickup-return')},
+        h('div',{className:'order-card-info'},
+          h('div',{className:'order-card-id'},o.id),
+          h('div',{className:'order-card-dates'},o.dateRange?.start&&o.dateRange?.end?(o.dateRange.start+' → '+o.dateRange.end):'Dates not set'),
+          h('div',{className:'order-card-items'},o.items?.length+' item'+(o.items?.length!==1?'s':''))
+        ),
+        h('span',{className:'badge '+(o.status==='upcoming'?'badge-ok':'badge-partial')},o.status),
+        h('span',{className:'order-card-total'},o.total?fmtPrice(o.total):'')
+      )
+    )),
+    h('div',{style:{marginTop:24}},h('button',{className:'btn-secondary',onClick:()=>setPage('browse')},'Browse more gear'))
+  ));
+}
+
+function PickupReturnPage({setPage}){
+  const{orders}=useOrders();
+  const order=orders[0];
+  const[checks,setChecks]=useState({});
+  if(!order)return h('div',{className:'page'},h('div',{className:'container'},
+    h('h1',{style:{fontSize:'1.5rem',fontWeight:700}},'Pickup & Return'),
+    h('div',{className:'empty'},h('h3',null,'No upcoming pickups'),h('p',null,'Place a rental order to see your pickup details here.'),h('div',{className:'empty-links'},h('button',{className:'btn-secondary',onClick:()=>setPage('browse')},'Browse Gear')))
+  ));
+  const allChecked=order.items?.every((_,i)=>checks[i]);
+  return h('div',{className:'page'},h('div',{className:'container',style:{maxWidth:600}},
+    h('h1',{style:{fontSize:'1.5rem',fontWeight:700}},'Pickup & Return'),
+    h('p',{style:{fontSize:'0.875rem',color:'var(--text-2)',marginTop:4}},'Condition check-in for order '+order.id),
+    h('div',{className:'pr-card'},
+      h('h3',null,'Items for pickup'),
+      order.items?.map((oi,i)=>{const inv=invLookup[oi.product];return h('div',{className:'pr-item',key:i},
+        h('div',{className:'pr-item-img'},h('img',{src:inv?imgSrc(inv):PLACEHOLDER,alt:oi.product,onError:e=>{e.target.src=PLACEHOLDER}})),
+        h('span',{className:'pr-item-name'},oi.product+' ×'+oi.qty),
+        h('div',{className:'pr-check'},h('input',{type:'checkbox',id:'chk'+i,checked:!!checks[i],onChange:()=>setChecks(p=>({...p,[i]:!p[i]}))}),h('label',{htmlFor:'chk'+i},'Good condition'))
+      )})
+    ),
+    h('button',{className:'btn-primary lg',style:{marginTop:24},disabled:!allChecked,onClick:()=>{alert('Check-in complete! (Demo)')}},'Confirm pickup'),
+    !allChecked&&h('p',{style:{fontSize:'0.8125rem',color:'var(--text-3)',marginTop:8,textAlign:'center'}},'Confirm each item is in good condition to proceed')
+  ));
+}
+
+// ─── APP SHELL ───
+function App(){
+  const[page,setPage]=useState('landing');
+  const cart=useCart();
+  return h(Fragment,null,
+    h('nav',{className:'nav'},h('div',{className:'nav-inner'},
+      h('div',{className:'logo',onClick:()=>setPage('landing')},h('span',{className:'logo-mark'},'L&M'),h('span',{className:'logo-text'},'Gear Rental')),
+      h('div',{className:'nav-links'},
+        h('button',{className:'nav-link'+(page==='browse'?' active':''),onClick:()=>setPage('browse')},'Browse'),
+        h('button',{className:'nav-link'+(page==='kit-builder'?' active':''),onClick:()=>setPage('kit-builder')},'Kit Builder'),
+        h('button',{className:'nav-link'+(page==='orders'?' active':''),onClick:()=>setPage('orders')},'Orders')
+      ),
+      h('button',{className:'cart-btn',onClick:()=>setPage('cart')},CartIcon,cart.count>0&&h('span',{className:'cart-badge'},cart.count))
+    )),
+    page==='landing'&&h(Landing,{setPage}),
+    page==='browse'&&h(BrowsePage,{setPage}),
+    page==='kit-builder'&&h(KitBuilderPage,{setPage}),
+    page==='cart'&&h(CartPage,{setPage}),
+    page==='checkout'&&h(CheckoutPage,{setPage}),
+    page==='orders'&&h(OrdersPage,{setPage}),
+    page==='pickup-return'&&h(PickupReturnPage,{setPage})
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('app')).render(h(CartProvider,null,h(App)));
+</script>
