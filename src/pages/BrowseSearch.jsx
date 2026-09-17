@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import AppHeader from '../components/AppHeader';
 import FilterBar from '../components/FilterBar';
 import GearCard from '../components/GearCard';
 import GearDetailDrawer from '../components/GearDetailDrawer';
@@ -10,31 +11,19 @@ export default function BrowseSearch() {
   const [search, setSearch] = useState('');
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
   const [location, setLocation] = useState(null);
-  const [sortBy, setSortBy] = useState('relevance');
   const [selectedItem, setSelectedItem] = useState(null);
 
   const { items, categories } = useInventory({ category, search, location });
 
-  const sorted = [...items].sort((a, b) => {
-    if (sortBy === 'price-asc') return (a.rentalDay || 999) - (b.rentalDay || 999);
-    if (sortBy === 'price-desc') return (b.rentalDay || 0) - (a.rentalDay || 0);
-    return 0;
-  });
+  const sorted = [...items].sort((a, b) => (a.rentalDay || 999) - (b.rentalDay || 999));
 
   const hasDateRange = !!(dateRange.start && dateRange.end);
 
   return (
-    <div className="page-enter" style={styles.page}>
-      <div className="container">
-        <div style={styles.header}>
-          <h1 style={styles.title}>Browse Gear</h1>
-          <p style={styles.subtitle}>
-            {hasDateRange
-              ? `Showing availability for your selected dates`
-              : 'Set dates to see real-time availability'}
-          </p>
-        </div>
+    <div className="page-enter">
+      <AppHeader />
 
+      <div style={styles.filterSection}>
         <FilterBar
           category={category}
           onCategoryChange={setCategory}
@@ -45,9 +34,16 @@ export default function BrowseSearch() {
           onLocationChange={setLocation}
           search={search}
           onSearchChange={setSearch}
-          sortBy={sortBy}
-          onSortChange={setSortBy}
         />
+      </div>
+
+      <div style={styles.body}>
+        <div style={styles.sectionHeader}>
+          <h2 style={styles.sectionTitle}>
+            {category === 'all' ? 'All Gear' : category}
+          </h2>
+          <span style={styles.count}>{sorted.length} items</span>
+        </div>
 
         {sorted.length === 0 ? (
           <EmptyState
@@ -80,25 +76,31 @@ export default function BrowseSearch() {
 }
 
 const styles = {
-  page: {
-    padding: 'var(--space-lg) 0 var(--space-3xl)',
+  filterSection: {
+    marginTop: 'var(--space-md)',
   },
-  header: {
-    marginBottom: 'var(--space-lg)',
+  body: {
+    padding: '0 var(--space-md)',
+    marginTop: 'var(--space-lg)',
+    paddingBottom: 'var(--space-lg)',
   },
-  title: {
-    fontSize: 'var(--text-2xl)',
+  sectionHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    marginBottom: 'var(--space-md)',
+  },
+  sectionTitle: {
+    fontSize: 'var(--text-xl)',
     fontWeight: 700,
   },
-  subtitle: {
+  count: {
     fontSize: 'var(--text-sm)',
     color: 'var(--color-text-secondary)',
-    marginTop: 'var(--space-xs)',
   },
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+    gridTemplateColumns: 'repeat(2, 1fr)',
     gap: 'var(--space-md)',
-    marginTop: 'var(--space-lg)',
   },
 };

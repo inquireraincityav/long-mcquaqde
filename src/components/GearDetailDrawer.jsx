@@ -1,21 +1,20 @@
 import { useState } from 'react';
-import PriceDisplay from './PriceDisplay';
 import QuantityStepper from './QuantityStepper';
-import DateRangePicker from './DateRangePicker';
 import AvailabilityBadge from './AvailabilityBadge';
 import { useCart } from '../context/CartContext';
-import { daysBetween, computeItemTotal } from '../utils/pricing';
+import { daysBetween, computeItemTotal, formatPrice } from '../utils/pricing';
+import { getDisplayData, getWeeklyRate } from '../utils/displayData';
 import placeholderImg from '/placeholder-gear.svg';
 
 export default function GearDetailDrawer({ item, dateRange: initialDateRange, onClose }) {
   const { addItem } = useCart();
-  const [dateRange, setDateRange] = useState(
-    initialDateRange || { start: '', end: '' }
-  );
+  const [dateRange, setDateRange] = useState(initialDateRange || { start: '', end: '' });
   const [qty, setQty] = useState(1);
+  const [activeTab, setActiveTab] = useState('specs');
 
   if (!item) return null;
 
+  const display = getDisplayData(item.product);
   const days = daysBetween(dateRange.start, dateRange.end);
   const validDates = dateRange.start && dateRange.end && days > 0;
   const totalAmount = validDates ? computeItemTotal(item, days) : null;
@@ -34,60 +33,118 @@ export default function GearDetailDrawer({ item, dateRange: initialDateRange, on
     onClose();
   }
 
+  const weeklyRate = getWeeklyRate(item.rentalDay);
+
   return (
     <div style={styles.overlay} onClick={onClose}>
       <div style={styles.drawer} onClick={(e) => e.stopPropagation()}>
-        <button style={styles.closeBtn} onClick={onClose} aria-label="Close">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
-
         <div style={styles.imageSection}>
+          <AvailabilityBadge product={item.product} hasDateRange={validDates} overlay />
+          <button style={styles.closeBtn} onClick={onClose} aria-label="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
           <img
             src={item.imageSource || placeholderImg}
-            alt={item.product}
+            alt={display.shortName}
             style={styles.image}
             onError={(e) => { e.target.src = placeholderImg; }}
           />
         </div>
 
         <div style={styles.content}>
-          <span style={styles.category}>{item.category}</span>
-          <h2 style={styles.title}>{item.product}</h2>
+          <h2 style={styles.title}>{display.shortName}</h2>
 
-          <AvailabilityBadge product={item.product} hasDateRange={validDates} />
-
-          <div style={styles.section}>
-            <h4 style={styles.sectionTitle}>Pricing</h4>
-            <PriceDisplay
-              rentalDay={item.rentalDay}
-              rentalMonth={item.rentalMonth}
-              totalDays={validDates ? days : undefined}
-              totalAmount={totalAmount}
-              qty={qty}
-            />
+          <div style={styles.metaRow}>
+            {display.sku && <span style={styles.sku}>SKU: {display.sku}</span>}
+            {display.condition && display.condition !== 'TBD' && (
+              <span style={styles.conditionBadge}>{display.condition}</span>
+            )}
           </div>
 
-          <div style={styles.section}>
-            <h4 style={styles.sectionTitle}>Rental terms</h4>
+          {display.rating && (
+            <div style={styles.ratingRow}>
+              <span style={styles.stars}>{'★'.repeat(Math.round(display.rating))}</span>
+              <span style={styles.ratingNum}>{display.rating}</span>
+              <span style={styles.reviewCount}>({display.reviews} reviews)</span>
+            </div>
+          )}
+
+          <div style={styles.priceTiers}>
+            <div style={{ ...styles.tierBox, ...(validDates && days <= 6 ? styles.tierActive : {}) }}>
+              <span style={styles.tierLabel}>Daily</span>
+              <span style={styles.tierPrice}>{item.rentalDay ? formatPrice(item.rentalDay) : '—'}</span>
+            </div>
+            <div style={{ ...styles.tierBox, ...(validDates && days > 6 && days < 30 ? styles.tierActive : {}) }}>
+              <span style={styles.tierLabel}>Weekly</span>
+              <span style={styles.tierPrice}>{weeklyRate ? formatPrice(weeklyRate) : '—'}</span>
+            </div>
+            <div style={{ ...styles.tierBox, ...(validDates && days >= 30 ? styles.tierActive : {}) }}>
+              <span style={styles.tierLabel}>Monthly</span>
+              <span style={styles.tierPrice}>{item.rentalMonth ? formatPrice(item.rentalMonth) : '—'}</span>
+            </div>
+          </div>
+
+          <div style={styles.tabs}>
+            <button
+              style={{ ...styles.tab, ...(activeTab === 'specs' ? styles.tabActive : {}) }}
+              onClick={() => setActiveTab('specs')}
+            >
+              Specifications
+            </button>
+            <button
+              style={{ ...styles.tab, ...(activeTab === 'terms' ? styles.tabActive : {}) }}
+              onClick={() => setActiveTab('terms')}
+            >
+              Rental Terms
+            </button>
+          </div>
+
+          {activeTab === 'specs' ? (
+            <div style={styles.specsGrid}>
+              {Object.entries(display.detailSpecs).map(([key, val]) => (
+                <div key={key} style={styles.specItem}>
+                  <span style={styles.specLabel}>{key}</span>
+                  <span style={styles.specValue}>{val}</span>
+                </div>
+              ))}
+            </div>
+          ) : (
             <ul style={styles.terms}>
               <li>Valid government-issued ID required at pickup</li>
               <li>$20 deposit if no credit card on file</li>
               <li>Hold fee may apply for advance reservations</li>
+              <li>Damage review within 48 hrs of return</li>
             </ul>
-          </div>
+          )}
+        </div>
 
-          <div style={styles.divider} />
-
-          <div style={styles.section}>
-            <h4 style={styles.sectionTitle}>Rental dates</h4>
-            <DateRangePicker value={dateRange} onChange={setDateRange} />
-          </div>
-
-          <div style={styles.section}>
-            <h4 style={styles.sectionTitle}>Quantity</h4>
+        <div style={styles.bottomBar}>
+          <div style={styles.dateQtyRow}>
+            <div style={styles.dateDisplay}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              <input
+                type="date"
+                value={dateRange.start || ''}
+                onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
+                style={styles.dateInput}
+              />
+              <span style={{ color: 'var(--color-text-tertiary)' }}>-</span>
+              <input
+                type="date"
+                value={dateRange.end || ''}
+                min={dateRange.start || ''}
+                onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
+                style={styles.dateInput}
+              />
+            </div>
             <QuantityStepper value={qty} onChange={setQty} />
           </div>
 
@@ -98,10 +155,8 @@ export default function GearDetailDrawer({ item, dateRange: initialDateRange, on
             onClick={handleAdd}
           >
             {!canAdd
-              ? item.rentalDay
-                ? 'Select dates to add'
-                : 'Contact store for rate'
-              : `Add to cart — ${totalAmount !== null ? `$${(totalAmount * qty).toLocaleString()}` : 'Price TBD'}`}
+              ? item.rentalDay ? 'Select dates to add' : 'Contact store for rate'
+              : `Add to Cart - ${formatPrice((totalAmount || 0) * qty)} total`}
           </button>
         </div>
       </div>
@@ -118,95 +173,218 @@ const styles = {
     WebkitBackdropFilter: 'blur(4px)',
     zIndex: 200,
     display: 'flex',
-    justifyContent: 'flex-end',
-    animation: 'fadeIn 0.15s ease-out',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
   },
   drawer: {
     width: '100%',
-    maxWidth: 480,
+    maxWidth: 'var(--max-width)',
     background: 'var(--color-surface-solid)',
-    height: '100%',
+    maxHeight: '95dvh',
     overflowY: 'auto',
     position: 'relative',
+    borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0',
     boxShadow: 'var(--glass-shadow-xl)',
+    display: 'flex',
+    flexDirection: 'column',
   },
   closeBtn: {
     position: 'absolute',
     top: 'var(--space-md)',
     right: 'var(--space-md)',
-    width: 36,
-    height: 36,
+    width: 32,
+    height: 32,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 'var(--radius-full)',
-    background: 'var(--color-surface)',
+    background: 'rgba(255,255,255,0.85)',
     border: '1px solid var(--color-border)',
     cursor: 'pointer',
     zIndex: 1,
     color: 'var(--color-text-secondary)',
   },
   imageSection: {
-    background: '#f0f4f8',
-    aspectRatio: '4/3',
+    position: 'relative',
+    background: '#f0f0ea',
+    aspectRatio: '16/10',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 'var(--space-xl)',
+    overflow: 'hidden',
+    borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0',
   },
   image: {
-    maxWidth: '100%',
-    maxHeight: '100%',
-    objectFit: 'contain',
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
   },
   content: {
-    padding: 'var(--space-lg)',
+    padding: 'var(--space-lg) var(--space-md)',
     display: 'flex',
     flexDirection: 'column',
     gap: 'var(--space-md)',
-  },
-  category: {
-    fontSize: '11px',
-    fontWeight: 500,
-    color: 'var(--color-text-tertiary)',
-    textTransform: 'uppercase',
-    letterSpacing: '0.05em',
+    flex: 1,
   },
   title: {
     fontSize: 'var(--text-xl)',
     fontWeight: 700,
     lineHeight: 1.3,
   },
-  section: {
+  metaRow: {
     display: 'flex',
-    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 'var(--space-sm)',
+    marginTop: -8,
+  },
+  sku: {
+    fontSize: 'var(--text-xs)',
+    color: 'var(--color-text-tertiary)',
+  },
+  conditionBadge: {
+    fontSize: '11px',
+    fontWeight: 600,
+    padding: '2px 8px',
+    borderRadius: 'var(--radius-full)',
+    background: 'var(--color-success-light)',
+    color: 'var(--color-success)',
+  },
+  ratingRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'var(--space-xs)',
+    marginTop: -8,
+  },
+  stars: {
+    color: '#facc15',
+    fontSize: 'var(--text-sm)',
+    letterSpacing: 1,
+  },
+  ratingNum: {
+    fontWeight: 600,
+    fontSize: 'var(--text-sm)',
+  },
+  reviewCount: {
+    fontSize: 'var(--text-xs)',
+    color: 'var(--color-text-tertiary)',
+  },
+  priceTiers: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr 1fr',
     gap: 'var(--space-sm)',
   },
-  sectionTitle: {
+  tierBox: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 2,
+    padding: 'var(--space-sm) var(--space-xs)',
+    borderRadius: 'var(--radius-md)',
+    border: '1px solid var(--color-border)',
+    background: 'var(--color-surface-solid)',
+  },
+  tierActive: {
+    borderColor: 'var(--color-accent)',
+    background: 'var(--color-accent-lighter)',
+  },
+  tierLabel: {
     fontSize: 'var(--text-xs)',
+    color: 'var(--color-text-secondary)',
+  },
+  tierPrice: {
+    fontSize: 'var(--text-lg)',
+    fontWeight: 700,
+    color: 'var(--color-text)',
+  },
+  tabs: {
+    display: 'flex',
+    gap: 0,
+    borderRadius: 'var(--radius-md)',
+    overflow: 'hidden',
+    border: '1px solid var(--color-border)',
+  },
+  tab: {
+    flex: 1,
+    padding: '10px',
+    fontSize: 'var(--text-sm)',
+    fontWeight: 500,
+    color: 'var(--color-text-secondary)',
+    background: 'var(--color-surface-solid)',
+    cursor: 'pointer',
+    border: 'none',
+    transition: 'background 0.15s, color 0.15s',
+  },
+  tabActive: {
+    background: 'var(--color-surface)',
+    color: 'var(--color-text)',
     fontWeight: 600,
+  },
+  specsGrid: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: 'var(--space-md)',
+  },
+  specItem: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 2,
+  },
+  specLabel: {
+    fontSize: 'var(--text-xs)',
     color: 'var(--color-text-tertiary)',
-    textTransform: 'uppercase',
-    letterSpacing: '0.05em',
+    fontStyle: 'italic',
+  },
+  specValue: {
+    fontSize: 'var(--text-base)',
+    fontWeight: 700,
   },
   terms: {
     listStyle: 'none',
     padding: 0,
     display: 'flex',
     flexDirection: 'column',
-    gap: 'var(--space-xs)',
+    gap: 'var(--space-sm)',
     fontSize: 'var(--text-sm)',
     color: 'var(--color-text-secondary)',
   },
-  divider: {
-    height: 1,
-    background: 'var(--color-border)',
-    margin: 'var(--space-sm) 0',
+  bottomBar: {
+    position: 'sticky',
+    bottom: 0,
+    padding: 'var(--space-md)',
+    background: 'var(--color-surface-solid)',
+    borderTop: '1px solid var(--color-border)',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 'var(--space-sm)',
+  },
+  dateQtyRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 'var(--space-sm)',
+  },
+  dateDisplay: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'var(--space-xs)',
+    padding: '8px 12px',
+    borderRadius: 'var(--radius-full)',
+    border: '1px solid var(--color-border)',
+    background: 'var(--color-surface-solid)',
+    flex: 1,
+  },
+  dateInput: {
+    border: 'none',
+    background: 'transparent',
+    fontSize: 'var(--text-xs)',
+    color: 'var(--color-text)',
+    outline: 'none',
+    width: 85,
+    padding: 0,
   },
   addBtn: {
     width: '100%',
-    marginTop: 'var(--space-sm)',
-    height: 48,
     fontSize: 'var(--text-base)',
+    fontWeight: 700,
   },
 };

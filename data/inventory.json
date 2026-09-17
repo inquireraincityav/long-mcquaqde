@@ -168,5 +168,15 @@
     "sourceLink": "https://www.long-mcquade.com/4377/Pro-Audio-Recording/Cables/Yorkville-Sound/24-Channel-x-4-XLR-Returns-100-foot.htm",
     "notes": "[Image: L&M product page (own photo)]",
     "imageSource": "https://www.long-mcquade.com/4377/Pro-Audio-Recording/Cables/Yorkville-Sound/24-Channel-x-4-XLR-Returns-100-foot.htm"
+  },
+  {
+    "category": "Mixers & Extras",
+    "product": "Mackie ProFX16v3 16-Channel Professional Effects Mixer",
+    "rentalDay": 35,
+    "rentalMonth": 140,
+    "location": null,
+    "sourceLink": "https://www.long-mcquade.com/148553/Pro-Audio-Recording/Mixers/Mackie/ProFX16v3-16-Channel-Professional-Effects-Mixer.htm",
+    "notes": "Added to match Figma prototype — real Mackie product, rates estimated from comparable L&M mixer rentals. [Image: Manufacturer (Mackie)]",
+    "imageSource": "https://mackie.com/img/product_thumb/2048/ProFX16v3_Front.png"
   }
 ]

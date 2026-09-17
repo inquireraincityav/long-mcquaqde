@@ -1,56 +1,30 @@
-import PriceDisplay from './PriceDisplay';
 import AvailabilityBadge from './AvailabilityBadge';
+import { getDisplayData } from '../utils/displayData';
 import placeholderImg from '/placeholder-gear.svg';
 
-function specHighlight(item) {
-  const p = item.product.toLowerCase();
-  if (p.includes('watt')) {
-    const m = item.product.match(/(\d+)\s*Watt/i);
-    if (m) return `${m[1]}W`;
-  }
-  if (p.includes('channel')) {
-    const m = item.product.match(/(\d+)-Channel/i);
-    if (m) return `${m[1]} Ch`;
-  }
-  if (p.includes('inch') || p.includes('"')) {
-    const m = item.product.match(/(\d+)\s*(?:Inch|")/i);
-    if (m) return `${m[1]}"`;
-  }
-  return null;
-}
-
 export default function GearCard({ item, hasDateRange, onClick }) {
-  const spec = specHighlight(item);
+  const display = getDisplayData(item.product);
 
   return (
-    <button style={styles.card} onClick={onClick} aria-label={`View ${item.product}`}>
+    <button style={styles.card} onClick={onClick} aria-label={`View ${display.shortName}`}>
       <div style={styles.imageWrapper}>
         <img
           src={item.imageSource || placeholderImg}
-          alt={item.product}
+          alt={display.shortName}
           style={styles.image}
-          onError={(e) => {
-            e.target.src = placeholderImg;
-          }}
+          onError={(e) => { e.target.src = placeholderImg; }}
         />
-        {spec && <span style={styles.spec}>{spec}</span>}
+        <AvailabilityBadge product={item.product} hasDateRange={hasDateRange} overlay />
       </div>
 
       <div style={styles.body}>
-        <span style={styles.category}>{item.category}</span>
-        <h3 style={styles.name}>{item.product}</h3>
-
-        <div style={styles.footer}>
-          <PriceDisplay
-            rentalDay={item.rentalDay}
-            rentalMonth={item.rentalMonth}
-            compact
-          />
-          <AvailabilityBadge
-            product={item.product}
-            hasDateRange={hasDateRange}
-          />
-        </div>
+        <h3 style={styles.name}>{display.shortName}</h3>
+        {display.specs && <p style={styles.specs}>{display.specs}</p>}
+        {item.rentalDay ? (
+          <span style={styles.price}>from ${item.rentalDay}<span style={styles.priceUnit}>/day</span></span>
+        ) : (
+          <span style={styles.priceTbd}>Contact store</span>
+        )}
       </div>
     </button>
   );
@@ -60,9 +34,7 @@ const styles = {
   card: {
     display: 'flex',
     flexDirection: 'column',
-    background: 'var(--color-surface)',
-    backdropFilter: 'var(--glass-blur)',
-    WebkitBackdropFilter: 'var(--glass-blur)',
+    background: 'var(--color-surface-solid)',
     border: '1px solid var(--color-border)',
     borderRadius: 'var(--radius-lg)',
     boxShadow: 'var(--glass-shadow)',
@@ -75,46 +47,28 @@ const styles = {
   imageWrapper: {
     position: 'relative',
     aspectRatio: '4/3',
-    background: '#f0f4f8',
+    background: '#f0f0ea',
     overflow: 'hidden',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0',
   },
   image: {
     width: '100%',
     height: '100%',
-    objectFit: 'contain',
-    padding: 'var(--space-md)',
-  },
-  spec: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    background: 'rgba(0,0,0,0.6)',
-    color: '#fff',
-    fontSize: '11px',
-    fontWeight: 600,
-    padding: '2px 8px',
-    borderRadius: 'var(--radius-full)',
+    objectFit: 'cover',
   },
   body: {
-    padding: 'var(--space-md)',
+    padding: 'var(--space-sm) var(--space-md) var(--space-md)',
     display: 'flex',
     flexDirection: 'column',
-    gap: 'var(--space-xs)',
+    gap: 2,
     flex: 1,
-  },
-  category: {
-    fontSize: '11px',
-    fontWeight: 500,
-    color: 'var(--color-text-tertiary)',
-    textTransform: 'uppercase',
-    letterSpacing: '0.05em',
   },
   name: {
     fontSize: 'var(--text-sm)',
-    fontWeight: 600,
+    fontWeight: 700,
     color: 'var(--color-text)',
     lineHeight: 1.3,
     display: '-webkit-box',
@@ -122,11 +76,26 @@ const styles = {
     WebkitBoxOrient: 'vertical',
     overflow: 'hidden',
   },
-  footer: {
-    marginTop: 'auto',
-    paddingTop: 'var(--space-sm)',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 'var(--space-xs)',
+  specs: {
+    fontSize: 'var(--text-xs)',
+    color: 'var(--color-text-secondary)',
+    lineHeight: 1.3,
+  },
+  price: {
+    fontSize: 'var(--text-sm)',
+    fontWeight: 700,
+    color: 'var(--color-accent)',
+    marginTop: 'var(--space-xs)',
+  },
+  priceUnit: {
+    fontWeight: 400,
+    fontSize: 'var(--text-xs)',
+    color: 'var(--color-text-secondary)',
+  },
+  priceTbd: {
+    fontSize: 'var(--text-xs)',
+    fontWeight: 500,
+    color: 'var(--color-warning)',
+    marginTop: 'var(--space-xs)',
   },
 };
