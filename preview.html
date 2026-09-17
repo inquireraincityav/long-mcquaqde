@@ -613,7 +613,7 @@ function KitBuilderPage({setPage}){
           const tot=days>0?itemTotal(item,days):null;
           return h('div',{className:'kb-item',key:i},
             h('div',{className:'kb-item-img'},h('img',{src:imgSrc(item),alt:item.product,onError:e=>{e.target.src=PLACEHOLDER}})),
-            h('div',{className:'kb-item-info'},h('div',{className:'kb-item-name'},item.product),h('div',{className:'kb-item-price'},item.rentalDay?(tot!=null?fmtPrice(tot*item.qty)+' ('+item.qty+'×'+fmtPrice(item.rentalDay)+'/day)'):fmtPrice(item.rentalDay)+'/day × '+item.qty):'Price to be confirmed')),
+            h('div',{className:'kb-item-info'},h('div',{className:'kb-item-name'},item.product),h('div',{className:'kb-item-price'},item.rentalDay?(tot!=null?fmtPrice(tot*item.qty)+' ('+item.qty+'×'+fmtPrice(item.rentalDay)+'/day)':fmtPrice(item.rentalDay)+'/day × '+item.qty):'Price to be confirmed')),
             h('div',{className:'kb-item-qty'},'Qty: '+item.qty)
           )})),
         h('div',{className:'kb-total'},h('span',null,'Estimated total'),h('span',null,(()=>{let t=0,tbd=false;result.items.forEach(i=>{if(!i.rentalDay){tbd=true;return}const it=days>0?itemTotal(i,days):i.rentalDay;if(it!=null)t+=it*i.qty;else tbd=true});return fmtPrice(t)+(tbd?' + items TBD':'')})())),
