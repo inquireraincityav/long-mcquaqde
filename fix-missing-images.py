@@ -1,44 +1,25 @@
 #!/usr/bin/env python3
 """
-Fix the 18 products that got the L&M generic banner instead of real images.
-Uses Playwright screenshots as primary strategy since scraping failed for these.
+Download real product images for products with null imageSource.
+Goes directly to retailer search pages to avoid Google bot detection.
 
 Setup:
-  pip install requests beautifulsoup4 playwright
+  pip install playwright
   playwright install chromium
 
 Run:
   python3 fix-missing-images.py
+  python3 fix-missing-images.py --visible   # show browser for debugging
 """
 import json, os, re, hashlib, time, sys, asyncio
 
 try:
-    import requests
-    from bs4 import BeautifulSoup
-except ImportError:
-    print("pip install requests beautifulsoup4 playwright")
-    sys.exit(1)
-
-try:
     from playwright.async_api import async_playwright
-    HAS_PLAYWRIGHT = True
 except ImportError:
-    HAS_PLAYWRIGHT = False
-    print("ERROR: This script requires Playwright for screenshots.")
     print("Run: pip install playwright && playwright install chromium")
     sys.exit(1)
 
-HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-}
-
-# Direct search URLs for the 18 failed products - search B&H Photo, Sweetwater, Amazon
-SEARCH_SITES = [
-    "site:bhphotovideo.com",
-    "site:sweetwater.com",
-    "site:amazon.ca",
-    "site:long-mcquade.com",
-]
+VISIBLE = '--visible' in sys.argv
 
 def slug(name):
     h = hashlib.md5(name.encode()).hexdigest()[:8]
@@ -46,146 +27,166 @@ def slug(name):
     s = ''.join(c for c in s if c.isalnum() or c == '-')
     return s[:40] + '-' + h
 
+def short_query(name):
+    """Extract brand + model for cleaner search (e.g. 'Pioneer DDJ-FLX6')."""
+    parts = name.split()
+    # Take first 2-3 words (brand + model), skip generic descriptors
+    query_parts = []
+    for p in parts:
+        if len(query_parts) >= 3:
+            break
+        if p.lower() in ('the', 'a', 'an', 'with', 'and', 'for', 'pro', 'series'):
+            continue
+        query_parts.append(p)
+    return ' '.join(query_parts) if query_parts else name[:30]
 
-def _is_generic(url):
+def is_junk_url(url):
     lower = url.lower()
     return any(kw in lower for kw in [
         'logo', 'icon', 'banner', 'sprite', 'pixel', 'spacer',
         'placeholder', 'default', 'blank', 'loading', 'spinner',
         'social', 'facebook', 'twitter', 'instagram', 'youtube',
-        'favicon', 'badge', 'arrow', 'close', 'search', 'saxophone',
+        'favicon', 'badge', 'arrow', 'close', 'search-icon',
+        'saxophone', 'flute', 'no-image', 'noimage',
+        'data:image/svg', 'data:image/gif',
     ])
 
 
-async def find_and_screenshot_product(product_name, browser):
-    """Search for the product on Google, find a retailer page, and screenshot the product image."""
-    page = await browser.new_page(viewport={'width': 1280, 'height': 900})
+async def try_bhphoto(page, product_name):
+    """Search B&H Photo directly and get product image."""
+    query = short_query(product_name)
+    url = f"https://www.bhphotovideo.com/c/search?q={query.replace(' ', '%20')}"
     try:
-        # Try each retailer site
-        for site_filter in SEARCH_SITES:
-            query = f"{product_name} {site_filter}"
-            search_url = f"https://www.google.com/search?q={requests.utils.quote(query)}"
+        await page.goto(url, wait_until='domcontentloaded', timeout=20000)
+        await page.wait_for_timeout(3000)
 
-            await page.goto(search_url, wait_until='networkidle', timeout=15000)
-            await page.wait_for_timeout(1000)
+        # Find first product image in search results
+        selectors = [
+            'img[data-selenium="miniProductPageImg"]',
+            '.product-image img',
+            'img[loading="lazy"][src*="bhphoto"]',
+            '.sku-grid img',
+        ]
+        for sel in selectors:
+            imgs = await page.query_selector_all(sel)
+            for img in imgs:
+                src = await img.get_attribute('src') or ''
+                if is_junk_url(src):
+                    continue
+                bbox = await img.bounding_box()
+                if bbox and bbox['width'] >= 80 and bbox['height'] >= 80:
+                    screenshot = await img.screenshot(type='jpeg', quality=92)
+                    if len(screenshot) > 2000:
+                        return screenshot
+    except Exception as e:
+        print(f"B&H error: {e}", end=' ')
+    return None
 
-            # Click first search result
-            first_result = await page.query_selector('div.g a[href], a[data-ved]')
-            if not first_result:
-                continue
 
-            href = await first_result.get_attribute('href')
-            if not href or 'google' in href:
-                # Try to find a real result link
-                links = await page.query_selector_all('div.g a[href]')
-                for link in links:
-                    h = await link.get_attribute('href')
-                    if h and not 'google' in h and h.startswith('http'):
-                        href = h
-                        break
+async def try_sweetwater(page, product_name):
+    """Search Sweetwater directly and get product image."""
+    query = short_query(product_name)
+    url = f"https://www.sweetwater.com/store/search?s={query.replace(' ', '+')}"
+    try:
+        await page.goto(url, wait_until='domcontentloaded', timeout=20000)
+        await page.wait_for_timeout(3000)
 
-            if not href or not href.startswith('http'):
-                continue
+        selectors = [
+            '.product-listing__media img',
+            '.search-results img',
+            '.product-card img',
+            '.product-image img',
+        ]
+        for sel in selectors:
+            imgs = await page.query_selector_all(sel)
+            for img in imgs:
+                src = await img.get_attribute('src') or ''
+                if is_junk_url(src):
+                    continue
+                bbox = await img.bounding_box()
+                if bbox and bbox['width'] >= 80 and bbox['height'] >= 80:
+                    screenshot = await img.screenshot(type='jpeg', quality=92)
+                    if len(screenshot) > 2000:
+                        return screenshot
+    except Exception as e:
+        print(f"SW error: {e}", end=' ')
+    return None
 
-            # Navigate to the product page
+
+async def try_google_images(page, product_name):
+    """Search Google Images and screenshot the first result."""
+    query = f"{product_name} product"
+    url = f"https://www.google.com/search?tbm=isch&q={query.replace(' ', '+')}"
+    try:
+        await page.goto(url, wait_until='domcontentloaded', timeout=20000)
+        await page.wait_for_timeout(2000)
+
+        # Click first image thumbnail to open the preview
+        thumbnails = await page.query_selector_all('div[data-ri] img, .rg_i, img.Q4LuWd')
+        for thumb in thumbnails[:3]:
             try:
-                await page.goto(href, wait_until='networkidle', timeout=20000)
-                await page.wait_for_timeout(2000)
+                bbox = await thumb.bounding_box()
+                if not bbox or bbox['width'] < 50:
+                    continue
+                await thumb.click()
+                await page.wait_for_timeout(2500)
+
+                # Find the large preview image
+                large_selectors = [
+                    'img.sFlh5c.FyHeAf',
+                    'img.iPVvYb',
+                    'img[jsname="kn3ccd"]',
+                    'img.r48jcc',
+                    'c-wiz img[src^="http"]',
+                ]
+                for sel in large_selectors:
+                    large = await page.query_selector(sel)
+                    if large:
+                        lbox = await large.bounding_box()
+                        if lbox and lbox['width'] >= 100 and lbox['height'] >= 100:
+                            screenshot = await large.screenshot(type='jpeg', quality=92)
+                            if len(screenshot) > 2000:
+                                return screenshot
             except:
                 continue
 
-            # Try to find and screenshot the product image
-            selectors = [
-                '.product-detail img', '.product-image img', '#product-image img',
-                '.product-gallery img', '.main-image img', 'img[itemprop="image"]',
-                '.product-media img', '#mainImage', '.product-hero img',
-                '.product-img img', '[data-zoom-image]', '.slick-current img',
-                # B&H specific
-                '.product-image-container img', '.main-product-image img',
-                # Sweetwater specific
-                '.product-image--main img', '.product-hero__image img',
-                # Amazon specific
-                '#landingImage', '#imgBlkFront', '#imgTagWrapperId img',
-            ]
+        # Fallback: screenshot first decent thumbnail
+        for thumb in thumbnails[:5]:
+            try:
+                bbox = await thumb.bounding_box()
+                if bbox and bbox['width'] >= 80 and bbox['height'] >= 80:
+                    screenshot = await thumb.screenshot(type='jpeg', quality=92)
+                    if len(screenshot) > 1500:
+                        return screenshot
+            except:
+                continue
 
-            for sel in selectors:
-                el = await page.query_selector(sel)
-                if el:
-                    bbox = await el.bounding_box()
-                    if bbox and bbox['width'] >= 100 and bbox['height'] >= 100:
-                        # Try to download the actual image first
-                        for attr in ['data-zoom-image', 'data-large', 'data-src', 'src']:
-                            val = await el.get_attribute(attr)
-                            if val and not _is_generic(val):
-                                if val.startswith('//'):
-                                    val = 'https:' + val
-                                elif val.startswith('/'):
-                                    from urllib.parse import urlparse
-                                    parsed = urlparse(href)
-                                    val = f"{parsed.scheme}://{parsed.netloc}{val}"
-                                try:
-                                    resp = requests.get(val, headers=HEADERS, timeout=10)
-                                    if resp.status_code == 200 and len(resp.content) > 3000 and len(resp.content) != 13536:
-                                        ct = resp.headers.get('content-type', '').lower()
-                                        ext = '.webp' if 'webp' in ct else '.png' if 'png' in ct else '.jpg'
-                                        return (resp.content, ext)
-                                except:
-                                    pass
-
-                        # Fall back to screenshot
-                        screenshot = await el.screenshot(type='jpeg', quality=90)
-                        if len(screenshot) > 3000:
-                            return (screenshot, '.jpg')
-
-            # Fallback: find largest image on page
-            imgs = await page.query_selector_all('img')
-            best_el = None
-            best_area = 0
-            for img in imgs:
-                try:
-                    bbox = await img.bounding_box()
-                    if not bbox or bbox['width'] < 200 or bbox['height'] < 200:
-                        continue
-                    src = await img.get_attribute('src') or ''
-                    if _is_generic(src):
-                        continue
-                    area = bbox['width'] * bbox['height']
-                    if area > best_area:
-                        best_el = img
-                        best_area = area
-                except:
-                    continue
-
-            if best_el:
-                screenshot = await best_el.screenshot(type='jpeg', quality=90)
-                if len(screenshot) > 3000:
-                    return (screenshot, '.jpg')
-
-        # Last resort: Google Images screenshot
-        query = f"{product_name} product photo"
-        search_url = f"https://www.google.com/search?q={requests.utils.quote(query)}&tbm=isch"
-        await page.goto(search_url, wait_until='networkidle', timeout=15000)
-        await page.wait_for_timeout(1000)
-
-        first_img = await page.query_selector('div[data-ri="0"] img, .rg_i')
-        if first_img:
-            await first_img.click()
-            await page.wait_for_timeout(2000)
-
-            large_img = await page.query_selector('img.sFlh5c.FyHeAf, img.iPVvYb, img[jsname="kn3ccd"]')
-            if large_img:
-                bbox = await large_img.bounding_box()
-                if bbox and bbox['width'] >= 100 and bbox['height'] >= 100:
-                    screenshot = await large_img.screenshot(type='jpeg', quality=90)
-                    if len(screenshot) > 3000:
-                        return (screenshot, '.jpg')
-
-        return None
     except Exception as e:
-        print(f"\n    Error: {e}")
-        return None
-    finally:
-        await page.close()
+        print(f"GI error: {e}", end=' ')
+    return None
+
+
+async def try_long_mcquade(page, product_name):
+    """Search Long & McQuade directly."""
+    query = short_query(product_name)
+    url = f"https://www.long-mcquade.com/search?q={query.replace(' ', '+')}"
+    try:
+        await page.goto(url, wait_until='domcontentloaded', timeout=20000)
+        await page.wait_for_timeout(3000)
+
+        imgs = await page.query_selector_all('.product-image img, .search-result img, .card img')
+        for img in imgs:
+            src = await img.get_attribute('src') or ''
+            if is_junk_url(src) or '13536' in src:
+                continue
+            bbox = await img.bounding_box()
+            if bbox and bbox['width'] >= 80 and bbox['height'] >= 80:
+                screenshot = await img.screenshot(type='jpeg', quality=92)
+                if len(screenshot) > 2000 and len(screenshot) != 13536:
+                    return screenshot
+    except Exception as e:
+        print(f"L&M error: {e}", end=' ')
+    return None
 
 
 async def main_async():
@@ -194,45 +195,72 @@ async def main_async():
     with open('data/inventory.json') as f:
         inventory = json.load(f)
 
-    # Find items with no image
     missing = [(i, item) for i, item in enumerate(inventory) if not item.get('imageSource')]
 
     if not missing:
         print("All products already have images!")
         return
 
-    print(f"Found {len(missing)} products missing images. Downloading...\n")
+    print(f"Found {len(missing)} products missing images.")
+    print(f"Mode: {'visible' if VISIBLE else 'headless'} (add --visible to see browser)")
+    print()
 
     pw = await async_playwright().start()
-    browser = await pw.chromium.launch(headless=True)
+    browser = await pw.chromium.launch(headless=not VISIBLE)
+    context = await browser.new_context(
+        viewport={'width': 1280, 'height': 900},
+        user_agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36'
+    )
 
     success = 0
     failed = []
+
+    strategies = [
+        ('B&H', try_bhphoto),
+        ('Sweetwater', try_sweetwater),
+        ('Google Images', try_google_images),
+        ('Long & McQuade', try_long_mcquade),
+    ]
 
     for idx, (i, item) in enumerate(missing):
         name = item['product']
         filename_base = slug(name)
 
-        print(f"[{idx+1}/{len(missing)}] {name}...", end=' ', flush=True)
+        print(f"[{idx+1}/{len(missing)}] {name}")
 
-        result = await find_and_screenshot_product(name, browser)
+        screenshot = None
+        for label, strategy in strategies:
+            print(f"  Trying {label}...", end=' ', flush=True)
+            page = await context.new_page()
+            try:
+                screenshot = await strategy(page, name)
+            except Exception as e:
+                print(f"error: {e}", end=' ')
+            finally:
+                await page.close()
 
-        if result:
-            data, ext = result
-            filename = filename_base + ext
+            if screenshot:
+                print(f"OK ({len(screenshot)//1024}KB)")
+                break
+            else:
+                print("no image")
+
+        if screenshot:
+            filename = filename_base + '.jpg'
             filepath = os.path.join('public', 'products', filename)
             with open(filepath, 'wb') as f:
-                f.write(data)
+                f.write(screenshot)
             item['imageSource'] = f'/products/{filename}'
-            print(f"OK ({len(data)//1024}KB)")
             success += 1
         else:
-            print("FAILED")
+            print("  FAILED - no source found")
             failed.append(name)
 
-        time.sleep(1)
+        # Brief pause between products
+        await asyncio.sleep(1.5)
 
     await browser.close()
+    await pw.stop()
 
     with open('data/inventory.json', 'w') as f:
         json.dump(inventory, f, indent=2)
@@ -244,14 +272,13 @@ async def main_async():
         for name in failed:
             print(f"  - {name}")
 
-    print(f"\nNext steps:")
-    print(f"  git add public/products/ data/inventory.json")
-    print(f"  git commit -m 'Fix missing product images'")
-    print(f"  git push origin main")
+    if success > 0:
+        print(f"\nNext steps:")
+        print(f"  git pull origin main")
+        print(f"  git add public/products/ data/inventory.json")
+        print(f"  git commit -m 'Add missing product images'")
+        print(f"  git push origin main")
 
-
-def main():
-    asyncio.run(main_async())
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main_async())
