@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AppHeader from '../components/AppHeader';
 import StatusBadge from '../components/StatusBadge';
+import Barcode from '../components/Barcode';
 import useOrders from '../hooks/useOrders';
 import { getDisplayData } from '../utils/displayData';
 import placeholderImg from '/placeholder-gear.svg';
@@ -167,10 +168,10 @@ export default function PickupReturn() {
 
         {/* Order info card */}
         <div style={styles.infoCard}>
-          <div style={styles.infoRow}>
-            <span style={styles.infoLabel}>Order</span>
-            <span style={styles.infoValue}>{order.id}</span>
+          <div style={styles.barcodeWrap}>
+            <Barcode value={order.id} width={200} height={44} />
           </div>
+          <div style={styles.infoDivider} />
           <div style={styles.infoRow}>
             <span style={styles.infoLabel}>{mode === 'pickup' ? 'Pickup Date' : 'Return Date'}</span>
             <span style={styles.infoValue}>{mode === 'pickup' ? pickupDate : returnDate}</span>
@@ -200,7 +201,7 @@ export default function PickupReturn() {
             </h3>
             <p style={styles.doneSub}>
               {mode === 'pickup'
-                ? 'All items checked out. Enjoy your event!'
+                ? 'All items checked out. Your $100 deposit has been refunded. Enjoy your event!'
                 : 'All items returned. Thank you!'}
             </p>
             <div style={styles.doneTimestamp}>
@@ -325,6 +326,17 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: 'var(--space-sm)',
+  },
+  barcodeWrap: {
+    padding: 'var(--space-sm)',
+    background: '#fff',
+    borderRadius: 'var(--radius-sm)',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  infoDivider: {
+    height: 1,
+    background: 'var(--color-border)',
   },
   infoRow: {
     display: 'flex',

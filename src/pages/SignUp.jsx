@@ -174,7 +174,7 @@ export default function SignUp() {
 
         {form.saveCard && (
           <div style={styles.cardSection}>
-            <p style={styles.mockNote}>Payment is mocked — no real charges will be made</p>
+            <p style={styles.mockNote}>Demo only — no real charges will be made. A $100 refundable deposit applies per order.</p>
             <div style={styles.field}>
               <label style={styles.label}>Card Number</label>
               <input

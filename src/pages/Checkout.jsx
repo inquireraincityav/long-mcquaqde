@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppHeader from '../components/AppHeader';
+import Barcode from '../components/Barcode';
 import { useCart } from '../context/CartContext';
 import useOrders from '../hooks/useOrders';
 import { resolveFulfillment } from '../utils/fulfillment';
@@ -14,12 +15,13 @@ export default function Checkout() {
 
   const [fulfillMethod, setFulfillMethod] = useState('pickup');
   const [summaryOpen, setSummaryOpen] = useState(false);
-  const [hasCreditCard, setHasCreditCard] = useState(true);
   const [form, setForm] = useState({ name: '', email: '', phone: '', card: '', expiry: '', cvv: '' });
   const [errors, setErrors] = useState({});
   const [confirmed, setConfirmed] = useState(null);
 
   const fulfillment = useMemo(() => resolveFulfillment(items), [items]);
+
+  const DEPOSIT = 100;
 
   const totals = useMemo(() => {
     let subtotal = 0;
@@ -31,10 +33,9 @@ export default function Checkout() {
       if (it !== null) subtotal += it * ci.qty;
       else hasTbd = true;
     }
-    const deposit = hasCreditCard ? 0 : 20;
     const delivery = fulfillMethod === 'delivery' ? 45 : 0;
-    return { subtotal, deposit, delivery, total: subtotal + deposit + delivery, hasTbd };
-  }, [items, hasCreditCard, fulfillMethod]);
+    return { subtotal, deposit: DEPOSIT, delivery, total: subtotal + DEPOSIT + delivery, hasTbd };
+  }, [items, fulfillMethod]);
 
   function formatDateShort(dateStr) {
     if (!dateStr) return '';
@@ -100,7 +101,9 @@ export default function Checkout() {
             <p style={styles.confirmSub}>
               Your rental reservation has been placed. You'll receive a confirmation email shortly.
             </p>
-            <div style={styles.confirmId}>{confirmed.id}</div>
+            <div style={styles.barcodeWrap}>
+              <Barcode value={confirmed.id} width={240} height={56} />
+            </div>
             <div style={styles.confirmDetails}>
               <div style={styles.confirmRow}>
                 <span style={styles.confirmLabel}>Items</span>
@@ -128,11 +131,18 @@ export default function Checkout() {
                   <span>{fulfillment.locations[0].name}</span>
                 </div>
               )}
+              <div style={styles.confirmRow}>
+                <span style={styles.confirmLabel}>Deposit</span>
+                <span>{formatPrice(confirmed.totals.deposit)}</span>
+              </div>
               <div style={styles.confirmDivider} />
               <div style={styles.confirmRow}>
                 <span style={{ fontWeight: 700 }}>Total charged</span>
                 <span style={{ fontWeight: 700 }}>{formatPrice(confirmed.totals.total)}</span>
               </div>
+              <p style={styles.depositReminder}>
+                Deposit of {formatPrice(confirmed.totals.deposit)} is refunded only upon equipment pickup. If equipment is not picked up, the deposit is forfeited.
+              </p>
             </div>
           </div>
           <button
@@ -261,6 +271,13 @@ export default function Checkout() {
         {/* Deposit terms */}
         <div style={styles.section}>
           <h3 style={styles.sectionTitle}>Deposit & Terms</h3>
+          <div style={styles.depositBanner}>
+            <span style={styles.depositAmount}>{formatPrice(DEPOSIT)}</span>
+            <div>
+              <span style={styles.depositTitle}>Refundable Deposit</span>
+              <span style={styles.depositDesc}>Charged at booking. Refunded only upon equipment pickup.</span>
+            </div>
+          </div>
           <div style={styles.termsList}>
             <div style={styles.termItem}>
               <span style={styles.termBullet}>•</span>
@@ -268,28 +285,13 @@ export default function Checkout() {
             </div>
             <div style={styles.termItem}>
               <span style={styles.termBullet}>•</span>
-              Hold fee may apply for advance reservations
+              Deposit is forfeited if equipment is not picked up
             </div>
             <div style={styles.termItem}>
               <span style={styles.termBullet}>•</span>
               Damage review within 48 hrs of return
             </div>
           </div>
-          <label style={styles.checkboxRow}>
-            <input
-              type="checkbox"
-              checked={!hasCreditCard}
-              onChange={(e) => setHasCreditCard(!e.target.checked)}
-              style={styles.checkbox}
-              id="no-cc"
-            />
-            <span style={styles.checkboxLabel}>
-              I don't have a credit card on file
-              {!hasCreditCard && (
-                <span style={styles.depositNote}> — $20 refundable deposit applies</span>
-              )}
-            </span>
-          </label>
         </div>
 
         {/* Payment form (mocked) */}
@@ -387,15 +389,13 @@ export default function Checkout() {
             <span style={styles.totalLabel}>Equipment subtotal</span>
             <span style={styles.totalValue}>{formatPrice(totals.subtotal)}</span>
           </div>
-          {totals.deposit > 0 && (
-            <div style={styles.totalRow}>
-              <span style={styles.totalLabel}>
-                Refundable deposit
-                <span style={styles.depositTag}>no CC on file</span>
-              </span>
-              <span style={styles.totalValue}>{formatPrice(totals.deposit)}</span>
-            </div>
-          )}
+          <div style={styles.totalRow}>
+            <span style={styles.totalLabel}>
+              Refundable deposit
+              <span style={styles.depositTag}>refunded at pickup</span>
+            </span>
+            <span style={styles.totalValue}>{formatPrice(totals.deposit)}</span>
+          </div>
           {totals.delivery > 0 && (
             <div style={styles.totalRow}>
               <span style={styles.totalLabel}>Delivery fee</span>
@@ -561,25 +561,40 @@ const styles = {
     color: 'var(--color-text-tertiary)',
     flexShrink: 0,
   },
-  checkboxRow: {
+  depositBanner: {
     display: 'flex',
-    alignItems: 'flex-start',
-    gap: 'var(--space-sm)',
-    marginTop: 'var(--space-xs)',
-    cursor: 'pointer',
+    alignItems: 'center',
+    gap: 'var(--space-md)',
+    padding: 'var(--space-md)',
+    background: 'var(--color-accent-lighter)',
+    borderRadius: 'var(--radius-md)',
+    border: '1px solid rgba(246, 139, 30, 0.15)',
   },
-  checkbox: {
-    accentColor: 'var(--color-accent)',
-    marginTop: 3,
+  depositAmount: {
+    fontSize: 'var(--text-xl)',
+    fontWeight: 800,
+    color: 'var(--color-accent)',
     flexShrink: 0,
   },
-  checkboxLabel: {
+  depositTitle: {
     fontSize: 'var(--text-sm)',
-    lineHeight: 1.5,
+    fontWeight: 700,
+    display: 'block',
+    color: 'var(--color-text)',
   },
-  depositNote: {
+  depositDesc: {
+    fontSize: 'var(--text-xs)',
+    color: 'var(--color-text-secondary)',
+    display: 'block',
+    marginTop: 2,
+    lineHeight: 1.4,
+  },
+  depositReminder: {
+    fontSize: 'var(--text-xs)',
     color: 'var(--color-warning)',
-    fontWeight: 600,
+    margin: 0,
+    lineHeight: 1.5,
+    fontStyle: 'italic',
   },
   mockNotice: {
     fontSize: 'var(--text-xs)',
@@ -712,15 +727,12 @@ const styles = {
     maxWidth: 320,
     margin: 0,
   },
-  confirmId: {
-    fontSize: 'var(--text-lg)',
-    fontWeight: 700,
-    color: 'var(--color-accent)',
-    padding: '8px 20px',
-    background: 'var(--color-accent-light)',
-    borderRadius: 'var(--radius-full)',
+  barcodeWrap: {
+    padding: 'var(--space-md)',
+    background: '#fff',
+    borderRadius: 'var(--radius-md)',
+    border: '1px solid var(--color-border)',
     marginTop: 'var(--space-sm)',
-    fontVariantNumeric: 'tabular-nums',
   },
   confirmDetails: {
     width: '100%',

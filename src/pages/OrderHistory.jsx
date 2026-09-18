@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppHeader from '../components/AppHeader';
 import StatusBadge from '../components/StatusBadge';
+import Barcode from '../components/Barcode';
 import EmptyState from '../components/EmptyState';
 import { useCart } from '../context/CartContext';
 import useOrders from '../hooks/useOrders';
@@ -136,6 +137,9 @@ export default function OrderHistory() {
                 {/* Expand/collapse detail */}
                 {isExpanded && (
                   <div style={styles.detailSection}>
+                    <div style={styles.barcodeWrap}>
+                      <Barcode value={order.id} width={200} height={44} />
+                    </div>
                     <div style={styles.detailDivider} />
                     {order.items.map((item, i) => {
                       const d = getDisplayData(item.product);
@@ -161,6 +165,14 @@ export default function OrderHistory() {
                     {order.totals && (
                       <>
                         <div style={styles.detailDivider} />
+                        {order.totals.deposit > 0 && (
+                          <div style={styles.detailLine}>
+                            <span style={{ color: 'var(--color-text-secondary)' }}>Refundable deposit</span>
+                            <span style={{ marginLeft: 'auto' }}>
+                              {formatPrice(order.totals.deposit)}
+                            </span>
+                          </div>
+                        )}
                         <div style={styles.detailLine}>
                           <span style={{ fontWeight: 700 }}>Total</span>
                           <span style={{ fontWeight: 700, marginLeft: 'auto' }}>
@@ -309,6 +321,14 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: 6,
+  },
+  barcodeWrap: {
+    padding: 'var(--space-sm) var(--space-md)',
+    background: '#fff',
+    borderRadius: 'var(--radius-sm)',
+    border: '1px solid var(--color-border)',
+    display: 'flex',
+    justifyContent: 'center',
   },
   detailDivider: {
     height: 1,

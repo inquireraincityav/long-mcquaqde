@@ -171,8 +171,8 @@ export default function GearDetailDrawer({ item, dateRange: initialDateRange, on
           ) : (
             <ul style={styles.terms}>
               <li>Valid government-issued ID required at pickup</li>
-              <li>$20 deposit if no credit card on file</li>
-              <li>Hold fee may apply for advance reservations</li>
+              <li>$100 refundable deposit charged at booking</li>
+              <li>Deposit refunded only upon equipment pickup</li>
               <li>Damage review within 48 hrs of return</li>
             </ul>
           )}

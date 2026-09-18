@@ -248,7 +248,7 @@ function GearDetail({item,initDR,onClose}){
           h('button',{style:{flex:1,padding:10,fontSize:'var(--text-sm)',fontWeight:tab==='terms'?600:500,color:tab==='terms'?'var(--color-text)':'var(--color-text-secondary)',background:tab==='terms'?'var(--color-surface)':'var(--color-surface-solid)'},onClick:()=>setTab('terms')},'Rental Terms')
         ),
         tab==='specs'?h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}},...Object.entries(d.ds).map(([k,v])=>h('div',{key:k,style:{display:'flex',flexDirection:'column',gap:2}},h('span',{style:{fontSize:'var(--text-xs)',color:'var(--color-text-tertiary)',fontStyle:'italic'}},k),h('span',{style:{fontSize:'var(--text-base)',fontWeight:700}},v))))
-        :h('div',{style:{display:'flex',flexDirection:'column',gap:8,fontSize:'var(--text-sm)',color:'var(--color-text-secondary)'}},h('p',null,'• Valid government-issued ID required at pickup'),h('p',null,'• $20 deposit if no credit card on file'),h('p',null,'• Hold fee may apply for advance reservations'),h('p',null,'• Damage review within 48 hrs of return'))
+        :h('div',{style:{display:'flex',flexDirection:'column',gap:8,fontSize:'var(--text-sm)',color:'var(--color-text-secondary)'}},h('p',null,'• Valid government-issued ID required at pickup'),h('p',null,'• $100 refundable deposit charged at booking'),h('p',null,'• Deposit refunded only upon equipment pickup'),h('p',null,'• Damage review within 48 hrs of return'))
       ),
       h('div',{style:{position:'sticky',bottom:0,padding:16,background:'var(--color-surface-solid)',borderTop:'1px solid var(--color-border)',display:'flex',flexDirection:'column',gap:8}},
         h('div',{style:{display:'flex',alignItems:'center',justifyContent:'space-between',gap:8}},

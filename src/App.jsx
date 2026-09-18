@@ -15,7 +15,7 @@ export default function App() {
     <>
       <main style={styles.main}>
         <Routes>
-          <Route path="/" element={<Navigate to="/browse" replace />} />
+          <Route path="/" element={<Navigate to="/sign-in" replace />} />
           <Route path="/browse" element={<BrowseSearch />} />
           <Route path="/kit-builder" element={<KitBuilder />} />
           <Route path="/cart" element={<Cart />} />
