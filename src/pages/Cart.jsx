@@ -50,11 +50,11 @@ export default function Cart() {
         <div style={styles.body}>
           <EmptyState
             title="Your cart is empty"
-            message="Browse gear or use the Kit Builder to get started."
+            message="Browse gear or use GearGenie to get started."
           >
             <div style={styles.emptyLinks}>
               <Link to="/browse" className="btn-outline-accent" style={styles.emptyBtn}>Browse Gear</Link>
-              <Link to="/kit-builder" className="btn-outline-accent" style={styles.emptyBtn}>Kit Builder</Link>
+              <Link to="/kit-builder" className="btn-outline-accent" style={styles.emptyBtn}>GearGenie</Link>
             </div>
           </EmptyState>
         </div>

@@ -4,12 +4,11 @@ import inventory from '../../data/inventory.json';
 const CATEGORIES = [
   'Speakers',
   'Microphones',
-  'Mixers & Extras',
-  'Visual',
-  'Lighting',
   'DJ Equipment',
-  'Backline',
   'Recording',
+  'Lighting',
+  'Visual',
+  'Mixers & Extras',
 ];
 
 export default function useInventory(filters = {}) {

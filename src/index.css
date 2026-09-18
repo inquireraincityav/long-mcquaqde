@@ -238,3 +238,20 @@ a:hover {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
 }
+
+input[type="date"] {
+  cursor: pointer;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+input[type="date"].date-empty::-webkit-datetime-edit {
+  color: transparent;
+}
+
+input[type="date"].date-empty {
+  color: transparent;
+}
