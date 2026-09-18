@@ -16,6 +16,7 @@ export default function GearCard({ item, hasDateRange, onClick }) {
           onError={(e) => { e.target.src = placeholder; }}
         />
         <AvailabilityBadge product={item.product} hasDateRange={hasDateRange} overlay />
+        {item.isRender && <span style={styles.renderBadge}>Render</span>}
       </div>
 
       <div style={styles.body}>
@@ -61,6 +62,19 @@ const styles = {
     height: '100%',
     objectFit: 'cover',
     opacity: 0.88,
+  },
+  renderBadge: {
+    position: 'absolute',
+    bottom: 6,
+    left: 6,
+    fontSize: '9px',
+    fontWeight: 600,
+    color: '#fff',
+    background: 'rgba(0,0,0,0.55)',
+    padding: '2px 6px',
+    borderRadius: 4,
+    letterSpacing: '0.3px',
+    textTransform: 'uppercase',
   },
   body: {
     padding: '11px 12px 13px',

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-Download clean product images for all products.
-Downloads actual image files (not screenshots) from Bing Images.
-Searches for "[product] product photo" to find clean product-on-white shots.
+Download clean product images with 3-tier fallback:
+  1. Download actual image file from Bing Images source URLs
+  2. Screenshot the product image from Bing preview panel
+  3. Generate a styled placeholder render with disclaimer
 
 Setup:
   pip install playwright requests
@@ -13,7 +14,7 @@ Run:
   python3 fix-missing-images.py --all        # redo ALL products
   python3 fix-missing-images.py --visible    # show browser
 """
-import json, os, hashlib, sys, asyncio, urllib.parse, re
+import json, os, hashlib, sys, asyncio, urllib.parse
 
 try:
     from playwright.async_api import async_playwright
@@ -34,6 +35,17 @@ PRODUCTS_DIR = os.path.join('public', 'products')
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
     'Accept': 'image/webp,image/apng,image/*,*/*;q=0.8',
+}
+
+CATEGORY_ICONS = {
+    'Speakers': '🔊',
+    'Microphones': '🎤',
+    'DJ Equipment': '🎛️',
+    'Recording': '🎚️',
+    'Lighting': '💡',
+    'Visual': '📽️',
+    'Mixers & Extras': '🎛️',
+    'Backline': '🎸',
 }
 
 def slug(name):
@@ -62,15 +74,12 @@ def download_image(url, min_bytes=5000):
             url = 'https:' + url
         if not url.startswith('http'):
             return None
-
-        resp = requests.get(url, headers=HEADERS, timeout=15, stream=True)
+        resp = requests.get(url, headers=HEADERS, timeout=15)
         if resp.status_code != 200:
             return None
-
         data = resp.content
         if len(data) < min_bytes:
             return None
-
         ct = resp.headers.get('content-type', '').lower()
         if 'webp' in ct:
             ext = '.webp'
@@ -84,71 +93,58 @@ def download_image(url, min_bytes=5000):
             ext = '.png'
         else:
             ext = '.jpg'
-
         return (data, ext)
     except:
         return None
 
 
-async def get_bing_image_urls(page, product_name):
-    """
-    Search Bing Images and extract actual source image URLs.
-    Returns list of (source_url, thumbnail_width) tuples.
-    """
+# ── TIER 1: Download actual image files from Bing source URLs ──
+
+async def tier1_download(page, product_name):
+    """Extract source image URLs from Bing and download the actual files."""
     query = urllib.parse.quote(f"{product_name} product photo")
     url = f"https://www.bing.com/images/search?q={query}&form=HDRSC2&first=1"
 
     await page.goto(url, wait_until='domcontentloaded', timeout=20000)
     await page.wait_for_timeout(2500)
 
-    # Extract image URLs from Bing's data attributes
-    # Bing stores the source URL in 'm' attribute as JSON on .iusc elements
     urls = await page.evaluate("""
         () => {
             const results = [];
-            // Method 1: Parse the 'm' JSON attribute on iusc divs
             document.querySelectorAll('.iusc').forEach(el => {
                 try {
                     const m = JSON.parse(el.getAttribute('m') || '{}');
-                    if (m.murl) {
-                        results.push({ url: m.murl, w: m.purl ? 1 : 0 });
-                    }
+                    if (m.murl) results.push(m.murl);
                 } catch(e) {}
             });
-            // Method 2: data-src on thumbnails as fallback
             if (results.length === 0) {
                 document.querySelectorAll('img.mimg').forEach(img => {
                     const src = img.getAttribute('src') || img.getAttribute('data-src');
-                    if (src && src.startsWith('http')) {
-                        results.push({ url: src, w: 0 });
-                    }
+                    if (src && src.startsWith('http')) results.push(src);
                 });
             }
             return results;
         }
     """)
 
-    return [(r['url'], r['w']) for r in urls if not is_junk(r['url'])]
+    for img_url in urls[:8]:
+        if is_junk(img_url):
+            continue
+        result = download_image(img_url, min_bytes=5000)
+        if result:
+            return result
+    return None
 
 
-async def get_image_for_product(page, product_name):
-    """Get a clean product image. Returns (bytes, extension) or None."""
+# ── TIER 2: Screenshot the product image from Bing/Google preview ──
 
-    # Try Bing Images - extract actual source URLs and download them
+async def tier2_screenshot(page, product_name):
+    """Click into image search results and screenshot the large preview."""
+
+    # Try Bing first
+    query = urllib.parse.quote(f"{product_name} product")
+    url = f"https://www.bing.com/images/search?q={query}&form=HDRSC2"
     try:
-        image_urls = await get_bing_image_urls(page, product_name)
-
-        for img_url, _ in image_urls[:8]:
-            result = download_image(img_url, min_bytes=5000)
-            if result:
-                return result
-    except Exception as e:
-        print(f"(Bing extract error: {e})", end=' ')
-
-    # Fallback: try clicking into Bing image preview and getting source URL
-    try:
-        query = urllib.parse.quote(f"{product_name} product")
-        url = f"https://www.bing.com/images/search?q={query}&form=HDRSC2"
         await page.goto(url, wait_until='domcontentloaded', timeout=20000)
         await page.wait_for_timeout(2000)
 
@@ -156,18 +152,39 @@ async def get_image_for_product(page, product_name):
         for thumb in thumbs[:5]:
             try:
                 await thumb.click()
-                await page.wait_for_timeout(2000)
+                await page.wait_for_timeout(2500)
 
-                # Get the large image src from the detail panel
-                large_img = await page.query_selector('.mainImage img, img.nofocus')
-                if large_img:
-                    src = await large_img.get_attribute('src')
-                    if src and src.startswith('http') and not is_junk(src):
-                        result = download_image(src, min_bytes=5000)
-                        if result:
-                            return result
+                # Find the large preview — try multiple selectors
+                for sel in ['img.nofocus', '.mainImage img', '.imgContainer img']:
+                    large_img = await page.query_selector(sel)
+                    if large_img:
+                        bbox = await large_img.bounding_box()
+                        if bbox and bbox['width'] >= 120 and bbox['height'] >= 120:
+                            screenshot = await large_img.screenshot(type='jpeg', quality=92)
+                            if len(screenshot) > 3000:
+                                return (screenshot, '.jpg')
 
-                # Try to close the panel and move to next
+                # Generic: find largest visible image
+                imgs = await page.query_selector_all('img')
+                best, best_area = None, 0
+                for img in imgs:
+                    try:
+                        src = await img.get_attribute('src') or ''
+                        if is_junk(src) or 'bing' in src.lower():
+                            continue
+                        bbox = await img.bounding_box()
+                        if bbox and bbox['width'] >= 150 and bbox['height'] >= 150:
+                            area = bbox['width'] * bbox['height']
+                            if area > best_area:
+                                best, best_area = img, area
+                    except:
+                        continue
+                if best:
+                    screenshot = await best.screenshot(type='jpeg', quality=92)
+                    if len(screenshot) > 3000:
+                        return (screenshot, '.jpg')
+
+                # Close panel for next attempt
                 close_btn = await page.query_selector('.close, [aria-label="Close"]')
                 if close_btn:
                     await close_btn.click()
@@ -175,40 +192,93 @@ async def get_image_for_product(page, product_name):
             except:
                 continue
     except Exception as e:
-        print(f"(Bing click error: {e})", end=' ')
+        print(f"(Bing screenshot err: {e})", end=' ')
 
-    # Last fallback: Google Images source extraction
+    # Try Google Images
+    query = urllib.parse.quote(f"{product_name} product photo")
+    url = f"https://www.google.com/search?tbm=isch&q={query}"
     try:
-        query = urllib.parse.quote(f"{product_name} product photo")
-        url = f"https://www.google.com/search?tbm=isch&q={query}"
         await page.goto(url, wait_until='domcontentloaded', timeout=20000)
         await page.wait_for_timeout(2000)
 
-        # Click thumbnail to get full-size URL
         thumbs = await page.query_selector_all('div[data-ri] img, img.Q4LuWd, img.rg_i')
         for thumb in thumbs[:5]:
             try:
+                bbox = await thumb.bounding_box()
+                if not bbox or bbox['width'] < 40:
+                    continue
                 await thumb.click()
                 await page.wait_for_timeout(2500)
 
-                # Find the full-res image in the side panel
-                large_imgs = await page.query_selector_all('img[src^="http"]')
-                for img in large_imgs:
+                # Find large preview images
+                imgs = await page.query_selector_all('img[src^="http"]')
+                for img in imgs:
                     src = await img.get_attribute('src') or ''
                     if is_junk(src) or 'gstatic' in src or 'google' in src:
                         continue
                     bbox = await img.bounding_box()
                     if bbox and bbox['width'] >= 150 and bbox['height'] >= 150:
-                        result = download_image(src, min_bytes=5000)
-                        if result:
-                            return result
+                        screenshot = await img.screenshot(type='jpeg', quality=92)
+                        if len(screenshot) > 3000:
+                            return (screenshot, '.jpg')
             except:
                 continue
     except Exception as e:
-        print(f"(Google error: {e})", end=' ')
+        print(f"(Google screenshot err: {e})", end=' ')
 
     return None
 
+
+# ── TIER 3: Generate styled placeholder render ──
+
+async def tier3_render(context, product_name, category):
+    """Generate a clean placeholder image with product name and disclaimer."""
+    icon = CATEGORY_ICONS.get(category, '📦')
+
+    html = f"""<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>
+  * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+  body {{
+    width: 400px; height: 400px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: linear-gradient(145deg, #f8f8f8, #e8e8e8);
+    font-family: -apple-system, 'Segoe UI', sans-serif;
+    text-align: center; padding: 32px;
+  }}
+  .icon {{ font-size: 72px; margin-bottom: 20px; filter: grayscale(30%); }}
+  .name {{
+    font-size: 18px; font-weight: 600; color: #333;
+    line-height: 1.3; margin-bottom: 16px;
+    max-width: 320px;
+    display: -webkit-box; -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical; overflow: hidden;
+  }}
+  .disclaimer {{
+    font-size: 11px; color: #999; letter-spacing: 0.3px;
+    border-top: 1px solid #ddd; padding-top: 12px;
+    margin-top: auto;
+  }}
+</style></head>
+<body>
+  <div class="icon">{icon}</div>
+  <div class="name">{product_name}</div>
+  <div class="disclaimer">Product render &middot; actual image pending</div>
+</body></html>"""
+
+    page = await context.new_page()
+    try:
+        await page.set_viewport_size({'width': 400, 'height': 400})
+        await page.set_content(html, wait_until='networkidle')
+        await page.wait_for_timeout(300)
+        screenshot = await page.screenshot(type='jpeg', quality=92)
+        return (screenshot, '.jpg')
+    finally:
+        await page.close()
+
+
+# ── Main ──
 
 async def main_async():
     os.makedirs(PRODUCTS_DIR, exist_ok=True)
@@ -226,8 +296,7 @@ async def main_async():
             return
 
     print(f"Processing {len(targets)} products.")
-    print(f"Mode: {'visible' if VISIBLE else 'headless'} (add --visible to see browser)")
-    print()
+    print(f"Mode: {'visible' if VISIBLE else 'headless'} (add --visible to see browser)\n")
 
     pw = await async_playwright().start()
     browser = await pw.chromium.launch(
@@ -243,29 +312,65 @@ async def main_async():
         Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
     """)
 
-    success = 0
+    stats = {'tier1': 0, 'tier2': 0, 'tier3': 0, 'failed': 0}
     failed = []
 
     for idx, (i, item) in enumerate(targets):
         name = item['product']
+        category = item.get('category', '')
         filename_base = slug(name)
 
-        # Delete old image file if redoing
+        # Delete old image if redoing
         if REDO_ALL and item.get('imageSource'):
             old_path = os.path.join('public', item['imageSource'].lstrip('/'))
             if os.path.exists(old_path):
                 os.remove(old_path)
 
-        print(f"[{idx+1}/{len(targets)}] {name}...", end=' ', flush=True)
+        print(f"[{idx+1}/{len(targets)}] {name}")
 
+        result = None
+        tier_used = None
+
+        # TIER 1: Download actual image file
+        print(f"  Tier 1 (download)...", end=' ', flush=True)
         page = await context.new_page()
         try:
-            result = await get_image_for_product(page, name)
+            result = await tier1_download(page, name)
         except Exception as e:
-            print(f"error: {e}", end=' ')
-            result = None
+            print(f"err: {e}", end=' ')
         finally:
             await page.close()
+
+        if result:
+            tier_used = 'tier1'
+            print(f"OK ({len(result[0])//1024}KB)")
+        else:
+            print("miss")
+
+            # TIER 2: Screenshot product from image search preview
+            print(f"  Tier 2 (screenshot)...", end=' ', flush=True)
+            page = await context.new_page()
+            try:
+                result = await tier2_screenshot(page, name)
+            except Exception as e:
+                print(f"err: {e}", end=' ')
+            finally:
+                await page.close()
+
+            if result:
+                tier_used = 'tier2'
+                print(f"OK ({len(result[0])//1024}KB)")
+            else:
+                print("miss")
+
+                # TIER 3: Generate placeholder render
+                print(f"  Tier 3 (render)...", end=' ', flush=True)
+                try:
+                    result = await tier3_render(context, name, category)
+                    tier_used = 'tier3'
+                    print("OK (placeholder)")
+                except Exception as e:
+                    print(f"err: {e}")
 
         if result:
             data, ext = result
@@ -274,11 +379,14 @@ async def main_async():
             with open(filepath, 'wb') as f:
                 f.write(data)
             item['imageSource'] = f'/products/{filename}'
-            print(f"OK ({len(data)//1024}KB)")
-            success += 1
+            item['isRender'] = (tier_used == 'tier3')
+            if tier_used != 'tier3' and 'isRender' in item:
+                del item['isRender']
+            stats[tier_used] += 1
         else:
-            print("FAILED")
+            print("  FAILED - all tiers exhausted")
             failed.append(name)
+            stats['failed'] += 1
 
         await asyncio.sleep(1.5)
 
@@ -289,17 +397,27 @@ async def main_async():
         json.dump(inventory, f, indent=2)
 
     print(f"\n{'='*60}")
-    print(f"Got {success}/{len(targets)} product images.")
+    total = stats['tier1'] + stats['tier2'] + stats['tier3']
+    print(f"Got {total}/{len(targets)} product images:")
+    print(f"  Tier 1 (downloaded):    {stats['tier1']}")
+    print(f"  Tier 2 (screenshot):    {stats['tier2']}")
+    print(f"  Tier 3 (render):        {stats['tier3']}")
+    if stats['failed']:
+        print(f"  Failed:                 {stats['failed']}")
+
+    render_count = sum(1 for item in inventory if item.get('isRender'))
+    if render_count:
+        print(f"\n⚠ {render_count} products have placeholder renders (need real images later)")
+
     if failed:
-        print(f"\nFailed ({len(failed)}):")
+        print(f"\nFailed completely:")
         for name in failed:
             print(f"  - {name}")
 
-    if success > 0:
-        print(f"\nNext steps:")
-        print(f"  git add public/products/ data/inventory.json")
-        print(f"  git commit -m 'Update product images'")
-        print(f"  git push origin main")
+    print(f"\nNext steps:")
+    print(f"  git add public/products/ data/inventory.json")
+    print(f"  git commit -m 'Update product images'")
+    print(f"  git push origin main")
 
 
 if __name__ == '__main__':
