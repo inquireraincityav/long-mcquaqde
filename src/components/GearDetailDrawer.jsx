@@ -188,14 +188,18 @@ export default function GearDetailDrawer({ item, dateRange: initialDateRange, on
         <div style={styles.bottomBar}>
           <div style={styles.dateQtyRow}>
             <div style={styles.dateDisplay}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                <line x1="16" y1="2" x2="16" y2="6" />
-                <line x1="8" y1="2" x2="8" y2="6" />
-                <line x1="3" y1="10" x2="21" y2="10" />
-              </svg>
+              <label htmlFor="detail-start" style={styles.calLabel}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+              </label>
               <input
+                id="detail-start"
                 type="date"
+                className={dateRange.start ? '' : 'date-empty'}
                 value={dateRange.start || ''}
                 onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
                 style={styles.dateInput}
@@ -203,6 +207,7 @@ export default function GearDetailDrawer({ item, dateRange: initialDateRange, on
               <span style={{ color: 'var(--color-text-tertiary)' }}>-</span>
               <input
                 type="date"
+                className={dateRange.end ? '' : 'date-empty'}
                 value={dateRange.end || ''}
                 min={dateRange.start || ''}
                 onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
@@ -552,6 +557,11 @@ const styles = {
     border: '1px solid var(--color-border)',
     background: 'var(--color-surface-solid)',
     flex: 1,
+  },
+  calLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
   },
   dateInput: {
     border: 'none',

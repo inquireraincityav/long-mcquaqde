@@ -7,6 +7,7 @@ export default function DateRangePicker({ value, onChange, compact = false }) {
         {!compact && <label style={styles.label}>Pickup</label>}
         <input
           type="date"
+          className={value?.start ? '' : 'date-empty'}
           style={styles.input}
           value={value?.start || ''}
           min={today}
@@ -21,6 +22,7 @@ export default function DateRangePicker({ value, onChange, compact = false }) {
         {!compact && <label style={styles.label}>Return</label>}
         <input
           type="date"
+          className={value?.end ? '' : 'date-empty'}
           style={styles.input}
           value={value?.end || ''}
           min={value?.start || today}

@@ -39,7 +39,6 @@ export default function BrowseSearch() {
           <h2 style={styles.sectionTitle}>
             {category === 'all' ? 'All Gear' : category}
           </h2>
-          <span style={styles.count}>{sorted.length} items</span>
         </div>
 
         {sorted.length === 0 ? (
