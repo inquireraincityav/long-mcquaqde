@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """
 Download real product images for all 74 inventory items.
-Uses Playwright (headless Chromium) to render L&M pages and capture product images.
-Falls back to Google Image search if L&M doesn't have a good image.
+Uses multiple strategies:
+  1. Playwright browser to find and download product images from L&M
+  2. Simple requests scraping of L&M product pages
+  3. Google Images search
+  4. Screenshot of product page (cropped to product image area)
 
 Setup:
   pip install requests beautifulsoup4 playwright
@@ -33,7 +36,8 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 }
 
-MIN_GOOD_SIZE = 3000  # bytes - anything smaller is a placeholder/thumbnail
+MIN_GOOD_SIZE = 3000
+
 
 def slug(name):
     h = hashlib.md5(name.encode()).hexdigest()[:8]
@@ -47,10 +51,8 @@ async def download_with_playwright(source_link, product_name, browser):
     page = await browser.new_page()
     try:
         await page.goto(source_link, wait_until='networkidle', timeout=20000)
-        await page.wait_for_timeout(2000)  # extra wait for lazy-loaded images
+        await page.wait_for_timeout(2000)
 
-        # L&M-specific: look for the main product image
-        # Try multiple selectors that L&M product pages commonly use
         selectors = [
             '.product-detail img',
             '.product-image img',
@@ -69,7 +71,6 @@ async def download_with_playwright(source_link, product_name, browser):
         for sel in selectors:
             el = await page.query_selector(sel)
             if el:
-                # Check data-zoom-image first (highest res), then data-src, then src
                 for attr in ['data-zoom-image', 'data-large', 'data-src', 'src']:
                     val = await el.get_attribute(attr)
                     if val and not _is_generic(val):
@@ -78,7 +79,6 @@ async def download_with_playwright(source_link, product_name, browser):
                 if img_url:
                     break
 
-        # Fallback: find largest visible image that's not a logo/banner
         if not img_url:
             imgs = await page.query_selector_all('img')
             best = None
@@ -100,7 +100,6 @@ async def download_with_playwright(source_link, product_name, browser):
             img_url = best
 
         if img_url:
-            # Make absolute
             if img_url.startswith('//'):
                 img_url = 'https:' + img_url
             elif img_url.startswith('/'):
@@ -108,7 +107,6 @@ async def download_with_playwright(source_link, product_name, browser):
                 parsed = urlparse(source_link)
                 img_url = f"{parsed.scheme}://{parsed.netloc}{img_url}"
 
-            # Download
             resp = requests.get(img_url, headers=HEADERS, timeout=15)
             if resp.status_code == 200 and len(resp.content) > MIN_GOOD_SIZE:
                 ext = _get_ext(resp.headers.get('content-type', ''), img_url)
@@ -117,6 +115,129 @@ async def download_with_playwright(source_link, product_name, browser):
         return None
     except Exception as e:
         print(f"\n    Playwright error: {e}")
+        return None
+    finally:
+        await page.close()
+
+
+async def screenshot_product_image(source_link, product_name, browser):
+    """Take a screenshot of the product page and crop to the product image area."""
+    page = await browser.new_page(viewport={'width': 1280, 'height': 900})
+    try:
+        await page.goto(source_link, wait_until='networkidle', timeout=20000)
+        await page.wait_for_timeout(2000)
+
+        # Try to find the product image element and screenshot just that
+        selectors = [
+            '.product-detail img',
+            '.product-image img',
+            '#product-image img',
+            '.product-gallery img',
+            '.main-image img',
+            'img[itemprop="image"]',
+            '.slick-current img',
+            '.product-media img',
+            '#mainImage',
+        ]
+
+        for sel in selectors:
+            el = await page.query_selector(sel)
+            if el:
+                bbox = await el.bounding_box()
+                if bbox and bbox['width'] >= 100 and bbox['height'] >= 100:
+                    screenshot = await el.screenshot(type='jpeg', quality=90)
+                    if len(screenshot) > MIN_GOOD_SIZE:
+                        return (screenshot, '.jpg')
+
+        # Fallback: find the largest visible image and screenshot it
+        imgs = await page.query_selector_all('img')
+        best_el = None
+        best_area = 0
+        for img in imgs:
+            try:
+                bbox = await img.bounding_box()
+                if not bbox or bbox['width'] < 150 or bbox['height'] < 150:
+                    continue
+                src = await img.get_attribute('src') or ''
+                if _is_generic(src):
+                    continue
+                area = bbox['width'] * bbox['height']
+                if area > best_area:
+                    best_el = img
+                    best_area = area
+            except:
+                continue
+
+        if best_el:
+            screenshot = await best_el.screenshot(type='jpeg', quality=90)
+            if len(screenshot) > MIN_GOOD_SIZE:
+                return (screenshot, '.jpg')
+
+        # Last resort: screenshot the top-center of the page (product area)
+        screenshot = await page.screenshot(
+            type='jpeg',
+            quality=90,
+            clip={'x': 200, 'y': 100, 'width': 600, 'height': 500}
+        )
+        if len(screenshot) > MIN_GOOD_SIZE:
+            return (screenshot, '.jpg')
+
+        return None
+    except Exception as e:
+        print(f"\n    Screenshot error: {e}")
+        return None
+    finally:
+        await page.close()
+
+
+async def screenshot_google_image(product_name, browser):
+    """Search Google Images and screenshot the first result."""
+    page = await browser.new_page(viewport={'width': 1280, 'height': 900})
+    try:
+        query = f"{product_name} product photo"
+        url = f"https://www.google.com/search?q={requests.utils.quote(query)}&tbm=isch&safe=active"
+        await page.goto(url, wait_until='networkidle', timeout=15000)
+        await page.wait_for_timeout(1000)
+
+        # Click first image result
+        first_img = await page.query_selector('div[data-ri="0"] img, .rg_i')
+        if first_img:
+            await first_img.click()
+            await page.wait_for_timeout(2000)
+
+            # Find the large preview image
+            large_img = await page.query_selector('img.sFlh5c.FyHeAf, img.iPVvYb, img[jsname="kn3ccd"]')
+            if large_img:
+                bbox = await large_img.bounding_box()
+                if bbox and bbox['width'] >= 100 and bbox['height'] >= 100:
+                    screenshot = await large_img.screenshot(type='jpeg', quality=90)
+                    if len(screenshot) > MIN_GOOD_SIZE:
+                        return (screenshot, '.jpg')
+
+        # Fallback: find largest image on page
+        imgs = await page.query_selector_all('img')
+        best_el = None
+        best_area = 0
+        for img in imgs:
+            try:
+                bbox = await img.bounding_box()
+                if not bbox or bbox['width'] < 200 or bbox['height'] < 200:
+                    continue
+                area = bbox['width'] * bbox['height']
+                if area > best_area:
+                    best_el = img
+                    best_area = area
+            except:
+                continue
+
+        if best_el:
+            screenshot = await best_el.screenshot(type='jpeg', quality=90)
+            if len(screenshot) > MIN_GOOD_SIZE:
+                return (screenshot, '.jpg')
+
+        return None
+    except Exception as e:
+        print(f"\n    Google screenshot error: {e}")
         return None
     finally:
         await page.close()
@@ -131,14 +252,10 @@ def download_from_google_images(product_name):
         if resp.status_code != 200:
             return None
 
-        # Extract image URLs from Google Images results
-        # Google embeds base64 thumbnails and links to originals
         soup = BeautifulSoup(resp.text, 'html.parser')
 
-        # Look for image data in script tags
         for script in soup.find_all('script'):
             text = script.string or ''
-            # Find full-size image URLs
             urls = re.findall(r'https?://[^"\'\\]+\.(?:jpg|jpeg|png|webp)', text)
             for img_url in urls:
                 if _is_generic(img_url):
@@ -167,7 +284,6 @@ def download_with_requests(source_link, product_name):
 
         img_url = None
 
-        # Look for product-specific image selectors (NOT og:image which is generic)
         for selector in [
             'img.product-image', '#mainImage', '.product-image img',
             '.main-image img', 'img[itemprop="image"]',
@@ -184,13 +300,11 @@ def download_with_requests(source_link, product_name):
                 if img_url:
                     break
 
-        # Look for img tags with product-related URLs (not logos/banners)
         if not img_url:
             for img in soup.find_all('img'):
                 src = img.get('data-src') or img.get('src') or ''
                 if not src or _is_generic(src):
                     continue
-                # Look for images in product/upload/media paths
                 if any(kw in src.lower() for kw in ['product', 'upload', 'media', 'image', 'item']):
                     img_url = src
                     break
@@ -198,7 +312,6 @@ def download_with_requests(source_link, product_name):
         if not img_url:
             return None
 
-        # Make absolute
         if img_url.startswith('//'):
             img_url = 'https:' + img_url
         elif img_url.startswith('/'):
@@ -218,7 +331,6 @@ def download_with_requests(source_link, product_name):
 
 
 def _is_generic(url):
-    """Check if URL is a generic/logo/banner image."""
     lower = url.lower()
     return any(kw in lower for kw in [
         'logo', 'icon', 'banner', 'sprite', 'pixel', 'spacer',
@@ -229,7 +341,6 @@ def _is_generic(url):
 
 
 def _get_ext(content_type, url):
-    """Determine file extension from content type or URL."""
     ct = content_type.lower()
     if 'webp' in ct:
         return '.webp'
@@ -237,7 +348,6 @@ def _get_ext(content_type, url):
         return '.png'
     elif 'gif' in ct:
         return '.gif'
-    # Check URL extension
     for ext in ['.webp', '.png', '.gif']:
         if ext in url.lower():
             return ext
@@ -257,18 +367,17 @@ async def main_async():
 
     success = 0
     failed = []
+    screenshot_items = []
 
     for i, item in enumerate(inventory):
         name = item['product']
         link = item.get('sourceLink')
         filename_base = slug(name)
 
-        # Skip if we already have a good image
         existing = item.get('imageSource', '')
         if existing:
             existing_path = 'public' + existing
             if os.path.exists(existing_path) and os.path.getsize(existing_path) > MIN_GOOD_SIZE:
-                # Verify it's not the generic L&M banner (13536 bytes)
                 size = os.path.getsize(existing_path)
                 if size != 13536:
                     print(f"[{i+1}/{len(inventory)}] {name[:55]}... SKIP (already good {size//1024}KB)")
@@ -279,7 +388,7 @@ async def main_async():
 
         result = None
 
-        # Strategy 1: Playwright (if available) - best for JS-rendered pages
+        # Strategy 1: Playwright image download
         if browser and link:
             result = await download_with_playwright(link, name, browser)
             if result:
@@ -291,11 +400,23 @@ async def main_async():
             if result:
                 print("OK (requests)", end=' ')
 
-        # Strategy 3: Google Images search
+        # Strategy 3: Google Images download
         if not result:
             result = download_from_google_images(name)
             if result:
                 print("OK (Google)", end=' ')
+
+        # Strategy 4: Screenshot of product page (cropped to product image)
+        if not result and browser and link:
+            result = await screenshot_product_image(link, name, browser)
+            if result:
+                print("OK (screenshot)", end=' ')
+
+        # Strategy 5: Screenshot from Google Images
+        if not result and browser:
+            result = await screenshot_google_image(name, browser)
+            if result:
+                print("OK (Google screenshot)", end=' ')
 
         if result:
             data, ext = result
@@ -315,7 +436,6 @@ async def main_async():
     if browser:
         await browser.close()
 
-    # Save updated inventory
     with open('data/inventory.json', 'w') as f:
         json.dump(inventory, f, indent=2)
 
@@ -325,11 +445,11 @@ async def main_async():
         print(f"\nFailed ({len(failed)}):")
         for name in failed:
             print(f"  - {name}")
-        print(f"\nFailed items will use illustrated fallback images.")
+        print(f"\nFailed items will use category placeholder icons in the app.")
 
     print(f"\nNext steps:")
     print(f"  git add public/products/ data/inventory.json")
-    print(f"  git commit -m 'Update product images'")
+    print(f"  git commit -m 'Add real product images'")
     print(f"  git push origin main")
 
 
