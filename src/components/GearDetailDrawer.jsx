@@ -4,7 +4,7 @@ import { useCart } from '../context/CartContext';
 import { daysBetween, computeItemTotal, formatPrice } from '../utils/pricing';
 import { getDisplayData, getWeeklyRate } from '../utils/displayData';
 import { getItemAvailability, LOCATIONS } from '../utils/availability';
-import placeholderImg from '/placeholder-gear.svg';
+import { getCategoryPlaceholder } from '../utils/categoryPlaceholders';
 
 export default function GearDetailDrawer({ item, dateRange: initialDateRange, onClose }) {
   const { addItem } = useCart();
@@ -39,6 +39,7 @@ export default function GearDetailDrawer({ item, dateRange: initialDateRange, on
   }
 
   const weeklyRate = getWeeklyRate(item.rentalDay);
+  const placeholder = getCategoryPlaceholder(item.category);
 
   return (
     <div style={styles.overlay} onClick={onClose}>
@@ -48,16 +49,23 @@ export default function GearDetailDrawer({ item, dateRange: initialDateRange, on
         </div>
         <div style={styles.imageSection}>
           <button style={styles.closeBtn} onClick={onClose} aria-label="Close">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
+          <button style={styles.backBtn} onClick={onClose} aria-label="Back to browse">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12" />
+              <polyline points="12 19 5 12 12 5" />
+            </svg>
+            <span>Back</span>
+          </button>
           <img
-            src={item.imageSource || placeholderImg}
+            src={item.imageSource || placeholder}
             alt={display.shortName}
             style={styles.image}
-            onError={(e) => { e.target.src = placeholderImg; }}
+            onError={(e) => { e.target.src = placeholder; }}
           />
         </div>
 
@@ -268,17 +276,40 @@ const styles = {
     position: 'absolute',
     top: 'var(--space-md)',
     right: 'var(--space-md)',
-    width: 32,
-    height: 32,
+    width: 36,
+    height: 36,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 'var(--radius-full)',
-    background: 'rgba(255,255,255,0.85)',
-    border: '1px solid var(--color-border)',
+    background: 'rgba(0,0,0,0.5)',
+    backdropFilter: 'blur(8px)',
+    WebkitBackdropFilter: 'blur(8px)',
+    border: '1px solid rgba(255,255,255,0.2)',
     cursor: 'pointer',
     zIndex: 3,
-    color: 'var(--color-text-secondary)',
+    color: '#fff',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+  },
+  backBtn: {
+    position: 'absolute',
+    top: 'var(--space-md)',
+    left: 'var(--space-md)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 4,
+    padding: '7px 14px 7px 10px',
+    borderRadius: 'var(--radius-full)',
+    background: 'rgba(0,0,0,0.5)',
+    backdropFilter: 'blur(8px)',
+    WebkitBackdropFilter: 'blur(8px)',
+    border: '1px solid rgba(255,255,255,0.2)',
+    cursor: 'pointer',
+    zIndex: 3,
+    color: '#fff',
+    fontSize: '13px',
+    fontWeight: 600,
+    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
   },
   imageSection: {
     position: 'relative',

@@ -6,7 +6,7 @@ import EmptyState from '../components/EmptyState';
 import { useCart } from '../context/CartContext';
 import { daysBetween, computeItemTotal, formatPrice } from '../utils/pricing';
 import { getDisplayData } from '../utils/displayData';
-import placeholderImg from '/placeholder-gear.svg';
+import { getCategoryPlaceholder } from '../utils/categoryPlaceholders';
 
 export default function Cart() {
   const navigate = useNavigate();
@@ -120,14 +120,15 @@ export default function Cart() {
               const itemDays = daysBetween(ci.dateRange?.start, ci.dateRange?.end);
               const lineTotal = ci.rentalDay ? computeItemTotal(ci, itemDays) : null;
 
+              const placeholder = getCategoryPlaceholder(ci.category);
               return (
                 <div key={ci.product} style={styles.cartItem}>
                   <div style={styles.itemThumb}>
                     <img
-                      src={ci.imageSource || placeholderImg}
+                      src={ci.imageSource || placeholder}
                       alt={d.shortName}
                       style={styles.itemImg}
-                      onError={(e) => { e.target.src = placeholderImg; }}
+                      onError={(e) => { e.target.src = placeholder; }}
                     />
                   </div>
                   <div style={styles.itemInfo}>

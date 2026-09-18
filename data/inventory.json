@@ -5,7 +5,7 @@
     "rentalDay": 11,
     "rentalMonth": 43,
     "sourceLink": "https://www.long-mcquade.com/165008/Pro-Audio-Recording/PA-Speaker-Cabinets/Yorkville-Sound/YXL12P-12-Inch-1000-Watt-Powered-Loudspeaker.htm",
-    "imageSource": "https://yorkville.com/loudspeakers/yxl/product/yxl12p"
+    "imageSource": null
   },
   {
     "category": "Speakers",
@@ -13,7 +13,7 @@
     "rentalDay": 25,
     "rentalMonth": 100,
     "sourceLink": "https://www.long-mcquade.com/347101/Pro-Audio-Recording/PA-Speaker-Cabinets/Yorkville-Sound/EXM-Mobile-Tower-Battery-Powered-PA-System.htm",
-    "imageSource": "https://yorkville.com/loudspeakers/exm/product/exm-mobile-tower"
+    "imageSource": null
   },
   {
     "category": "Speakers",
@@ -389,6 +389,78 @@
     "rentalDay": 22,
     "rentalMonth": 88,
     "sourceLink": "https://www.long-mcquade.com/234567/Pro-Audio-Recording/DJ-Equipment/Technics/SL-1200MK7-Direct-Drive-Turntable.htm",
+    "imageSource": null
+  },
+  {
+    "category": "DJ Equipment",
+    "product": "Pioneer DJM-V10 6-Channel Professional DJ Mixer",
+    "rentalDay": 55,
+    "rentalMonth": 220,
+    "sourceLink": "https://www.long-mcquade.com/310567/Pro-Audio-Recording/DJ-Equipment/Pioneer-DJ/DJM-V10-6-Channel-Professional-DJ-Mixer.htm",
+    "imageSource": null
+  },
+  {
+    "category": "DJ Equipment",
+    "product": "Pioneer DJM-A9 4-Channel Professional DJ Mixer",
+    "rentalDay": 50,
+    "rentalMonth": 200,
+    "sourceLink": "https://www.long-mcquade.com/378901/Pro-Audio-Recording/DJ-Equipment/Pioneer-DJ/DJM-A9-4-Channel-Professional-DJ-Mixer.htm",
+    "imageSource": null
+  },
+  {
+    "category": "DJ Equipment",
+    "product": "Pioneer DJM-S11 Professional 2-Channel DJ Mixer",
+    "rentalDay": 42,
+    "rentalMonth": 168,
+    "sourceLink": "https://www.long-mcquade.com/345012/Pro-Audio-Recording/DJ-Equipment/Pioneer-DJ/DJM-S11-Professional-2-Channel-DJ-Mixer.htm",
+    "imageSource": null
+  },
+  {
+    "category": "DJ Equipment",
+    "product": "Rane ONE Professional Motorized DJ Controller",
+    "rentalDay": 48,
+    "rentalMonth": 192,
+    "sourceLink": "https://www.long-mcquade.com/356789/Pro-Audio-Recording/DJ-Equipment/Rane/ONE-Professional-Motorized-DJ-Controller.htm",
+    "imageSource": null
+  },
+  {
+    "category": "DJ Equipment",
+    "product": "Rane SEVENTY-TWO MKII Premium 2-Channel Mixer",
+    "rentalDay": 45,
+    "rentalMonth": 180,
+    "sourceLink": "https://www.long-mcquade.com/367890/Pro-Audio-Recording/DJ-Equipment/Rane/SEVENTY-TWO-MKII-Premium-2-Channel-Mixer.htm",
+    "imageSource": null
+  },
+  {
+    "category": "DJ Equipment",
+    "product": "Rane TWELVE MKII 12-Inch Motorized Turntable Controller",
+    "rentalDay": 35,
+    "rentalMonth": 140,
+    "sourceLink": "https://www.long-mcquade.com/378012/Pro-Audio-Recording/DJ-Equipment/Rane/TWELVE-MKII-12-Inch-Motorized-Turntable-Controller.htm",
+    "imageSource": null
+  },
+  {
+    "category": "DJ Equipment",
+    "product": "Pioneer CDJ-3000 Professional DJ Multi Player",
+    "rentalDay": 50,
+    "rentalMonth": 200,
+    "sourceLink": "https://www.long-mcquade.com/389012/Pro-Audio-Recording/DJ-Equipment/Pioneer-DJ/CDJ-3000-Professional-DJ-Multi-Player.htm",
+    "imageSource": null
+  },
+  {
+    "category": "DJ Equipment",
+    "product": "Pioneer DDJ-REV7 Scratch-Style 2-Channel DJ Controller",
+    "rentalDay": 38,
+    "rentalMonth": 152,
+    "sourceLink": "https://www.long-mcquade.com/390123/Pro-Audio-Recording/DJ-Equipment/Pioneer-DJ/DDJ-REV7-Scratch-Style-2-Channel-Controller.htm",
+    "imageSource": null
+  },
+  {
+    "category": "DJ Equipment",
+    "product": "Rane FOUR Advanced 4-Channel Stems DJ Controller",
+    "rentalDay": 52,
+    "rentalMonth": 208,
+    "sourceLink": "https://www.long-mcquade.com/401234/Pro-Audio-Recording/DJ-Equipment/Rane/FOUR-Advanced-4-Channel-Stems-Controller.htm",
     "imageSource": null
   },
   {

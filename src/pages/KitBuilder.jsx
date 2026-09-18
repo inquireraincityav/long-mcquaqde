@@ -7,7 +7,7 @@ import { useCart } from '../context/CartContext';
 import { buildKit } from '../utils/kitMatcher';
 import { daysBetween, computeItemTotal, formatPrice, } from '../utils/pricing';
 import { getDisplayData, getWeeklyRate } from '../utils/displayData';
-import placeholderImg from '/placeholder-gear.svg';
+import { getCategoryPlaceholder } from '../utils/categoryPlaceholders';
 
 const EVENT_TYPES = [
   { value: 'corporate_panel', label: 'Corporate Conference' },
@@ -262,10 +262,10 @@ export default function KitBuilder() {
                     return (
                       <div key={item.product} style={styles.thumbCard}>
                         <img
-                          src={item.imageSource || placeholderImg}
+                          src={item.imageSource || getCategoryPlaceholder(item.category)}
                           alt={d.shortName}
                           style={styles.thumbImg}
-                          onError={(e) => { e.target.src = placeholderImg; }}
+                          onError={(e) => { e.target.src = getCategoryPlaceholder(item.category); }}
                         />
                         <button
                           style={styles.thumbRemove}

@@ -1,18 +1,19 @@
 import AvailabilityBadge from './AvailabilityBadge';
 import { getDisplayData } from '../utils/displayData';
-import placeholderImg from '/placeholder-gear.svg';
+import { getCategoryPlaceholder } from '../utils/categoryPlaceholders';
 
 export default function GearCard({ item, hasDateRange, onClick }) {
   const display = getDisplayData(item.product);
+  const placeholder = getCategoryPlaceholder(item.category);
 
   return (
     <button style={styles.card} onClick={onClick} aria-label={`View ${display.shortName}`}>
       <div style={styles.imageWrapper}>
         <img
-          src={item.imageSource || placeholderImg}
+          src={item.imageSource || placeholder}
           alt={display.shortName}
           style={styles.image}
-          onError={(e) => { e.target.src = placeholderImg; }}
+          onError={(e) => { e.target.src = placeholder; }}
         />
         <AvailabilityBadge product={item.product} hasDateRange={hasDateRange} overlay />
       </div>
