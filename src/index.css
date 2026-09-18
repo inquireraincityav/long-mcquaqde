@@ -249,7 +249,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 input[type="date"].date-empty::-webkit-datetime-edit {
-  color: transparent;
+  display: none;
 }
 
 input[type="date"].date-empty {

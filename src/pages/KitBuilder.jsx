@@ -171,23 +171,29 @@ export default function KitBuilder() {
                   <line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
               </label>
-              <input
-                id="kit-start"
-                type="date"
-                className={dateRange.start ? '' : 'date-empty'}
-                value={dateRange.start}
-                onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-                style={styles.dateInput}
-              />
+              <div style={styles.dateFieldWrap}>
+                {!dateRange.start && <span style={styles.datePlaceholder}>Start</span>}
+                <input
+                  id="kit-start"
+                  type="date"
+                  className={dateRange.start ? '' : 'date-empty'}
+                  value={dateRange.start}
+                  onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
+                  style={styles.dateInput}
+                />
+              </div>
               <span style={{ color: 'var(--color-text-tertiary)' }}>-</span>
-              <input
-                type="date"
-                className={dateRange.end ? '' : 'date-empty'}
-                value={dateRange.end}
-                min={dateRange.start || ''}
-                onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-                style={styles.dateInput}
-              />
+              <div style={styles.dateFieldWrap}>
+                {!dateRange.end && <span style={styles.datePlaceholder}>End</span>}
+                <input
+                  type="date"
+                  className={dateRange.end ? '' : 'date-empty'}
+                  value={dateRange.end}
+                  min={dateRange.start || ''}
+                  onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
+                  style={styles.dateInput}
+                />
+              </div>
             </div>
           </div>
 
@@ -500,15 +506,28 @@ const styles = {
     alignItems: 'center',
     cursor: 'pointer',
   },
+  dateFieldWrap: {
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    flex: 1,
+    minWidth: 0,
+  },
+  datePlaceholder: {
+    position: 'absolute',
+    left: 0,
+    fontSize: 'var(--text-sm)',
+    color: 'var(--color-text-tertiary)',
+    pointerEvents: 'none',
+  },
   dateInput: {
     border: 'none',
     background: 'transparent',
     fontSize: 'var(--text-sm)',
     color: 'var(--color-text)',
     outline: 'none',
-    flex: 1,
+    width: '100%',
     padding: 0,
-    minWidth: 0,
   },
   generateBtn: {
     width: '100%',

@@ -56,25 +56,31 @@ export default function FilterBar({
               <line x1="3" y1="10" x2="21" y2="10" />
             </svg>
           </label>
-          <input
-            id="browse-start"
-            type="date"
-            className={dateRange?.start ? '' : 'date-empty'}
-            value={dateRange?.start || ''}
-            onChange={(e) => onDateRangeChange({ ...dateRange, start: e.target.value })}
-            style={styles.dateInput}
-            aria-label="Start date"
-          />
+          <div style={styles.dateFieldWrap}>
+            {!dateRange?.start && <span style={styles.datePlaceholder}>Start</span>}
+            <input
+              id="browse-start"
+              type="date"
+              className={dateRange?.start ? '' : 'date-empty'}
+              value={dateRange?.start || ''}
+              onChange={(e) => onDateRangeChange({ ...dateRange, start: e.target.value })}
+              style={styles.dateInput}
+              aria-label="Start date"
+            />
+          </div>
           <span style={{ color: 'var(--color-text-tertiary)', fontSize: 'var(--text-xs)' }}>-</span>
-          <input
-            type="date"
-            className={dateRange?.end ? '' : 'date-empty'}
-            value={dateRange?.end || ''}
-            min={dateRange?.start || ''}
-            onChange={(e) => onDateRangeChange({ ...dateRange, end: e.target.value })}
-            style={styles.dateInput}
-            aria-label="End date"
-          />
+          <div style={styles.dateFieldWrap}>
+            {!dateRange?.end && <span style={styles.datePlaceholder}>End</span>}
+            <input
+              type="date"
+              className={dateRange?.end ? '' : 'date-empty'}
+              value={dateRange?.end || ''}
+              min={dateRange?.start || ''}
+              onChange={(e) => onDateRangeChange({ ...dateRange, end: e.target.value })}
+              style={styles.dateInput}
+              aria-label="End date"
+            />
+          </div>
         </div>
       </div>
 
@@ -151,14 +157,27 @@ const styles = {
     alignItems: 'center',
     cursor: 'pointer',
   },
+  dateFieldWrap: {
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    flex: 1,
+    minWidth: 0,
+  },
+  datePlaceholder: {
+    position: 'absolute',
+    left: 0,
+    fontSize: 'var(--text-xs)',
+    color: 'var(--color-text-tertiary)',
+    pointerEvents: 'none',
+  },
   dateInput: {
     border: 'none',
     background: 'transparent',
     fontSize: 'var(--text-xs)',
     color: 'var(--color-text)',
     outline: 'none',
-    flex: 1,
-    minWidth: 0,
+    width: '100%',
     padding: 0,
   },
 };

@@ -44,23 +44,16 @@ export default function GearDetailDrawer({ item, dateRange: initialDateRange, on
   return (
     <div style={styles.overlay} onClick={onClose}>
       <div style={styles.drawer} onClick={(e) => e.stopPropagation()}>
-        <div style={styles.dragHandleWrap}>
+        <div style={styles.stickyHeader}>
           <div style={styles.dragHandle} />
-        </div>
-        <div style={styles.imageSection}>
           <button style={styles.closeBtn} onClick={onClose} aria-label="Close">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
-          <button style={styles.backBtn} onClick={onClose} aria-label="Back to browse">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="19" y1="12" x2="5" y2="12" />
-              <polyline points="12 19 5 12 12 5" />
-            </svg>
-            <span>Back</span>
-          </button>
+        </div>
+        <div style={styles.imageSection}>
           <img
             src={item.imageSource || placeholder}
             alt={display.shortName}
@@ -196,23 +189,29 @@ export default function GearDetailDrawer({ item, dateRange: initialDateRange, on
                   <line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
               </label>
-              <input
-                id="detail-start"
-                type="date"
-                className={dateRange.start ? '' : 'date-empty'}
-                value={dateRange.start || ''}
-                onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-                style={styles.dateInput}
-              />
+              <div style={styles.dateFieldWrap}>
+                {!dateRange.start && <span style={styles.datePlaceholder}>Start</span>}
+                <input
+                  id="detail-start"
+                  type="date"
+                  className={dateRange.start ? '' : 'date-empty'}
+                  value={dateRange.start || ''}
+                  onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
+                  style={styles.dateInput}
+                />
+              </div>
               <span style={{ color: 'var(--color-text-tertiary)' }}>-</span>
-              <input
-                type="date"
-                className={dateRange.end ? '' : 'date-empty'}
-                value={dateRange.end || ''}
-                min={dateRange.start || ''}
-                onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-                style={styles.dateInput}
-              />
+              <div style={styles.dateFieldWrap}>
+                {!dateRange.end && <span style={styles.datePlaceholder}>End</span>}
+                <input
+                  type="date"
+                  className={dateRange.end ? '' : 'date-empty'}
+                  value={dateRange.end || ''}
+                  min={dateRange.start || ''}
+                  onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
+                  style={styles.dateInput}
+                />
+              </div>
             </div>
             <QuantityStepper value={qty} onChange={setQty} />
           </div>
@@ -261,15 +260,16 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
   },
-  dragHandleWrap: {
-    display: 'flex',
-    justifyContent: 'center',
-    padding: '10px 0 6px',
-    position: 'absolute',
+  stickyHeader: {
+    position: 'sticky',
     top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 2,
+    zIndex: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '10px var(--space-md) 6px',
+    background: 'var(--color-surface-solid)',
+    borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0',
   },
   dragHandle: {
     width: 36,
@@ -279,7 +279,6 @@ const styles = {
   },
   closeBtn: {
     position: 'absolute',
-    top: 'var(--space-md)',
     right: 'var(--space-md)',
     width: 36,
     height: 36,
@@ -287,34 +286,10 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 'var(--radius-full)',
-    background: 'rgba(0,0,0,0.5)',
-    backdropFilter: 'blur(8px)',
-    WebkitBackdropFilter: 'blur(8px)',
-    border: '1px solid rgba(255,255,255,0.2)',
+    background: 'var(--color-surface)',
+    border: '1px solid var(--color-border-strong)',
     cursor: 'pointer',
-    zIndex: 3,
-    color: '#fff',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-  },
-  backBtn: {
-    position: 'absolute',
-    top: 'var(--space-md)',
-    left: 'var(--space-md)',
-    display: 'flex',
-    alignItems: 'center',
-    gap: 4,
-    padding: '7px 14px 7px 10px',
-    borderRadius: 'var(--radius-full)',
-    background: 'rgba(0,0,0,0.5)',
-    backdropFilter: 'blur(8px)',
-    WebkitBackdropFilter: 'blur(8px)',
-    border: '1px solid rgba(255,255,255,0.2)',
-    cursor: 'pointer',
-    zIndex: 3,
-    color: '#fff',
-    fontSize: '13px',
-    fontWeight: 600,
-    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+    color: 'var(--color-text)',
   },
   imageSection: {
     position: 'relative',
@@ -563,14 +538,27 @@ const styles = {
     alignItems: 'center',
     cursor: 'pointer',
   },
+  dateFieldWrap: {
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    flex: 1,
+    minWidth: 0,
+  },
+  datePlaceholder: {
+    position: 'absolute',
+    left: 0,
+    fontSize: 'var(--text-xs)',
+    color: 'var(--color-text-tertiary)',
+    pointerEvents: 'none',
+  },
   dateInput: {
     border: 'none',
     background: 'transparent',
     fontSize: 'var(--text-xs)',
     color: 'var(--color-text)',
     outline: 'none',
-    flex: 1,
-    minWidth: 0,
+    width: '100%',
     padding: 0,
   },
   addBtn: {
