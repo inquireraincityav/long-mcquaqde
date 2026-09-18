@@ -6,6 +6,9 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import PickupReturn from './pages/PickupReturn';
 import OrderHistory from './pages/OrderHistory';
+import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
+import Profile from './pages/Profile';
 
 export default function App() {
   return (
@@ -20,6 +23,9 @@ export default function App() {
           <Route path="/pickup-return" element={<PickupReturn />} />
           <Route path="/pickup-return/:orderId" element={<PickupReturn />} />
           <Route path="/orders" element={<OrderHistory />} />
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </main>
       <BottomTabBar />

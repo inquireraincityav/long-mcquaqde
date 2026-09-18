@@ -157,7 +157,8 @@ const styles = {
     fontSize: 'var(--text-xs)',
     color: 'var(--color-text)',
     outline: 'none',
-    width: 95,
+    flex: 1,
+    minWidth: 0,
     padding: 0,
   },
 };

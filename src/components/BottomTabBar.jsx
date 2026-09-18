@@ -56,7 +56,7 @@ export default function BottomTabBar() {
     return location.pathname.startsWith(to);
   };
 
-  const hideOnPaths = ['/checkout', '/pickup-return'];
+  const hideOnPaths = ['/checkout', '/pickup-return', '/sign-in', '/sign-up', '/profile'];
   if (hideOnPaths.some((p) => location.pathname.startsWith(p))) return null;
 
   return (

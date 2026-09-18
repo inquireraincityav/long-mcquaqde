@@ -88,11 +88,13 @@ export default function KitBuilder() {
   }, [result, days]);
 
   return (
-    <div className="page-enter">
+    <div className="page-enter" style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100dvh - var(--bottom-nav-height))' }}>
       <AppHeader
         title="GearGenie"
         subtitle="AI-suggested gear for your event"
       />
+
+      {!result && <div style={{ flex: 1 }} />}
 
       <div style={styles.body}>
         {/* Form */}
