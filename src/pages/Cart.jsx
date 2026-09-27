@@ -287,7 +287,7 @@ const styles = {
     width: 48,
     height: 48,
     borderRadius: 'var(--radius-sm)',
-    background: '#1a1520',
+    background: 'var(--color-surface)',
     overflow: 'hidden',
     flexShrink: 0,
   },

@@ -298,7 +298,7 @@ const styles = {
   },
   imageSection: {
     position: 'relative',
-    background: '#1a1520',
+    background: 'var(--color-surface)',
     aspectRatio: '16/10',
     display: 'flex',
     alignItems: 'center',
@@ -310,7 +310,6 @@ const styles = {
     width: '100%',
     height: '100%',
     objectFit: 'contain',
-    opacity: 0.88,
     padding: 12,
   },
   content: {

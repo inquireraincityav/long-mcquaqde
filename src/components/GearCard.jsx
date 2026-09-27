@@ -51,7 +51,7 @@ const styles = {
   imageWrapper: {
     position: 'relative',
     aspectRatio: '4/3',
-    background: '#1a1520',
+    background: 'var(--color-surface)',
     overflow: 'hidden',
     display: 'flex',
     alignItems: 'center',
@@ -61,7 +61,6 @@ const styles = {
     width: '100%',
     height: '100%',
     objectFit: 'contain',
-    opacity: 0.88,
   },
   renderBadge: {
     position: 'absolute',
