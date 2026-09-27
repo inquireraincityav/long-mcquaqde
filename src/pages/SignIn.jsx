@@ -35,9 +35,9 @@ export default function SignIn() {
     <div className="page-enter" style={styles.page}>
       <div style={styles.header}>
         <svg width="44" height="44" viewBox="0 0 32 32" fill="none">
-          <rect x="2" y="2" width="28" height="28" rx="8" fill="var(--color-accent)" />
-          <path d="M10 20 L13 12 L16 18 L19 10 L22 20" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-          <circle cx="16" cy="22" r="1.5" fill="#fff" opacity="0.6" />
+          <rect x="1" y="1" width="30" height="30" rx="8" fill="var(--color-accent)" />
+          <path d="M7 8 L7 24 L13 24 L13 22 L9.5 22 L9.5 8 Z" fill="#fff" />
+          <path d="M15 8 L15 24 L17.3 24 L17.3 13.5 L20.5 24 L22.2 24 L25.4 13.5 L25.4 24 L27.7 24 L27.7 8 L24.6 8 L21.35 19.2 L18.1 8 Z" fill="#fff" opacity="0.95" />
         </svg>
         <div>
           <span style={styles.brandName}>L&M Pro</span>
