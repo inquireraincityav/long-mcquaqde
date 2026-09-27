@@ -40,7 +40,11 @@ export default function AppHeader({ title, subtitle, backTo, children }) {
   return (
     <div style={styles.header}>
       <Link to="/" style={styles.brand}>
-        <span style={styles.brandBar} />
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" style={{ flexShrink: 0 }}>
+          <rect x="2" y="2" width="28" height="28" rx="8" fill="var(--color-accent)" />
+          <path d="M10 20 L13 12 L16 18 L19 10 L22 20" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          <circle cx="16" cy="22" r="1.5" fill="#fff" opacity="0.6" />
+        </svg>
         <div>
           <span style={styles.brandName}>L&M Pro</span>
           <span style={styles.brandSub}>RENTALS</span>
@@ -72,13 +76,6 @@ const styles = {
     gap: 'var(--space-sm)',
     textDecoration: 'none',
     color: 'var(--color-text)',
-  },
-  brandBar: {
-    width: 4,
-    height: 30,
-    borderRadius: 2,
-    background: 'var(--color-accent)',
-    flexShrink: 0,
   },
   brandName: {
     display: 'block',

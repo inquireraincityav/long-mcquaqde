@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppHeader from '../components/AppHeader';
 import { useAuth } from '../context/AuthContext';
+import useOrders from '../hooks/useOrders';
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -12,8 +13,9 @@ export default function Profile() {
     address: user?.address || '',
     email: user?.email || '',
   });
+  const { orders } = useOrders();
   const [contactOpen, setContactOpen] = useState(false);
-  const [contactForm, setContactForm] = useState({ subject: '', message: '' });
+  const [contactForm, setContactForm] = useState({ orderId: '', subject: '', message: '' });
   const [contactSent, setContactSent] = useState(false);
 
   if (!user) {
@@ -43,7 +45,7 @@ export default function Profile() {
   function handleContactSubmit(e) {
     e.preventDefault();
     setContactSent(true);
-    setContactForm({ subject: '', message: '' });
+    setContactForm({ orderId: '', subject: '', message: '' });
   }
 
   return (
@@ -135,9 +137,10 @@ export default function Profile() {
           >
             <div style={styles.contactBtnContent}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
               </svg>
-              <span>Contact Us</span>
+              <span>Submit a Ticket</span>
             </div>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: contactOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
               <polyline points="6 9 12 15 18 9" />
@@ -159,8 +162,21 @@ export default function Profile() {
               ) : (
                 <form onSubmit={handleContactSubmit} style={styles.contactForm}>
                   <p style={styles.contactInfo}>
-                    For refunds, order issues, or general inquiries
+                    For payment issues, refunds, order problems, or any other concerns
                   </p>
+                  <div style={styles.field}>
+                    <label style={styles.label}>Order ID (optional)</label>
+                    <select
+                      value={contactForm.orderId}
+                      onChange={(e) => setContactForm({ ...contactForm, orderId: e.target.value })}
+                      style={styles.input}
+                    >
+                      <option value="">Select an order...</option>
+                      {orders.map((o) => (
+                        <option key={o.id} value={o.id}>{o.id}</option>
+                      ))}
+                    </select>
+                  </div>
                   <div style={styles.field}>
                     <label style={styles.label}>Subject</label>
                     <select
@@ -170,8 +186,10 @@ export default function Profile() {
                     >
                       <option value="">Select a topic...</option>
                       <option value="refund">Refund Request</option>
+                      <option value="payment">Payment Issue</option>
                       <option value="order">Order Issue</option>
                       <option value="damage">Damage Report</option>
+                      <option value="deposit">Deposit Inquiry</option>
                       <option value="billing">Billing Question</option>
                       <option value="other">Other</option>
                     </select>

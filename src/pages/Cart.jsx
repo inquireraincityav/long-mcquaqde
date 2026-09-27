@@ -294,7 +294,8 @@ const styles = {
   itemImg: {
     width: '100%',
     height: '100%',
-    objectFit: 'cover',
+    objectFit: 'contain',
+    padding: 2,
   },
   itemInfo: {
     flex: 1,

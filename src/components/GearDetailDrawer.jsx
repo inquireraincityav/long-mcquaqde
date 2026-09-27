@@ -309,8 +309,9 @@ const styles = {
   image: {
     width: '100%',
     height: '100%',
-    objectFit: 'cover',
+    objectFit: 'contain',
     opacity: 0.88,
+    padding: 12,
   },
   content: {
     padding: 'var(--space-lg) var(--space-md)',

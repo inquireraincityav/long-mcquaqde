@@ -34,7 +34,11 @@ export default function SignIn() {
   return (
     <div className="page-enter" style={styles.page}>
       <div style={styles.header}>
-        <span style={styles.brandBar} />
+        <svg width="44" height="44" viewBox="0 0 32 32" fill="none">
+          <rect x="2" y="2" width="28" height="28" rx="8" fill="var(--color-accent)" />
+          <path d="M10 20 L13 12 L16 18 L19 10 L22 20" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          <circle cx="16" cy="22" r="1.5" fill="#fff" opacity="0.6" />
+        </svg>
         <div>
           <span style={styles.brandName}>L&M Pro</span>
           <span style={styles.brandSub}>RENTALS</span>
@@ -100,13 +104,6 @@ const styles = {
     gap: 'var(--space-sm)',
     marginBottom: 'var(--space-xl)',
     marginTop: 'var(--space-xl)',
-  },
-  brandBar: {
-    width: 4,
-    height: 30,
-    borderRadius: 2,
-    background: 'var(--color-accent)',
-    flexShrink: 0,
   },
   brandName: {
     display: 'block',

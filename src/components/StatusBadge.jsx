@@ -3,6 +3,10 @@ const statusStyles = {
     background: 'var(--color-warning-light)',
     color: 'var(--color-warning)',
   },
+  'picked-up': {
+    background: 'var(--color-accent-light)',
+    color: 'var(--color-accent)',
+  },
   'in-progress': {
     background: 'var(--color-accent-light)',
     color: 'var(--color-accent)',
@@ -15,6 +19,7 @@ const statusStyles = {
 
 const labels = {
   upcoming: 'Upcoming',
+  'picked-up': 'Picked Up',
   'in-progress': 'In Progress',
   completed: 'Completed',
 };

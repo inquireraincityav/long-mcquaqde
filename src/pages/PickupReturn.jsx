@@ -71,7 +71,7 @@ export default function PickupReturn() {
   }, [orderId, orders]);
 
   const [checkStates, setCheckStates] = useState({});
-  const [mode, setMode] = useState('pickup');
+  const [mode, setMode] = useState(order?.status === 'picked-up' ? 'return' : 'pickup');
   const [completedAt, setCompletedAt] = useState(null);
 
   const allItems = order?.items || [];
@@ -104,8 +104,12 @@ export default function PickupReturn() {
   function handleComplete() {
     const now = new Date().toISOString();
     setCompletedAt(now);
-    if (order && mode === 'return') {
-      updateOrderStatus(order.id, 'completed');
+    if (order) {
+      if (mode === 'pickup') {
+        updateOrderStatus(order.id, 'picked-up');
+      } else {
+        updateOrderStatus(order.id, 'completed');
+      }
     }
   }
 

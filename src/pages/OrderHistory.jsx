@@ -22,9 +22,13 @@ export default function OrderHistory() {
 
   const [filter, setFilter] = useState('all');
   const [expandedId, setExpandedId] = useState(null);
+  const [ticketOpen, setTicketOpen] = useState(false);
+  const [ticketForm, setTicketForm] = useState({ orderId: '', subject: '', message: '' });
+  const [ticketSent, setTicketSent] = useState(false);
 
   const filtered = useMemo(() => {
     if (filter === 'all') return orders;
+    if (filter === 'active') return orders.filter((o) => o.status === 'upcoming' || o.status === 'picked-up');
     return orders.filter((o) => o.status === filter);
   }, [orders, filter]);
 
@@ -70,7 +74,7 @@ export default function OrderHistory() {
         <div style={styles.filterRow}>
           {[
             ['all', 'All'],
-            ['upcoming', 'Upcoming'],
+            ['active', 'Active'],
             ['completed', 'Completed'],
           ].map(([key, label]) => (
             <button
@@ -205,6 +209,16 @@ export default function OrderHistory() {
                         Pickup
                       </button>
                     )}
+                    {order.status === 'picked-up' && (
+                      <button
+                        style={styles.pickupBtn}
+                        onClick={() =>
+                          navigate(`/pickup-return/${order.id}`)
+                        }
+                      >
+                        Return
+                      </button>
+                    )}
                     <button
                       style={styles.reorderBtn}
                       onClick={() => handleReorder(order)}
@@ -225,6 +239,100 @@ export default function OrderHistory() {
             </p>
           </div>
         )}
+
+        {/* Submit a Ticket */}
+        <div style={styles.ticketSection}>
+          <button
+            style={styles.ticketToggle}
+            onClick={() => { setTicketOpen(!ticketOpen); setTicketSent(false); }}
+          >
+            <div style={styles.ticketToggleLeft}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+              <span style={styles.ticketToggleText}>Submit a Ticket</span>
+            </div>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: ticketOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+
+          {ticketOpen && (
+            <div style={styles.ticketBody}>
+              {ticketSent ? (
+                <div style={styles.ticketSuccess}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                  </svg>
+                  <p style={styles.ticketSuccessText}>
+                    Ticket submitted! Our support team will respond within 24 hours.
+                  </p>
+                </div>
+              ) : (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setTicketSent(true);
+                    setTicketForm({ orderId: '', subject: '', message: '' });
+                  }}
+                  style={styles.ticketForm}
+                >
+                  <p style={styles.ticketInfo}>
+                    For payment issues, refunds, order problems, or any other concerns
+                  </p>
+                  <div style={styles.ticketField}>
+                    <label style={styles.ticketLabel}>Order ID (optional)</label>
+                    <select
+                      value={ticketForm.orderId}
+                      onChange={(e) => setTicketForm({ ...ticketForm, orderId: e.target.value })}
+                      style={styles.ticketInput}
+                    >
+                      <option value="">Select an order...</option>
+                      {orders.map((o) => (
+                        <option key={o.id} value={o.id}>{o.id}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div style={styles.ticketField}>
+                    <label style={styles.ticketLabel}>Subject</label>
+                    <select
+                      value={ticketForm.subject}
+                      onChange={(e) => setTicketForm({ ...ticketForm, subject: e.target.value })}
+                      style={styles.ticketInput}
+                    >
+                      <option value="">Select a topic...</option>
+                      <option value="refund">Refund Request</option>
+                      <option value="payment">Payment Issue</option>
+                      <option value="order">Order Issue</option>
+                      <option value="damage">Damage Report</option>
+                      <option value="deposit">Deposit Inquiry</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div style={styles.ticketField}>
+                    <label style={styles.ticketLabel}>Message</label>
+                    <textarea
+                      placeholder="Describe your issue..."
+                      value={ticketForm.message}
+                      onChange={(e) => setTicketForm({ ...ticketForm, message: e.target.value })}
+                      style={{ ...styles.ticketInput, minHeight: 100, resize: 'vertical' }}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="btn-primary"
+                    style={styles.ticketSubmitBtn}
+                    disabled={!ticketForm.subject || !ticketForm.message.trim()}
+                  >
+                    Submit Ticket
+                  </button>
+                </form>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -405,5 +513,85 @@ const styles = {
   noResultsText: {
     fontSize: 'var(--text-sm)',
     color: 'var(--color-text-secondary)',
+  },
+  ticketSection: {
+    background: 'var(--color-surface-raised)',
+    border: '1px solid var(--color-border)',
+    borderRadius: 'var(--radius-lg)',
+    overflow: 'hidden',
+  },
+  ticketToggle: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    padding: 'var(--space-md)',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    color: 'var(--color-text)',
+  },
+  ticketToggleLeft: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'var(--space-sm)',
+  },
+  ticketToggleText: {
+    fontSize: 'var(--text-sm)',
+    fontWeight: 600,
+  },
+  ticketBody: {
+    borderTop: '1px solid var(--color-border)',
+    padding: 'var(--space-md)',
+  },
+  ticketForm: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 'var(--space-md)',
+  },
+  ticketInfo: {
+    fontSize: 'var(--text-xs)',
+    color: 'var(--color-text-secondary)',
+    margin: 0,
+  },
+  ticketField: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 'var(--space-xs)',
+  },
+  ticketLabel: {
+    fontSize: 'var(--text-xs)',
+    fontWeight: 600,
+    color: 'var(--color-text-tertiary)',
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em',
+  },
+  ticketInput: {
+    padding: '12px 14px',
+    border: '1px solid var(--color-border-strong)',
+    borderRadius: 'var(--radius-sm)',
+    fontSize: 'var(--text-base)',
+    background: 'var(--color-surface-solid)',
+    color: 'var(--color-text)',
+    outline: 'none',
+    width: '100%',
+    fontFamily: 'inherit',
+  },
+  ticketSubmitBtn: {
+    width: '100%',
+    borderRadius: 'var(--radius-lg)',
+  },
+  ticketSuccess: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 'var(--space-sm)',
+    padding: 'var(--space-md)',
+  },
+  ticketSuccessText: {
+    fontSize: 'var(--text-sm)',
+    color: 'var(--color-success)',
+    textAlign: 'center',
+    margin: 0,
   },
 };
