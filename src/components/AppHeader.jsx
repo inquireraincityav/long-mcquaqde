@@ -40,11 +40,7 @@ export default function AppHeader({ title, subtitle, backTo, children }) {
   return (
     <div style={styles.header}>
       <Link to="/" style={styles.brand}>
-        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" style={{ flexShrink: 0 }}>
-          <rect x="1" y="1" width="30" height="30" rx="8" fill="var(--color-accent)" />
-          <path d="M7 8 L7 24 L13 24 L13 22 L9.5 22 L9.5 8 Z" fill="#fff" />
-          <path d="M15 8 L15 24 L17.3 24 L17.3 13.5 L20.5 24 L22.2 24 L25.4 13.5 L25.4 24 L27.7 24 L27.7 8 L24.6 8 L21.35 19.2 L18.1 8 Z" fill="#fff" opacity="0.95" />
-        </svg>
+        <img src="/logo.png" alt="L&M Pro Rentals" width="28" height="28" style={{ flexShrink: 0, borderRadius: 7 }} />
         <div>
           <span style={styles.brandName}>L&M Pro</span>
           <span style={styles.brandSub}>RENTALS</span>

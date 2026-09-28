@@ -34,11 +34,7 @@ export default function SignIn() {
   return (
     <div className="page-enter" style={styles.page}>
       <div style={styles.header}>
-        <svg width="44" height="44" viewBox="0 0 32 32" fill="none">
-          <rect x="1" y="1" width="30" height="30" rx="8" fill="var(--color-accent)" />
-          <path d="M7 8 L7 24 L13 24 L13 22 L9.5 22 L9.5 8 Z" fill="#fff" />
-          <path d="M15 8 L15 24 L17.3 24 L17.3 13.5 L20.5 24 L22.2 24 L25.4 13.5 L25.4 24 L27.7 24 L27.7 8 L24.6 8 L21.35 19.2 L18.1 8 Z" fill="#fff" opacity="0.95" />
-        </svg>
+        <img src="/logo.png" alt="L&M Pro Rentals" width="44" height="44" style={{ borderRadius: 10 }} />
         <div>
           <span style={styles.brandName}>L&M Pro</span>
           <span style={styles.brandSub}>RENTALS</span>
