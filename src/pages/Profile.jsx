@@ -254,11 +254,14 @@ const styles = {
   },
   userName: {
     fontSize: 'var(--text-xl)',
-    fontWeight: 700,
+    fontWeight: 800,
+    letterSpacing: '-0.3px',
   },
   userPhone: {
     fontSize: 'var(--text-sm)',
-    color: 'var(--color-text-secondary)',
+    color: 'var(--color-text-tertiary)',
+    fontWeight: 400,
+    marginTop: 2,
   },
   section: {
     background: 'var(--color-surface-raised)',
@@ -298,11 +301,12 @@ const styles = {
   },
   detailLabel: {
     fontSize: 'var(--text-sm)',
-    color: 'var(--color-text-secondary)',
+    color: 'var(--color-text-tertiary)',
+    fontWeight: 400,
   },
   detailValue: {
     fontSize: 'var(--text-sm)',
-    fontWeight: 500,
+    fontWeight: 600,
     color: 'var(--color-text)',
     textAlign: 'right',
     maxWidth: '60%',
@@ -401,5 +405,6 @@ const styles = {
     fontWeight: 600,
     cursor: 'pointer',
     marginTop: 'var(--space-sm)',
+    transition: 'transform 0.12s, background 0.15s',
   },
 };

@@ -265,6 +265,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: 'var(--space-sm)',
+    animation: 'fadeInUp 0.25s ease-out both',
   },
   locationLabel: {
     display: 'flex',
@@ -307,19 +308,23 @@ const styles = {
   itemName: {
     fontSize: 'var(--text-sm)',
     fontWeight: 600,
+    lineHeight: 1.3,
   },
   itemDates: {
-    fontSize: 'var(--text-xs)',
-    color: 'var(--color-text-secondary)',
+    fontSize: '11px',
+    color: 'var(--color-text-tertiary)',
+    fontWeight: 400,
   },
   itemLocation: {
-    fontSize: 'var(--text-xs)',
+    fontSize: '11px',
     color: 'var(--color-text-tertiary)',
+    fontWeight: 400,
   },
   itemPrice: {
     fontSize: 'var(--text-sm)',
     fontWeight: 700,
     color: 'var(--color-accent)',
+    marginTop: 2,
   },
   itemActions: {
     display: 'flex',
@@ -364,11 +369,13 @@ const styles = {
   },
   summaryTotalLabel: {
     fontSize: 'var(--text-base)',
-    fontWeight: 700,
+    fontWeight: 800,
+    letterSpacing: '-0.3px',
   },
   summaryTotalValue: {
-    fontSize: 'var(--text-lg)',
-    fontWeight: 700,
+    fontSize: 'var(--text-xl)',
+    fontWeight: 800,
+    letterSpacing: '-0.3px',
   },
   tbdNote: {
     fontSize: 'var(--text-xs)',

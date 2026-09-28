@@ -458,12 +458,14 @@ const styles = {
     fontSize: 'var(--text-base)',
     fontWeight: 700,
     display: 'block',
+    letterSpacing: '-0.2px',
   },
   sectionSub: {
-    fontSize: 'var(--text-xs)',
-    color: 'var(--color-text-secondary)',
+    fontSize: '11px',
+    color: 'var(--color-text-tertiary)',
     display: 'block',
-    marginTop: 2,
+    marginTop: 3,
+    fontWeight: 400,
   },
   chevron: {
     fontSize: 'var(--text-xs)',
@@ -524,7 +526,7 @@ const styles = {
     textAlign: 'left',
     width: '100%',
     color: 'var(--color-text)',
-    transition: 'border-color 0.15s',
+    transition: 'border-color 0.15s, transform 0.12s',
   },
   fulfillActive: {
     borderColor: 'var(--color-accent)',
@@ -680,15 +682,17 @@ const styles = {
     background: 'var(--color-border)',
   },
   grandLabel: {
-    fontWeight: 700,
+    fontWeight: 800,
     fontSize: 'var(--text-base)',
     color: 'var(--color-text)',
+    letterSpacing: '-0.3px',
   },
   grandValue: {
-    fontWeight: 700,
-    fontSize: 'var(--text-lg)',
+    fontWeight: 800,
+    fontSize: 'var(--text-xl)',
     color: 'var(--color-text)',
     fontVariantNumeric: 'tabular-nums',
+    letterSpacing: '-0.3px',
   },
   tbdNote: {
     fontSize: 'var(--text-xs)',
@@ -717,15 +721,17 @@ const styles = {
     marginBottom: 'var(--space-sm)',
   },
   confirmTitle: {
-    fontSize: 'var(--text-xl)',
-    fontWeight: 700,
+    fontSize: 'var(--text-2xl)',
+    fontWeight: 800,
+    letterSpacing: '-0.5px',
   },
   confirmSub: {
     fontSize: 'var(--text-sm)',
-    color: 'var(--color-text-secondary)',
+    color: 'var(--color-text-tertiary)',
     lineHeight: 1.5,
     maxWidth: 320,
     margin: 0,
+    fontWeight: 400,
   },
   barcodeWrap: {
     padding: 'var(--space-md)',

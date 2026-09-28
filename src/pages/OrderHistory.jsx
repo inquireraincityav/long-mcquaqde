@@ -91,7 +91,7 @@ export default function OrderHistory() {
         </div>
 
         {/* Order list */}
-        <div style={styles.orderList}>
+        <div className="stagger-list" style={styles.orderList}>
           {filtered.map((order) => {
             const isExpanded = expandedId === order.id;
             const dateLabel =
@@ -359,7 +359,7 @@ const styles = {
     cursor: 'pointer',
     background: 'transparent',
     color: 'var(--color-text-secondary)',
-    transition: 'background 0.15s, color 0.15s',
+    transition: 'background 0.15s, color 0.15s, transform 0.12s',
   },
   filterActive: {
     background: 'var(--color-text)',
@@ -386,15 +386,17 @@ const styles = {
     alignItems: 'flex-start',
   },
   orderId: {
-    fontSize: 'var(--text-sm)',
+    fontSize: 'var(--text-base)',
     fontWeight: 700,
     display: 'block',
+    letterSpacing: '-0.3px',
   },
   orderDates: {
     fontSize: 'var(--text-xs)',
-    color: 'var(--color-text-secondary)',
+    color: 'var(--color-text-tertiary)',
     display: 'block',
-    marginTop: 2,
+    marginTop: 3,
+    fontWeight: 400,
   },
   itemSummary: {
     display: 'flex',
@@ -495,6 +497,7 @@ const styles = {
     border: 'none',
     borderRadius: 'var(--radius-full)',
     cursor: 'pointer',
+    transition: 'transform 0.12s, background 0.15s',
   },
   reorderBtn: {
     padding: '6px 14px',
@@ -505,6 +508,7 @@ const styles = {
     border: '1.5px solid var(--color-accent)',
     borderRadius: 'var(--radius-full)',
     cursor: 'pointer',
+    transition: 'transform 0.12s, background 0.15s',
   },
   noResults: {
     textAlign: 'center',

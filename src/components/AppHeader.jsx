@@ -111,12 +111,15 @@ const styles = {
   },
   pageTitle: {
     fontSize: 'var(--text-2xl)',
-    fontWeight: 700,
+    fontWeight: 800,
     lineHeight: 1.2,
+    letterSpacing: '-0.5px',
   },
   pageSubtitle: {
-    fontSize: 'var(--text-sm)',
-    color: 'var(--color-text-secondary)',
+    fontSize: 'var(--text-xs)',
+    color: 'var(--color-text-tertiary)',
+    fontWeight: 400,
+    marginTop: 2,
   },
   profileBtn: {
     display: 'flex',

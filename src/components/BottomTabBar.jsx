@@ -104,6 +104,7 @@ const styles = {
     textDecoration: 'none',
     padding: '4px 16px',
     minWidth: 64,
+    transition: 'transform 0.12s ease',
   },
   iconWrap: {
     position: 'relative',

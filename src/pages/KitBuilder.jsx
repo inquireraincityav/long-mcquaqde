@@ -296,7 +296,7 @@ export default function KitBuilder() {
                 </div>
 
                 {/* Item list */}
-                <div style={styles.itemList}>
+                <div className="stagger-list" style={styles.itemList}>
                   {result.items.map((item) => {
                     const d = getDisplayData(item.product);
                     const lineTotal = days > 0 && item.rentalDay
@@ -600,7 +600,7 @@ const styles = {
     height: 90,
     borderRadius: 'var(--radius-md)',
     overflow: 'hidden',
-    background: '#1a1520',
+    background: 'var(--color-surface)',
     flexShrink: 0,
   },
   thumbImg: {
@@ -648,10 +648,12 @@ const styles = {
     fontSize: 'var(--text-sm)',
     fontWeight: 600,
     color: 'var(--color-text)',
+    lineHeight: 1.3,
   },
   itemPrice: {
-    fontSize: 'var(--text-xs)',
-    color: 'var(--color-text-secondary)',
+    fontSize: '11px',
+    color: 'var(--color-text-tertiary)',
+    fontWeight: 400,
   },
   totalSection: {
     display: 'flex',

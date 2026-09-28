@@ -208,6 +208,10 @@ a:hover {
   background: var(--color-accent-light);
 }
 
+.btn-outline-accent:active {
+  transform: scale(0.97);
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -237,6 +241,28 @@ a:hover {
 @keyframes slideUp {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stagger-list > * {
+  animation: fadeInUp 0.25s ease-out both;
+}
+.stagger-list > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-list > *:nth-child(2) { animation-delay: 40ms; }
+.stagger-list > *:nth-child(3) { animation-delay: 80ms; }
+.stagger-list > *:nth-child(4) { animation-delay: 120ms; }
+.stagger-list > *:nth-child(5) { animation-delay: 160ms; }
+.stagger-list > *:nth-child(6) { animation-delay: 200ms; }
+.stagger-list > *:nth-child(n+7) { animation-delay: 240ms; }
+
+.press-scale {
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+.press-scale:active {
+  transform: scale(0.97);
 }
 
 input[type="date"] {

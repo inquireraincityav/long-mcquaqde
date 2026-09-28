@@ -146,6 +146,7 @@ const styles = {
     whiteSpace: 'nowrap',
     flexShrink: 0,
     boxShadow: 'var(--glass-shadow), var(--glass-highlight)',
+    transition: 'transform 0.12s ease',
   },
   calLabel: {
     display: 'flex',

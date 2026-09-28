@@ -247,15 +247,17 @@ const styles = {
   },
   title: {
     fontSize: 'var(--text-2xl)',
-    fontWeight: 700,
+    fontWeight: 800,
     marginBottom: 'var(--space-xs)',
     textAlign: 'center',
+    letterSpacing: '-0.5px',
   },
   subtitle: {
     fontSize: 'var(--text-sm)',
-    color: 'var(--color-text-secondary)',
+    color: 'var(--color-text-tertiary)',
     marginBottom: 'var(--space-lg)',
     textAlign: 'center',
+    fontWeight: 400,
   },
   form: {
     width: '100%',

@@ -259,6 +259,7 @@ const styles = {
     boxShadow: 'var(--glass-shadow-xl)',
     display: 'flex',
     flexDirection: 'column',
+    animation: 'slideUp 0.25s ease-out',
   },
   stickyHeader: {
     position: 'sticky',
@@ -321,8 +322,9 @@ const styles = {
   },
   title: {
     fontSize: 'var(--text-xl)',
-    fontWeight: 700,
+    fontWeight: 800,
     lineHeight: 1.3,
+    letterSpacing: '-0.3px',
   },
   metaRow: {
     display: 'flex',
@@ -381,13 +383,17 @@ const styles = {
     background: 'var(--color-accent-lighter)',
   },
   tierLabel: {
-    fontSize: 'var(--text-xs)',
-    color: 'var(--color-text-secondary)',
+    fontSize: '10px',
+    color: 'var(--color-text-tertiary)',
+    fontWeight: 500,
+    textTransform: 'uppercase',
+    letterSpacing: '0.03em',
   },
   tierPrice: {
     fontSize: 'var(--text-lg)',
-    fontWeight: 700,
+    fontWeight: 800,
     color: 'var(--color-text)',
+    letterSpacing: '-0.3px',
   },
   locationSection: {
     display: 'flex',
@@ -416,7 +422,7 @@ const styles = {
     border: '1px solid var(--color-border)',
     background: 'var(--color-surface-solid)',
     cursor: 'pointer',
-    transition: 'border-color 0.15s, background 0.15s',
+    transition: 'border-color 0.15s, background 0.15s, transform 0.12s',
   },
   locationRowSelected: {
     borderColor: 'var(--color-accent)',

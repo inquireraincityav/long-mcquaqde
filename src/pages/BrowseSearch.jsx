@@ -47,7 +47,7 @@ export default function BrowseSearch() {
             message="Try adjusting your filters or dates to see available gear."
           />
         ) : (
-          <div style={styles.grid}>
+          <div className="stagger-list" style={styles.grid}>
             {sorted.map((item) => (
               <GearCard
                 key={item.product}
@@ -87,9 +87,10 @@ const styles = {
     marginBottom: 'var(--space-md)',
   },
   sectionTitle: {
-    fontSize: '19px',
+    fontSize: '20px',
     fontWeight: 800,
     letterSpacing: '-0.5px',
+    color: 'var(--color-text)',
   },
   count: {
     fontSize: '12.5px',

@@ -7,7 +7,7 @@ export default function GearCard({ item, hasDateRange, onClick }) {
   const placeholder = getCategoryPlaceholder(item.category);
 
   return (
-    <button style={styles.card} onClick={onClick} aria-label={`View ${display.shortName}`}>
+    <button className="press-scale" style={styles.card} onClick={onClick} aria-label={`View ${display.shortName}`}>
       <div style={styles.imageWrapper}>
         <img
           src={item.imageSource || placeholder}
@@ -93,9 +93,10 @@ const styles = {
     overflow: 'hidden',
   },
   specs: {
-    fontSize: '11px',
-    color: 'var(--color-text-secondary)',
-    lineHeight: 1.5,
+    fontSize: '10.5px',
+    color: 'var(--color-text-tertiary)',
+    lineHeight: 1.4,
+    fontWeight: 400,
   },
   price: {
     fontSize: '14.5px',
