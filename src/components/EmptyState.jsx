@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-export default function EmptyState({ title, message, links }) {
+export default function EmptyState({ title, message, links, children }) {
   return (
     <div style={styles.wrapper}>
       <div style={styles.icon}>
@@ -20,6 +20,7 @@ export default function EmptyState({ title, message, links }) {
           ))}
         </div>
       )}
+      {children}
     </div>
   );
 }
