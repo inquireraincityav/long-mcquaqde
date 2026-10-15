@@ -241,6 +241,7 @@ a:hover {
 @keyframes slideUp {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
+}
 
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(6px); }
