@@ -5,7 +5,7 @@ import StatusBadge from '../components/StatusBadge';
 import Barcode from '../components/Barcode';
 import useOrders from '../hooks/useOrders';
 import { getDisplayData } from '../utils/displayData';
-import placeholderImg from '/placeholder-gear.svg';
+import { getCategoryPlaceholder } from '../utils/categoryPlaceholders';
 
 function formatDateShort(dateStr) {
   if (!dateStr) return '';
@@ -19,7 +19,7 @@ function ItemCheckRow({ item, checked, flagged, onCheck, onFlag }) {
     <div style={styles.checkRow}>
       <div style={styles.checkThumb}>
         <img
-          src={placeholderImg}
+          src={item.image || getCategoryPlaceholder(item.category)}
           alt={d.shortName}
           style={styles.checkImg}
         />
