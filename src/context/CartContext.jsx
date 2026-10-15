@@ -1,12 +1,23 @@
-import { createContext, useContext, useReducer, useCallback } from 'react';
+import { createContext, useContext, useReducer, useCallback, useEffect } from 'react';
 
 const CartContext = createContext(null);
+
+const STORAGE_KEY = 'lm-cart';
 
 const initialState = {
   items: [],
   dateRange: { start: null, end: null },
   location: null,
 };
+
+function loadCart() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : initialState;
+  } catch {
+    return initialState;
+  }
+}
 
 function cartReducer(state, action) {
   switch (action.type) {
@@ -106,7 +117,13 @@ function cartReducer(state, action) {
 }
 
 export function CartProvider({ children }) {
-  const [state, dispatch] = useReducer(cartReducer, initialState);
+  const [state, dispatch] = useReducer(cartReducer, null, loadCart);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch {}
+  }, [state]);
 
   const addItem = useCallback(
     (item) => dispatch({ type: 'ADD_ITEM', payload: item }),

@@ -15,7 +15,7 @@ export default function Checkout() {
 
   const [fulfillMethod, setFulfillMethod] = useState('pickup');
   const [summaryOpen, setSummaryOpen] = useState(false);
-  const [form, setForm] = useState({ name: '', email: '', phone: '', card: '', expiry: '', cvv: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', card: '', expiry: '', cvv: '', address: '', city: '', postalCode: '' });
   const [errors, setErrors] = useState({});
   const [confirmed, setConfirmed] = useState(null);
 
@@ -56,6 +56,11 @@ export default function Checkout() {
     if (!form.card.trim() || form.card.replace(/\D/g, '').length < 15) e.card = 'Valid card number required';
     if (!form.expiry.trim() || !/^\d{2}\/\d{2}$/.test(form.expiry)) e.expiry = 'MM/YY format';
     if (!form.cvv.trim() || form.cvv.length < 3) e.cvv = '3-4 digits';
+    if (fulfillMethod === 'delivery') {
+      if (!form.address.trim()) e.address = 'Delivery address required';
+      if (!form.city.trim()) e.city = 'City required';
+      if (!form.postalCode.trim()) e.postalCode = 'Postal code required';
+    }
     return e;
   }
 
@@ -266,6 +271,50 @@ export default function Checkout() {
               </div>
             </button>
           </div>
+          {fulfillMethod === 'delivery' && (
+            <div style={styles.deliveryFields}>
+              <h4 style={styles.deliveryTitle}>Delivery Address</h4>
+              <div style={styles.field}>
+                <label style={styles.fieldLabel} htmlFor="co-address">Street Address</label>
+                <input
+                  id="co-address"
+                  style={{ ...styles.fieldInput, ...(errors.address ? styles.fieldError : {}) }}
+                  type="text"
+                  placeholder="123 Main St, Unit 4"
+                  value={form.address}
+                  onChange={(e) => handleField('address', e.target.value)}
+                />
+                {errors.address && <span style={styles.errorMsg}>{errors.address}</span>}
+              </div>
+              <div style={styles.fieldRow}>
+                <div style={{ ...styles.field, flex: 2 }}>
+                  <label style={styles.fieldLabel} htmlFor="co-city">City</label>
+                  <input
+                    id="co-city"
+                    style={{ ...styles.fieldInput, ...(errors.city ? styles.fieldError : {}) }}
+                    type="text"
+                    placeholder="Vancouver"
+                    value={form.city}
+                    onChange={(e) => handleField('city', e.target.value)}
+                  />
+                  {errors.city && <span style={styles.errorMsg}>{errors.city}</span>}
+                </div>
+                <div style={{ ...styles.field, flex: 1 }}>
+                  <label style={styles.fieldLabel} htmlFor="co-postal">Postal Code</label>
+                  <input
+                    id="co-postal"
+                    style={{ ...styles.fieldInput, ...(errors.postalCode ? styles.fieldError : {}) }}
+                    type="text"
+                    placeholder="V5K 1A1"
+                    value={form.postalCode}
+                    onChange={(e) => handleField('postalCode', e.target.value)}
+                    maxLength={7}
+                  />
+                  {errors.postalCode && <span style={styles.errorMsg}>{errors.postalCode}</span>}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Deposit terms */}
@@ -546,6 +595,20 @@ const styles = {
     color: 'var(--color-text-secondary)',
     display: 'block',
     marginTop: 2,
+  },
+  deliveryFields: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 'var(--space-md)',
+    borderTop: '1px solid var(--color-border)',
+    paddingTop: 'var(--space-md)',
+    marginTop: 'var(--space-xs)',
+  },
+  deliveryTitle: {
+    fontSize: 'var(--text-sm)',
+    fontWeight: 600,
+    margin: 0,
+    letterSpacing: '-0.1px',
   },
   termsList: {
     display: 'flex',
